@@ -26,8 +26,8 @@ public class DataBaseConfiguration {
     }
 
 
-    @Bean(name = "SessionFactory")
-    public SqlSessionFactory SessionFactory(DataSource dataSource,
+    @Bean(name = "sessionFactory")
+    public SqlSessionFactory sessionFactory(DataSource dataSource,
                                             ApplicationContext applicationContext) throws Exception {
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
         sqlSessionFactoryBean.setDataSource(dataSource);
@@ -35,8 +35,8 @@ public class DataBaseConfiguration {
         return sqlSessionFactoryBean.getObject();
     }
 
-    @Bean(name = "SessionTemplate")
-    public SqlSessionTemplate SessionTemplate(SqlSessionFactory sessionFactory) {
+    @Bean(name = "sessionTemplate")
+    public SqlSessionTemplate sessionTemplate(SqlSessionFactory sessionFactory) {
         return new SqlSessionTemplate(sessionFactory);
     }
 
