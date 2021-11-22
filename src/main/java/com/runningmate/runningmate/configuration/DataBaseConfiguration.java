@@ -1,4 +1,4 @@
-package com.runningmate.configuration;
+package com.runningmate.runningmate.configuration;
 
 import com.zaxxer.hikari.HikariDataSource;
 import org.apache.ibatis.session.SqlSessionFactory;
