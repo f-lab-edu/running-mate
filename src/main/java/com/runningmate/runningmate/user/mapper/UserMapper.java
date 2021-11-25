@@ -1,6 +1,6 @@
 package com.runningmate.runningmate.user.mapper;
 
-import com.runningmate.runningmate.user.entity.UserInfo;
+import com.runningmate.runningmate.user.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -11,7 +11,7 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface UserMapper {
 
-    UserInfo selectUserByEmail(String email);
+    User findByEmail(String email);
 
-    void insertUser(UserInfo user);
+    void saveUser(User user);
 }

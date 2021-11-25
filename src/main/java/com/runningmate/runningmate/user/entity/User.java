@@ -6,17 +6,10 @@ import lombok.NonNull;
 
 import java.time.LocalDateTime;
 
-/**
- * RequiredArgsConstructor
- * final 이나 NonNull인 필드들만 파라미터로 받는 생성자를 만들어 준다.
- *
- * @author junsoo
- */
-
 
 @Getter
 @Builder
-public class UserInfo {
+public class User {
 
     // 이메일
     @NonNull

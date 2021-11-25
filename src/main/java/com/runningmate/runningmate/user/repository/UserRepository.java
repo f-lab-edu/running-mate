@@ -1,12 +1,12 @@
 package com.runningmate.runningmate.user.repository;
 
-import com.runningmate.runningmate.user.entity.UserInfo;
+import com.runningmate.runningmate.user.entity.User;
 
 
 public interface UserRepository {
 
-    UserInfo selectUserByEmail(String email);
+    User findByEmail(String email);
 
-    void insertUser(UserInfo user);
+    void saveUser(User user);
 
 }

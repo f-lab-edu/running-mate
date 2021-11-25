@@ -1,7 +1,6 @@
 package com.runningmate.runningmate.user.repository.impl;
 
-import com.runningmate.runningmate.user.dto.User;
-import com.runningmate.runningmate.user.entity.UserInfo;
+import com.runningmate.runningmate.user.entity.User;
 import com.runningmate.runningmate.user.mapper.UserMapper;
 import com.runningmate.runningmate.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,17 +10,17 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
-public class UserRepositoryImpl implements UserRepository {
+public class MybatisUserRepository implements UserRepository {
 
     private final UserMapper userMapper;
 
     @Override
-    public UserInfo selectUserByEmail(String email) {
-        return userMapper.selectUserByEmail(email);
+    public User findByEmail(String email) {
+        return userMapper.findByEmail(email);
     }
 
     @Override
-    public void insertUser(UserInfo user) {
-        userMapper.insertUser(user);
+    public void saveUser(User user) {
+        userMapper.saveUser(user);
     }
 }

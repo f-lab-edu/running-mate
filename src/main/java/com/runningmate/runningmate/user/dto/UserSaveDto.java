@@ -20,7 +20,7 @@ build() 메소드를 통해 멤버변수에 필수값들을 null체크하고
 
 @Getter
 @Builder
-public class User {
+public class UserSaveDto {
 
     // 이메일
     @NotBlank(message = "이메일은 필수 입력 값입니다.")

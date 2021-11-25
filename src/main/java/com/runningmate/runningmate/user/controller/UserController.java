@@ -1,9 +1,9 @@
 package com.runningmate.runningmate.user.controller;
 
 import com.runningmate.runningmate.common.utils.ResponseMessage;
-import com.runningmate.runningmate.user.dto.User;
-import com.runningmate.runningmate.user.entity.UserInfo;
+import com.runningmate.runningmate.user.dto.UserSaveDto;
 import com.runningmate.runningmate.user.service.UserService;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
 
 /**
  *
@@ -49,23 +46,17 @@ public class UserController {
      *
      * @author junsoo
      */
-    @PostMapping("login")
-    public ResponseEntity login(@RequestBody User requestUser, HttpSession session){
+    @PostMapping
+    public ResponseEntity login(@RequestBody @NonNull String email, @RequestBody @NonNull String password, HttpSession session){
 //        ResponseEntity
 //         - 상태 응답 코드와, 응답메세지 등을 보낼 수 있다.
 //         - HttpEntity를 상속받음으로써 HttpHeader와 body를 가질 수 있다.
-
-        String email = requestUser.getEmail();
-        String password = requestUser.getPassword();
-
-        User user = userService.loginCheck(email, password);
-        if(user == null){
+        UserSaveDto userSaveDto = userService.loginCheck(email, password);
+        if(userSaveDto == null){
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }else {
             userService.loginUser(session, email);
-            Map<String, Object> rmap = new HashMap<String, Object>();
-            rmap.put("data", user);
-            return new ResponseEntity<>(rmap, HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         }
     }
 
@@ -76,24 +67,23 @@ public class UserController {
      * @param session
      * @return
      */
-    @GetMapping("logout")
+    @GetMapping
     public ResponseEntity logout(HttpSession session){
         userService.logout(session);
-        return new ResponseEntity<>(ResponseMessage.LOGOUTCOMPLETE, HttpStatus.OK );
+        return new ResponseEntity<>(ResponseMessage.LOGOUT_COMPLETE, HttpStatus.OK);
     }
 
     /**
      * 회원가입
      *
-     * @param requestUser
+     * @param requestUserSaveDto
      * @param session
      * @return
      */
-    @PostMapping("insert")
-    public ResponseEntity userInsert(@Valid @RequestBody User requestUser, HttpSession session){
-
-        userService.insertUser(requestUser);
-        return new ResponseEntity<>(ResponseMessage.USERREGISTCOMPLETE , HttpStatus.OK);
+    @PostMapping("signUp")
+    public ResponseEntity signUp(@Valid @RequestBody UserSaveDto requestUserSaveDto){
+        userService.insertUser(requestUserSaveDto);
+        return new ResponseEntity<>(ResponseMessage.USER_REGIST_COMPLETE, HttpStatus.OK);
     }
 
 

@@ -2,8 +2,8 @@ package com.runningmate.runningmate.user.service.impl;
 
 import com.runningmate.runningmate.common.utils.BCryptUtil;
 import com.runningmate.runningmate.common.utils.SessionUtils;
-import com.runningmate.runningmate.user.dto.User;
-import com.runningmate.runningmate.user.entity.UserInfo;
+import com.runningmate.runningmate.user.dto.UserSaveDto;
+import com.runningmate.runningmate.user.entity.User;
 import com.runningmate.runningmate.user.repository.UserRepository;
 import com.runningmate.runningmate.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -13,15 +13,6 @@ import javax.servlet.http.HttpSession;
 import java.util.Optional;
 
 
-/**
- *
- * RequiredArgsConstructor
- * - final 이나 NonNull인 필드들만 파라미터로 받는 생성자를 만들어 준다.
- * - 빈 생성자가 하나만 있고, 생성자의 파라미터 타입이 빈으로 등록 가능할 때
- * - @Autowire 없이 DI가 가능하다.
- *
- */
-
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -29,25 +20,18 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
-
-    /*
-    * Optional
-    * null이 올 수 있는 값을 감싸는 Wrapper 클래스로, 참조하더라도 NullPointerException을 발생하지 않도록 도와준다
-    *
-    * */
-
     /**
      * 로그인 체크
      *  - 아이디(email) 과 비밀번호 체크
      *
      * @param email
      * @param password
-     * @return
+     * @return 로그인 성공시 로그인 데이터 리턴 / 실패시 null
      * 
      * @author junsoo
      */
-    public User loginCheck(String email, String password){
-        Optional<UserInfo> userInfo = Optional.ofNullable( userRepository.selectUserByEmail(email) );
+    public UserSaveDto loginCheck(String email, String password){
+        Optional<User> userInfo = Optional.ofNullable(userRepository.findByEmail(email));
 
         // 가입된 아이디가 없을 경우
         if(userInfo.isEmpty()){
@@ -55,36 +39,35 @@ public class UserServiceImpl implements UserService {
         }
         
         // 비밀번호가 다를 경우
-        if( !BCryptUtil.comparePassword(password, userInfo.get().getPassword()) ){
+        if(!BCryptUtil.comparePassword(password, userInfo.get().getPassword())){
             return null;
         }
 
-        User user = User.builder()
+        UserSaveDto userSaveDto = com.runningmate.runningmate.user.dto.UserSaveDto.builder()
                 .email(userInfo.get().getEmail())
                 .nickName(userInfo.get().getNickName())
                 .resetToken(userInfo.get().getResetToken())
                 .build();
 
-
-        return user;
+        return userSaveDto;
     }
 
     /**
      * 회원가입 로직 ( 미완 )
      *
-     * @param user
+     * @param userSaveDto
      *
      * @author junsoo
      */
-    public void insertUser(User user){
-        UserInfo insertUserInfo = UserInfo.builder()
-                .email(user.getEmail())
-                .password( BCryptUtil.setEncrypt( user.getPassword() ) )
-                .nickName(user.getNickName())
+    public void insertUser(UserSaveDto userSaveDto){
+        User insertUser = User.builder()
+                .email(userSaveDto.getEmail())
+                .password(BCryptUtil.setEncrypt(userSaveDto.getPassword()))
+                .nickName(userSaveDto.getNickName())
 //                .resetToken(user.getResetToken())
                 .build();
-        ;
-        userRepository.insertUser(insertUserInfo);
+
+        userRepository.saveUser(insertUser);
     }
 
     /**
