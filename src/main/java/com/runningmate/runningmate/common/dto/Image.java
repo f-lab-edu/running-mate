@@ -1,18 +1,18 @@
 package com.runningmate.runningmate.common.dto;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.Setter;
 
 @Getter
-@Setter
+@Builder
 public class Image {
 
     @NonNull
-    private String original_name;
+    private String originalName;
 
     @NonNull
-    private String store_name;
+    private String storeName;
 
     @NonNull
     private String extension;

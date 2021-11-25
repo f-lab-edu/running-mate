@@ -4,34 +4,36 @@
 
 <mapper namespace="com.runningmate.runningmate.user.mapper.UserMapper">
 
-    <select id="selectUserByEmail" resultType="com.runningmate.runningmate.user.dto.User">
+    <select id="selectUserByEmail" resultType="com.runningmate.runningmate.user.entity.UserInfo">
         select
-            user_id
+            email
             , password
-            , email
             , nickname
-            , image_id
-            , position_id
-            , reset_token
-            , create_date
-            , update_date
+            , position_id AS positionId
+            , image_id AS imageId
+            , reset_token AS resetToken
+            , create_date AS createDate
+            , update_date AS updateDate
         from user ;
 
     </select>
 
 
-    <insert id="insertUser" parameterType="com.runningmate.runningmate.user.dto.User"
-            useGeneratedKeys="true" keyProperty="user_id">
+    <insert id="insertUser" parameterType="com.runningmate.runningmate.user.entity.UserInfo">
         insert into
             user (
                 email
                 , password
                 , nickname
+                , create_date
+                , update_date
             )
             values(
                 #{email}
                 , #{password}
-                , #{nickname}
+                , #{nickName}
+                , now()
+                , now()
             )
     </insert>
 

@@ -3,7 +3,8 @@ package com.runningmate.runningmate.user.service.impl;
 import com.runningmate.runningmate.common.utils.BCryptUtil;
 import com.runningmate.runningmate.common.utils.SessionUtils;
 import com.runningmate.runningmate.user.dto.User;
-import com.runningmate.runningmate.user.mapper.UserMapper;
+import com.runningmate.runningmate.user.entity.UserInfo;
+import com.runningmate.runningmate.user.repository.UserRepository;
 import com.runningmate.runningmate.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final UserMapper userMapper;
+
+    private final UserRepository userRepository;
 
 
     /*
@@ -44,19 +46,26 @@ public class UserServiceImpl implements UserService {
      * 
      * @author junsoo
      */
-    public Optional<User> loginCheck(String email, String password){
-        Optional<User> user = Optional.ofNullable( userMapper.selectUserByEmail(email) );
+    public User loginCheck(String email, String password){
+        Optional<UserInfo> userInfo = Optional.ofNullable( userRepository.selectUserByEmail(email) );
 
         // 가입된 아이디가 없을 경우
-        if(user.isEmpty()){
-            return Optional.empty();
+        if(userInfo.isEmpty()){
+            return null;
         }
         
         // 비밀번호가 다를 경우
-        if( !BCryptUtil.matchCheck(password, user.get().getPassword()) ){
-            return Optional.empty();
+        if( !BCryptUtil.comparePassword(password, userInfo.get().getPassword()) ){
+            return null;
         }
-        user.get().setPassword("");
+
+        User user = User.builder()
+                .email(userInfo.get().getEmail())
+                .nickName(userInfo.get().getNickName())
+                .resetToken(userInfo.get().getResetToken())
+                .build();
+
+
         return user;
     }
 
@@ -68,8 +77,14 @@ public class UserServiceImpl implements UserService {
      * @author junsoo
      */
     public void insertUser(User user){
-        user.setPassword(BCryptUtil.setEncrypt( user.getPassword() ));
-        userMapper.insertUser(user);
+        UserInfo insertUserInfo = UserInfo.builder()
+                .email(user.getEmail())
+                .password( BCryptUtil.setEncrypt( user.getPassword() ) )
+                .nickName(user.getNickName())
+//                .resetToken(user.getResetToken())
+                .build();
+        ;
+        userRepository.insertUser(insertUserInfo);
     }
 
     /**
@@ -89,7 +104,7 @@ public class UserServiceImpl implements UserService {
      * @param session
      * @author junsoo
      */
-    public void loginout(HttpSession session) {
+    public void logout(HttpSession session) {
         SessionUtils.logoutSession(session);
     }
 }

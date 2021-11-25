@@ -1,6 +1,8 @@
 package com.runningmate.runningmate.user.controller;
 
+import com.runningmate.runningmate.common.utils.ResponseMessage;
 import com.runningmate.runningmate.user.dto.User;
+import com.runningmate.runningmate.user.entity.UserInfo;
 import com.runningmate.runningmate.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -55,13 +58,12 @@ public class UserController {
         String email = requestUser.getEmail();
         String password = requestUser.getPassword();
 
-        Optional<User> user = userService.loginCheck(email, password);
-        if(user.isEmpty()){
+        User user = userService.loginCheck(email, password);
+        if(user == null){
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }else {
-            //userService.loginUser(session, email);
+            userService.loginUser(session, email);
             Map<String, Object> rmap = new HashMap<String, Object>();
-            rmap.put("msg", "로그인에 성공했습니다.");
             rmap.put("data", user);
             return new ResponseEntity<>(rmap, HttpStatus.OK);
         }
@@ -74,12 +76,10 @@ public class UserController {
      * @param session
      * @return
      */
-    @GetMapping("loginout")
-    public ResponseEntity<Map<String, Object>> loginout(@RequestBody User requestUser, HttpSession session){
-        userService.loginout(session);
-        Map<String, Object> rmap = new HashMap<String, Object>();
-        rmap.put("msg", "로그아웃에 성공했습니다.");
-        return new ResponseEntity<>(rmap, HttpStatus.OK );
+    @GetMapping("logout")
+    public ResponseEntity logout(HttpSession session){
+        userService.logout(session);
+        return new ResponseEntity<>(ResponseMessage.LOGOUTCOMPLETE, HttpStatus.OK );
     }
 
     /**
@@ -89,12 +89,11 @@ public class UserController {
      * @param session
      * @return
      */
-    @PostMapping("userInsert")
-    public ResponseEntity<Map<String, Object>> userInsert(@RequestBody User requestUser, HttpSession session){
+    @PostMapping("insert")
+    public ResponseEntity userInsert(@Valid @RequestBody User requestUser, HttpSession session){
+
         userService.insertUser(requestUser);
-        Map<String, Object> rmap = new HashMap<String, Object>();
-        rmap.put("msg", "회원가입에 성공했습니다.");
-        return new ResponseEntity<>(rmap , HttpStatus.OK);
+        return new ResponseEntity<>(ResponseMessage.USERREGISTCOMPLETE , HttpStatus.OK);
     }
 
 

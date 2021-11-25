@@ -30,7 +30,7 @@ public class BCryptUtil {
      * 
      * @author junsoo
      */
-    public static boolean matchCheck(String password, String hashPassword){
+    public static boolean comparePassword(String password, String hashPassword){
         return BCrypt.checkpw(password, hashPassword);
     }
 }
