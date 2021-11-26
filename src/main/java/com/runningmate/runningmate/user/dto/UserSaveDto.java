@@ -1,7 +1,7 @@
 package com.runningmate.runningmate.user.dto;
 
-import com.runningmate.runningmate.common.dto.Position;
-import com.runningmate.runningmate.common.dto.Image;
+import com.runningmate.runningmate.common.dto.PositionSaveDto;
+import com.runningmate.runningmate.common.dto.ImageSaveDto;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
@@ -24,8 +24,8 @@ public class UserSaveDto {
 
     // 이메일
     @NotBlank(message = "이메일은 필수 입력 값입니다.")
-    @Pattern(regexp="/^[A-Za-z0-9_\\.\\-]+@[A-Za-z0-9\\-]+\\.[A-Za-z0-9\\-]+/",
-            message = "이메일 형식에 맞게 입력해 주세요.")
+//    @Pattern(regexp="/^[A-Za-z0-9_\\.\\-]+@[A-Za-z0-9\\-]+\\.[A-Za-z0-9\\-]+/",
+//            message = "이메일 형식에 맞게 입력해 주세요.")
     @Size(max = 50)
     @NotEmpty
     private String email;
@@ -45,10 +45,10 @@ public class UserSaveDto {
     private String nickName;
 
     // 포지션
-    private Position postition;
+    private PositionSaveDto postition;
 
     // 이미지
-    private Image userImage;
+    private ImageSaveDto userImage;
 
     // 비밀번호 초기화 토큰
     private String resetToken;

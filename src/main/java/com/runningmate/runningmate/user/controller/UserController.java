@@ -47,10 +47,13 @@ public class UserController {
      * @author junsoo
      */
     @PostMapping
-    public ResponseEntity login(@RequestBody @NonNull String email, @RequestBody @NonNull String password, HttpSession session){
+    public ResponseEntity login(@Valid @RequestBody UserSaveDto requestUserSaveDto, HttpSession session){
 //        ResponseEntity
 //         - 상태 응답 코드와, 응답메세지 등을 보낼 수 있다.
 //         - HttpEntity를 상속받음으로써 HttpHeader와 body를 가질 수 있다.
+        String email = requestUserSaveDto.getEmail();
+        String password = requestUserSaveDto.getPassword();
+
         UserSaveDto userSaveDto = userService.loginCheck(email, password);
         if(userSaveDto == null){
             return new ResponseEntity(HttpStatus.NOT_FOUND);

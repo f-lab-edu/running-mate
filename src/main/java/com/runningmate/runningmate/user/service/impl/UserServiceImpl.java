@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService {
 //                .resetToken(user.getResetToken())
                 .build();
 
-        userRepository.saveUser(insertUser);
+        userRepository.save(insertUser);
     }
 
     /**

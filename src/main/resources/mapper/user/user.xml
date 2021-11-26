@@ -14,14 +14,14 @@
             , reset_token AS resetToken
             , create_date AS createDate
             , update_date AS updateDate
-        from userSaveDto ;
+        from user ;
 
     </select>
 
 
     <insert id="saveUser" parameterType="com.runningmate.runningmate.user.entity.User">
         insert into
-            userSaveDto (
+            user (
                 email
                 , password
                 , nickname

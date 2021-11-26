@@ -1,4 +1,4 @@
-package com.runningmate.runningmate.common.dto;
+package com.runningmate.runningmate.common.entity;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -7,5 +7,4 @@ import lombok.Getter;
 @Builder
 public class Skill {
 
-    private String skillName;
 }

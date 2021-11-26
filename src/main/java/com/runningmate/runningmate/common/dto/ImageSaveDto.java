@@ -6,7 +6,7 @@ import lombok.NonNull;
 
 @Getter
 @Builder
-public class Image {
+public class ImageSaveDto {
 
     @NonNull
     private String originalName;

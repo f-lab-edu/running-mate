@@ -20,7 +20,7 @@ public class MybatisUserRepository implements UserRepository {
     }
 
     @Override
-    public void saveUser(User user) {
-        userMapper.saveUser(user);
+    public void save(User user) {
+        userMapper.save(user);
     }
 }
