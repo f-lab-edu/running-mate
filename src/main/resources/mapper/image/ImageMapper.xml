@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.runningmate.runningmate.image.domain.mapper.ImageMapper">
+    <insert id="insertImage" parameterType="com.runningmate.runningmate.image.domain.entity.Image" useGeneratedKeys="true" keyProperty="imageId">
+        INSERT INTO
+            image (
+                original_name
+                , store_name
+                , extension
+                , path
+                , create_date
+            )
+            VALUES
+            (
+                #{originalName}
+                , #{storeName}
+                , #{extension}
+                , #{path}
+                , #{createDate}
+            )
+    </insert>
+</mapper>
