@@ -12,6 +12,11 @@ public class MybatisImageRepository implements ImageRepository {
     private final ImageMapper imageMapper;
 
     @Override
+    public Image fineById(long imageId) {
+        return imageMapper.selectImage(imageId);
+    }
+
+    @Override
     public void save(Image image) {
         imageMapper.insertImage(image);
     }

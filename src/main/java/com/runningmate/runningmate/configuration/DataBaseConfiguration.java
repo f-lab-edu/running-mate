@@ -37,6 +37,7 @@ public class DataBaseConfiguration {
 
     @Bean(name = "sessionTemplate")
     public SqlSessionTemplate sessionTemplate(SqlSessionFactory sessionFactory) {
+        sessionFactory.getConfiguration().setMapUnderscoreToCamelCase(true);
         return new SqlSessionTemplate(sessionFactory);
     }
 
