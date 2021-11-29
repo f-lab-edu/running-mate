@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.runningmate.runningmate.user.mapper.UserMapper">
+
+    <select id="findByEmail" resultType="com.runningmate.runningmate.user.entity.User">
+        select
+            email
+            , password
+            , nickname
+            , position_id AS positionId
+            , image_id AS imageId
+            , reset_token AS resetToken
+            , create_date AS createDate
+            , update_date AS updateDate
+        from user ;
+
+    </select>
+
+
+    <insert id="saveUser" parameterType="com.runningmate.runningmate.user.entity.User">
+        insert into
+            user (
+                email
+                , password
+                , nickname
+                , create_date
+                , update_date
+            )
+            values(
+                #{email}
+                , #{password}
+                , #{nickName}
+                , now()
+                , now()
+            )
+    </insert>
+
+
+</mapper>
