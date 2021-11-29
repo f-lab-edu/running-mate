@@ -13,13 +13,15 @@ public class JasyptConfig{
     @Value("${jasypt.encryptor.algorithm}")
     private String encryptAlgorithm;
 
-    @Value("${jasypt.encryptor.password}")
-    private String encryptKey;
-
     @Bean("jasyptStringEncryptor")
     public StringEncryptor  stringEncryptor() {
         PooledPBEStringEncryptor encryptor = new PooledPBEStringEncryptor();
         SimpleStringPBEConfig config = new SimpleStringPBEConfig();
+        String encryptKey = System.getProperty("jasypt.encryptor.password");
+
+        if (encryptKey == null) {
+            throw new RuntimeException();
+        }
         config.setPassword(encryptKey);
         config.setAlgorithm(encryptAlgorithm);
         config.setKeyObtentionIterations("1000");
