@@ -20,4 +20,9 @@ public class MybatisImageRepository implements ImageRepository {
     public void save(Image image) {
         imageMapper.insertImage(image);
     }
+
+    @Override
+    public void delete(Image image) {
+        imageMapper.deleteImage(image);
+    }
 }
