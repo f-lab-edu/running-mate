@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.runningmate.runningmate.user.mapper.UserSkillMapper">
+
+    <resultMap type="com.runningmate.runningmate.user.entity.UserSkill" id="UserSkill">
+        <result property="userId" column="user_id"/>
+        <result property="skillId" column="skill_id"/>
+        <result property="updateDate" column="update_date"/>
+        <result property="createDate" column="create_date"/>
+    </resultMap>
+
+    <insert id="skillSaveAll" parameterType="com.runningmate.runningmate.user.entity.UserSkill">
+        INSERT INTO user_skill
+            (
+                user_id
+                , skill_id
+                , create_date
+                , update_date
+            )
+        VALUES
+            <foreach collection="list" item="item" index="index"
+                     separator=",">
+                (
+                    #{item.userId}
+                    ,#{item.skillId}
+                    ,now()
+                    ,now()
+                )
+            </foreach>
+    </insert>
+
+
+</mapper>

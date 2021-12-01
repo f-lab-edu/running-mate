@@ -4,37 +4,89 @@
 
 <mapper namespace="com.runningmate.runningmate.user.mapper.UserMapper">
 
-    <select id="findByEmail" resultType="com.runningmate.runningmate.user.entity.User">
-        select
-            email
+    <resultMap type="com.runningmate.runningmate.user.entity.User" id="User">
+        <result property="userId" column="user_id"/>
+        <result property="password" column="password"/>
+        <result property="nickName" column="nickname"/>
+        <result property="email" column="email"/>
+        <result property="level" column="level"/>
+        <result property="positionId" column="position_id"/>
+        <result property="imageId" column="image_id"/>
+        <result property="resetToken" column="reset_token"/>
+        <result property="updateDate" column="update_date"/>
+        <result property="createDate" column="create_date"/>
+    </resultMap>
+
+    <sql id="sqlUserSelect">
+        SELECT
+              user_id
+            , email
             , password
             , nickname
-            , position_id AS positionId
-            , image_id AS imageId
-            , reset_token AS resetToken
-            , create_date AS createDate
-            , update_date AS updateDate
-        from user ;
+            , position_id
+            , image_id
+            , reset_token
+            , level
+            , create_date
+            , update_date
+
+    </sql>
+
+<!--    <select id="findByEmail" resultType="com.runningmate.runningmate.user.entity.User">-->
+    <select id="findByEmail" resultMap="User">
+        <include refid="sqlUserSelect" />
+        FROM user
+
+        WHERE 1=1
+            AND email = #{email}
+
 
     </select>
 
 
-    <insert id="saveUser" parameterType="com.runningmate.runningmate.user.entity.User">
-        insert into
-            user (
+    <insert id="save" parameterType="com.runningmate.runningmate.user.entity.User"
+            keyProperty="userId" useGeneratedKeys="true">
+        INSERT INTO user
+            (
                 email
                 , password
                 , nickname
+                , level
+                , position_id
+                , image_id
                 , create_date
                 , update_date
             )
-            values(
+            VALUES(
                 #{email}
                 , #{password}
                 , #{nickName}
+                , #{level}
+                , #{positionId}
+                , #{imageId}
                 , now()
                 , now()
+            );
+    </insert>
+
+    <insert id="skillSaveAll" parameterType="com.runningmate.runningmate.user.entity.UserSkill">
+        INSERT INTO user_skill
+            (
+                user_id
+                , skill_id
+                , create_date
+                , update_date
             )
+        VALUES
+            <foreach collection="list" item="item" index="index"
+                     separator=",">
+                (
+                    #{item.userId}
+                    ,#{item.skillId}
+                    ,now()
+                    ,now()
+                )
+            </foreach>
     </insert>
 
 

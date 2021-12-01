@@ -1,15 +1,14 @@
-package com.runningmate.runningmate.common.entity;
+package com.runningmate.runningmate.user.dto;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NonNull;
 
 @Getter
 @Builder
-public class Position {
+public class UserPositionSaveDto {
 
-    @NonNull
     private long positionId;
 
     private String positionName;
+
 }

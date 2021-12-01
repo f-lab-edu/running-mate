@@ -1,4 +1,4 @@
-package com.runningmate.runningmate.common.entity;
+package com.runningmate.runningmate.user.entity;
 
 import lombok.Builder;
 import lombok.Getter;

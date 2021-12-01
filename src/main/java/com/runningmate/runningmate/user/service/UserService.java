@@ -1,17 +1,14 @@
 package com.runningmate.runningmate.user.service;
 
 import com.runningmate.runningmate.user.dto.UserSaveDto;
+import com.runningmate.runningmate.user.entity.User;
 
-import javax.servlet.http.HttpSession;
+import java.util.Optional;
 
 
 public interface UserService {
 
-    UserSaveDto loginCheck(String email, String password);
-
     void insertUser(UserSaveDto userSaveDto);
 
-    void loginUser(HttpSession session, String userEmail);
-
-    void logout(HttpSession session);
+    Optional<User> findByEmail(String email);
 }
