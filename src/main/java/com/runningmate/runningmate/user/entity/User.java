@@ -1,15 +1,18 @@
 package com.runningmate.runningmate.user.entity;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NonNull;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 
 @Getter
-@Builder
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
+    // 유저 고유 ID
+    @NonNull
+    private long userId;
 
     // 이메일
     @NonNull
@@ -24,19 +27,27 @@ public class User {
     private String nickName;
 
     // 포지션
-    private int postitionId;
+    private long positionId;
 
     // 이미지
-    private int imageId;
+    private long imageId;
 
     // 비밀번호 초기화 토큰
     private String resetToken;
 
     // 수정날짜
     private LocalDateTime updateDate;
-    
+
     // 생성날짜
     private LocalDateTime createDate;
+
+    // 권한
+    private Level level;
+
+    // 권한
+    public enum Level{
+        MANAGER, CUSTOMER
+    }
 
 
 }
