@@ -27,4 +27,9 @@
                 , #{createDate}
             )
     </insert>
+
+    <delete id="deleteImage" parameterType="com.runningmate.runningmate.image.domain.entity.Image">
+        DELETE FROM image
+        WHERE image_id = #{imageId}
+    </delete>
 </mapper>

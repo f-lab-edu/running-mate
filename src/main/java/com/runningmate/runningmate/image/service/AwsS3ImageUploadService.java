@@ -64,8 +64,10 @@ public class AwsS3ImageUploadService implements ImageUploadService {
     }
 
     @Override
-    public void delete(String path) {
-        amazonS3.deleteObject(bucket, path);
+    public void delete(Image image) {
+        amazonS3.deleteObject(bucket, image.getStorageFileName());
+
+        mybatisImageRepository.delete(image);
     }
 
     public void uploadToStorage(String storageFileName, MultipartFile file) {

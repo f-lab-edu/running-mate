@@ -5,5 +5,5 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface ImageUploadService {
     public Image upload(MultipartFile file);
-    public void delete(String path);
+    public void delete(Image image);
 }
