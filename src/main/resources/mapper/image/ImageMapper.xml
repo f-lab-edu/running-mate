@@ -5,10 +5,8 @@
     <select id="selectImage" resultType="com.runningmate.runningmate.image.domain.entity.Image">
         SELECT
             image_id
-            , original_name
-            , store_name
-            , extension
-            , path
+            , original_file_name
+            , storage_file_name
             , create_date
             , update_date
         FROM image
@@ -18,18 +16,14 @@
     <insert id="insertImage" parameterType="com.runningmate.runningmate.image.domain.entity.Image" useGeneratedKeys="true" keyProperty="imageId">
         INSERT INTO
             image (
-                original_name
-                , store_name
-                , extension
-                , path
+                original_file_name
+                , storage_file_name
                 , create_date
             )
             VALUES
             (
-                #{originalName}
-                , #{storeName}
-                , #{extension}
-                , #{path}
+                #{originalFileName}
+                , #{storageFileName}
                 , #{createDate}
             )
     </insert>
