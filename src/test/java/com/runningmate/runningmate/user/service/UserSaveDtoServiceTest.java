@@ -1,10 +1,10 @@
 package com.runningmate.runningmate.user.service;
 
+import com.runningmate.runningmate.aop.LoginCheck;
 import com.runningmate.runningmate.common.utils.SessionUtils;
 import com.runningmate.runningmate.user.dto.UserPositionSaveDto;
 import com.runningmate.runningmate.user.dto.UserSaveDto;
 import com.runningmate.runningmate.user.dto.UserSkillSaveDto;
-import com.runningmate.runningmate.user.entity.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ class UserSaveDtoServiceTest {
     @DisplayName("로그인체크 테스트")
     public void testLoginCheck(){
         HttpSession session = mock(HttpSession.class);
-        UserSaveDto userSaveDto = loginService.loginCheck("test@test.test", "password");
+        UserSaveDto userSaveDto = loginService.loginCheck("test@test.test", "password12#$");
 
 
         assertEquals(true, userSaveDto != null);
@@ -67,7 +67,7 @@ class UserSaveDtoServiceTest {
                         .resetToken("token")
                         .userPostition(userPositionSaveDto)
                         .userSkill(userSkillSaveDtoList)
-                        .level(User.Level.valueOf("MANAGER"))
+                        .level(LoginCheck.UserLevel.CUSTOMER)
                         .build();
 
 

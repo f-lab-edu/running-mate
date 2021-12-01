@@ -14,4 +14,11 @@ public class ResponseMessage {
 
     public static final String USER_SKILL_INSERT_FAIL = "유저 스킬 정보를 저장하는데 실패했습니다";
 
+    public static final String USER_UPDATE_FAIL = "유저 정보를 수정하는데 실패했습니다";
+    public static final String USER_UPDATE_COMPLETEL = "유저 정보를 저장하는데 성공했습니다";
+
+    public static final String REQUEST_LOGIN = "로그인이 필요합니다";
+
+    public static final String MANAGER_ONLY = "관리자만 가능합니다";
+
 }

@@ -7,7 +7,7 @@ import java.util.*;
  * 
  * @author junsoo 
  */
-class StringUtils {
+public class StringUtils {
 
 
     /**

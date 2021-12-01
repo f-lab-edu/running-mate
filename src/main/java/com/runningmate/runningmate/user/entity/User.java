@@ -1,5 +1,7 @@
 package com.runningmate.runningmate.user.entity;
 
+
+import com.runningmate.runningmate.aop.LoginCheck;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -42,12 +44,7 @@ public class User {
     private LocalDateTime createDate;
 
     // 권한
-    private Level level;
-
-    // 권한
-    public enum Level{
-        MANAGER, CUSTOMER
-    }
+    private LoginCheck.UserLevel level;
 
 
 }

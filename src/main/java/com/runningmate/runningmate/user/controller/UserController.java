@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.Optional;
@@ -48,7 +47,7 @@ public class UserController {
      * @param session
      * @return
      */
-    @GetMapping("/user/checkId/{email}")
+    @GetMapping("/checkId/{email}")
     public ResponseEntity checkId(@PathVariable @NotNull String email){
         Optional<User> user = userService.findByEmail(email);
         if (user != null) {
