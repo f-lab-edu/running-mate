@@ -12,7 +12,7 @@ public class MybatisImageRepository implements ImageRepository {
     private final ImageMapper imageMapper;
 
     @Override
-    public Image fineById(long imageId) {
+    public Image findById(long imageId) {
         return imageMapper.selectImage(imageId);
     }
 
