@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.runningmate.runningmate.project.domain.mapper.ApplyQuestionMapper">
+    <insert id="insertApplyQuestion">
+        INSERT INTO apply_question(project_id, question)
+        VALUES (#{projectId}, #{question})
+    </insert>
+
+    <insert id="insertApplyQuestions" parameterType="java.util.List">
+        INSERT INTO apply_question(project_id, question)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.projectId}, #{item.question})
+        </foreach>
+    </insert>
+</mapper>
