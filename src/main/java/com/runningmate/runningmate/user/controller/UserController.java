@@ -28,17 +28,15 @@ public class UserController {
     /**
      * 로그인
      *
-     * @param requestUserSaveDto
+     * @param userLoginRequestDto
      * @return
      *
      * @author junsoo
      */
     @PostMapping("/login")
-    public ResponseEntity login(@Valid @RequestBody UserLoginRequestDto requestUserSaveDto){
-        String email = requestUserSaveDto.getEmail();
-        String password = requestUserSaveDto.getPassword();
+    public ResponseEntity login(@Valid @RequestBody UserLoginRequestDto userLoginRequestDto){
 
-        UserSaveDto userSaveDto = userService.login(email, password);
+        UserSaveDto userSaveDto = userService.login(userLoginRequestDto);
         if(userSaveDto == null){
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }else {
@@ -61,12 +59,12 @@ public class UserController {
     /**
      * 회원가입
      *
-     * @param requestUserSaveDto
+     * @param userSaveDto
      * @return
      */
-    @PostMapping("signUp")
-    public ResponseEntity signUp(@Valid @RequestBody UserSaveDto requestUserSaveDto){
-        userService.insertUser(requestUserSaveDto);
+    @PostMapping("/signUp")
+    public ResponseEntity signUp(@Valid @RequestBody UserSaveDto userSaveDto){
+        userService.insertUser(userSaveDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

@@ -2,6 +2,7 @@ package com.runningmate.runningmate.user.service.impl;
 
 import com.runningmate.runningmate.common.utils.BCryptUtil;
 import com.runningmate.runningmate.common.utils.SessionUtils;
+import com.runningmate.runningmate.user.dto.UserLoginRequestDto;
 import com.runningmate.runningmate.user.dto.UserSaveDto;
 import com.runningmate.runningmate.user.entity.User;
 import com.runningmate.runningmate.user.repository.UserRepository;
@@ -23,18 +24,22 @@ public class UserServiceImpl implements UserService {
      * 로그인 체크
      *  - 아이디(email) 과 비밀번호 체크
      *
-     * @param email
-     * @param password
+     * @param userLoginRequestDto
      * @return 로그인 성공시 로그인 데이터 리턴 / 실패시 null
      *
      * @author junsoo
      */
-    public UserSaveDto login(String email, String password){
-        User userInfo = userRepository.findByEmail(email);
+    public UserSaveDto login(UserLoginRequestDto userLoginRequestDto){
+        String loginRequestEmail = userLoginRequestDto.getEmail();
+        String loginRequestPassword = userLoginRequestDto.getPassword();
+        
+        User userInfo = userRepository.findByEmail(loginRequestEmail);
 
-        if(userInfo == null || !BCryptUtil.comparePassword(password, userInfo.getPassword())){
+        if(userInfo == null || !BCryptUtil.comparePassword(loginRequestPassword, userInfo.getPassword())){
             return null;
         }
+        // 세션등록
+        this.loginUser(userInfo.getUserId());
         return modelMapper.map(userInfo, UserSaveDto.class);
     }
 

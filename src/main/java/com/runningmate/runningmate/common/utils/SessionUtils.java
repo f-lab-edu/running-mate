@@ -51,7 +51,7 @@ public class SessionUtils{
      * @return 세션 저장되어있는 userId
      * @author junsoo
      */
-    public static String getLoginSessionUserId(){ return StringUtils.getStringSafeFromObj(SessionUtils.getSession().getAttribute(LOGIN_USER_ID)); }
+    public static long getLoginSessionUserId(){ return Long.valueOf(StringUtils.getStringSafeFromObj(SessionUtils.getSession().getAttribute(LOGIN_USER_ID))); }
 
     /**
      * 로그아웃 세션 클리어
