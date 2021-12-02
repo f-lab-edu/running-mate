@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.runningmate.runningmate.image.domain.mapper.ImageMapper">
+    <select id="selectImage" resultType="com.runningmate.runningmate.image.domain.entity.Image">
+        SELECT
+            image_id
+            , original_file_name
+            , storage_file_name
+            , create_date
+            , update_date
+        FROM image
+        WHERE image_id = #{imageId}
+    </select>
+
+    <insert id="insertImage" parameterType="com.runningmate.runningmate.image.domain.entity.Image" useGeneratedKeys="true" keyProperty="imageId">
+        INSERT INTO
+            image (
+                original_file_name
+                , storage_file_name
+                , create_date
+            )
+            VALUES
+            (
+                #{originalFileName}
+                , #{storageFileName}
+                , #{createDate}
+            )
+    </insert>
+
+    <delete id="deleteImage" parameterType="com.runningmate.runningmate.image.domain.entity.Image">
+        DELETE FROM image
+        WHERE image_id = #{imageId}
+    </delete>
+</mapper>
