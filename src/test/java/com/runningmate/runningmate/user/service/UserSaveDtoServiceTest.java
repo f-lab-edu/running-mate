@@ -8,7 +8,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-//@RequiredArgsConstructor
 @SpringBootTest
 class UserSaveDtoServiceTest {
 
@@ -16,11 +15,9 @@ class UserSaveDtoServiceTest {
     UserService userService;
 
     @Test
-    @DisplayName("로그인체크 테스트")
-    public void testLoginCheck(){
-        UserSaveDto userSaveDto = userService.loginCheck("test@test.test", "password");
+    @DisplayName("로그인 테스트")
+    public void testLogin(){
+        UserSaveDto userSaveDto = userService.login("tesA3t@naver.com", "testTEST1234!@#$");
         assertEquals(true, userSaveDto != null);
     }
-
-
 }

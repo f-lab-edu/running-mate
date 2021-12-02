@@ -1,22 +1,17 @@
 package com.runningmate.runningmate.user.dto;
 
-import com.runningmate.runningmate.user.entity.User;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
 
 import javax.validation.constraints.*;
 
-
 @Getter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class UserSaveDto {
-    // 유저 고유 Id
-    private long userId;
+public class UserLoginRequestDto {
 
     // 이메일
     @NotBlank(message = "이메일은 필수 입력 값입니다.")
-    @Email(message = "이메일 형식에 맞게 입력해 주세요.")
+    @Email(message="이메일 형식에 맞지 않습니다.")
     @Size(max = 50)
     @NotEmpty
     private String email;
@@ -28,22 +23,4 @@ public class UserSaveDto {
     @Size(min=8, max = 20)
     @NotEmpty
     private String password;
-
-    // 닉네임
-    @NotBlank(message = "닉네임은 필수 입력 값입니다.")
-    @Size(max = 20)
-    @NotEmpty
-    private String nickName;
-
-    // 포지션
-    private long postitionId;
-
-    // 이미지
-    private long imageId;
-
-    // 비밀번호 초기화 토큰
-    private String resetToken;
-
-    // 권한
-    private User.Level level;
 }

@@ -6,12 +6,11 @@ import java.time.LocalDateTime;
 
 
 @Getter
-@Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
     // 유저 고유 ID
-    @NonNull
     private long userId;
 
     // 이메일
@@ -48,6 +47,4 @@ public class User {
     public enum Level{
         MANAGER, CUSTOMER
     }
-
-
 }

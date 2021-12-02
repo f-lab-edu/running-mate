@@ -7,10 +7,8 @@ import com.runningmate.runningmate.user.entity.User;
 import com.runningmate.runningmate.user.repository.UserRepository;
 import com.runningmate.runningmate.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-
-import javax.servlet.http.HttpSession;
-import java.util.Optional;
 
 
 @Service
@@ -20,6 +18,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
+    private final ModelMapper modelMapper;
     /**
      * 로그인 체크
      *  - 아이디(email) 과 비밀번호 체크
@@ -27,29 +26,16 @@ public class UserServiceImpl implements UserService {
      * @param email
      * @param password
      * @return 로그인 성공시 로그인 데이터 리턴 / 실패시 null
-     * 
+     *
      * @author junsoo
      */
-    public UserSaveDto loginCheck(String email, String password){
-        Optional<User> userInfo = Optional.ofNullable(userRepository.findByEmail(email));
+    public UserSaveDto login(String email, String password){
+        User userInfo = userRepository.findByEmail(email);
 
-        // 가입된 아이디가 없을 경우
-        if(userInfo.isEmpty()){
+        if(userInfo == null || !BCryptUtil.comparePassword(password, userInfo.getPassword())){
             return null;
         }
-        
-        // 비밀번호가 다를 경우
-        if(!BCryptUtil.comparePassword(password, userInfo.get().getPassword())){
-            return null;
-        }
-
-        UserSaveDto userSaveDto = com.runningmate.runningmate.user.dto.UserSaveDto.builder()
-                .email(userInfo.get().getEmail())
-                .nickName(userInfo.get().getNickName())
-                .resetToken(userInfo.get().getResetToken())
-                .build();
-
-        return userSaveDto;
+        return modelMapper.map(userInfo, UserSaveDto.class);
     }
 
     /**
@@ -73,21 +59,19 @@ public class UserServiceImpl implements UserService {
     /**
      *  로그인 세션 등록
      *
-     * @param session
-     * @param userEmail
+     * @param userId
      * @author junsoo
      */
-    public void loginUser(HttpSession session, String userEmail) {
-        SessionUtils.setLoginSessionEmail(session, userEmail);
+    public void loginUser(long userId){
+        SessionUtils.setLoginSessionUserId(userId);
     }
 
     /**
      * 로그아웃 세션 제거
      *
-     * @param session
      * @author junsoo
      */
-    public void logout(HttpSession session) {
-        SessionUtils.logoutSession(session);
+    public void logout() {
+        SessionUtils.logoutSession();
     }
 }
