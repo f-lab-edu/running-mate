@@ -28,13 +28,13 @@ public class ProjectService {
     private final ProjectPositionRepository mybatisProjectPositionRepository;
     private final ProjectSkillRepository mybatisProjectSkillRepository;
     private final ApplyQuestionRepository mybatisApplyQuestionRepository;
-    private final UserRepository userRepositoryImpl;
+    private final UserRepository mybatisUserRepository;
 
     private final ImageUploadService awsS3ImageUploadService;
 
     @Transactional
     public void createProject(String email, ProjectSaveRequestDto projectSaveRequestDto, MultipartFile multipartFile) {
-        User leader = userRepositoryImpl.findByEmail(email);
+        User leader = mybatisUserRepository.findByEmail(email);
         Image image = awsS3ImageUploadService.upload(multipartFile);
 
         Project project = Project.builder()
@@ -45,6 +45,8 @@ public class ProjectService {
             .contents(projectSaveRequestDto.getContents())
             .status(RECRUIT)
             .imageId(image.getImageId())
+            .createDate(LocalDateTime.now())
+            .updateDate(LocalDateTime.now())
             .build();
 
         mybatisProjectRepository.save(project);
@@ -55,6 +57,7 @@ public class ProjectService {
                 .positionId(projectPosition.getPositionId())
                 .personnel(projectPosition.getPersonnel())
                 .createDate(LocalDateTime.now())
+                .updateDate(LocalDateTime.now())
                 .build())
             .collect(Collectors.toList()));
 
@@ -63,6 +66,7 @@ public class ProjectService {
                 .projectId(project.getProjectId())
                 .skillId(projectSkill.getSkillId())
                 .createDate(LocalDateTime.now())
+                .updateDate(LocalDateTime.now())
                 .build())
             .collect(Collectors.toList()));
 
@@ -71,6 +75,7 @@ public class ProjectService {
                 .projectId(project.getProjectId())
                 .question(applyQuestion.getQuestion())
                 .createDate(LocalDateTime.now())
+                .updateDate(LocalDateTime.now())
                 .build())
             .collect(Collectors.toList()));
     }

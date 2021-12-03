@@ -3,15 +3,36 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.runningmate.runningmate.project.domain.mapper.ApplyQuestionMapper">
     <insert id="insertApplyQuestion">
-        INSERT INTO apply_question(project_id, question)
-        VALUES (#{projectId}, #{question})
+        INSERT INTO
+            apply_question (
+                project_id
+                , question
+                , create_date
+                , update_date
+        )
+        VALUES (
+            #{projectId}
+            , #{question}
+            , #{createDate}
+            , #{updateDate}
+        )
     </insert>
 
     <insert id="insertApplyQuestions" parameterType="java.util.List">
-        INSERT INTO apply_question(project_id, question)
+        INSERT INTO
+            apply_question (
+                project_id
+                , question
+                , create_date
+                , update_date
+        )
         VALUES
-        <foreach collection="list" item="item" separator=",">
-            (#{item.projectId}, #{item.question})
-        </foreach>
+            <foreach collection="list" item="item" separator=","> (
+                #{item.projectId}
+                , #{item.question}
+                , #{item.createDate}
+                , #{item.updateDate}
+            )
+            </foreach>
     </insert>
 </mapper>
