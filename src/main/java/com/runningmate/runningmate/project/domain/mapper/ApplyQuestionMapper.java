@@ -7,6 +7,8 @@ import java.util.List;
 
 @Mapper
 public interface ApplyQuestionMapper {
+
     public void insertApplyQuestion(ApplyQuestion applyQuestion);
+
     public void insertApplyQuestions(List<ApplyQuestion> applyQuestions);
 }

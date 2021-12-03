@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ApplyQuestion {
+
     private long applyQuestionId;
     private long projectId;
     private String question;

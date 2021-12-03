@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProjectSkill {
+
     private long projectSkillId;
     private long projectId;
     private long skillId;
