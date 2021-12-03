@@ -18,11 +18,11 @@ public class ProjectController {
 
     private final ProjectService projectService;
 
-    @PostMapping( "/project")
+    @PostMapping("/project")
     public ResponseEntity<?> addProject(@RequestPart("project") @Valid ProjectSaveRequestDto projectCreateRequestDto, @RequestPart("file") MultipartFile multipartFile, HttpSession session) {
         String loginUserEmail = SessionUtils.getLoginSessionEmail(session);
 
-        if(loginUserEmail.isEmpty()) {
+        if (loginUserEmail.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } else {
             projectService.createProject(loginUserEmail, projectCreateRequestDto, multipartFile);

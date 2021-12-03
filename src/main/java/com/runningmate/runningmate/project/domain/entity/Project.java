@@ -11,6 +11,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class Project {
+
     private long projectId;
     private long leader;
     private LocalDate beginDate;

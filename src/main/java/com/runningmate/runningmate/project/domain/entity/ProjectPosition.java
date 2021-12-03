@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProjectPosition {
+
     private long projectPositionId;
     private long projectId;
     private long positionId;

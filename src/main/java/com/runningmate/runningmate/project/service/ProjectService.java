@@ -38,40 +38,40 @@ public class ProjectService {
         Image image = awsS3ImageUploadService.upload(multipartFile);
 
         Project project = Project.builder()
-                .leader(leader.getUserId())
-                .beginDate(projectSaveRequestDto.getBeginDate())
-                .endDate(projectSaveRequestDto.getEndDate())
-                .title(projectSaveRequestDto.getTitle())
-                .contents(projectSaveRequestDto.getContents())
-                .status(RECRUIT)
-                .imageId(image.getImageId())
-                .build();
+            .leader(leader.getUserId())
+            .beginDate(projectSaveRequestDto.getBeginDate())
+            .endDate(projectSaveRequestDto.getEndDate())
+            .title(projectSaveRequestDto.getTitle())
+            .contents(projectSaveRequestDto.getContents())
+            .status(RECRUIT)
+            .imageId(image.getImageId())
+            .build();
 
         mybatisProjectRepository.save(project);
 
         mybatisProjectPositionRepository.saveAll(projectSaveRequestDto.getPositions().stream()
-                .map(projectPosition -> ProjectPosition.builder()
-                        .projectId(project.getProjectId())
-                        .positionId(projectPosition.getPositionId())
-                        .personnel(projectPosition.getPersonnel())
-                        .createDate(LocalDateTime.now())
-                        .build())
-                .collect(Collectors.toList()));
+            .map(projectPosition -> ProjectPosition.builder()
+                .projectId(project.getProjectId())
+                .positionId(projectPosition.getPositionId())
+                .personnel(projectPosition.getPersonnel())
+                .createDate(LocalDateTime.now())
+                .build())
+            .collect(Collectors.toList()));
 
         mybatisProjectSkillRepository.saveAll(projectSaveRequestDto.getSkills().stream()
-                .map(projectSkill -> ProjectSkill.builder()
-                        .projectId(project.getProjectId())
-                        .skillId(projectSkill.getSkillId())
-                        .createDate(LocalDateTime.now())
-                        .build())
-                .collect(Collectors.toList()));
+            .map(projectSkill -> ProjectSkill.builder()
+                .projectId(project.getProjectId())
+                .skillId(projectSkill.getSkillId())
+                .createDate(LocalDateTime.now())
+                .build())
+            .collect(Collectors.toList()));
 
         mybatisApplyQuestionRepository.saveAll(projectSaveRequestDto.getApplyQuestions().stream()
-                .map(applyQuestion -> ApplyQuestion.builder()
-                        .projectId(project.getProjectId())
-                        .question(applyQuestion.getQuestion())
-                        .createDate(LocalDateTime.now())
-                        .build())
-                .collect(Collectors.toList()));
+            .map(applyQuestion -> ApplyQuestion.builder()
+                .projectId(project.getProjectId())
+                .question(applyQuestion.getQuestion())
+                .createDate(LocalDateTime.now())
+                .build())
+            .collect(Collectors.toList()));
     }
 }

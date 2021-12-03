@@ -7,6 +7,8 @@ import java.util.List;
 
 @Mapper
 public interface ProjectPositionMapper {
+
     public void insertPosition(ProjectPosition position);
+
     public void insertPositions(List<ProjectPosition> positions);
 }

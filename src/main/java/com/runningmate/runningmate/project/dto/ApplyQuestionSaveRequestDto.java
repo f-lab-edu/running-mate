@@ -12,6 +12,7 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ApplyQuestionSaveRequestDto {
+
     @NotBlank(message = "질문을 입력해주세요")
     private String question;
 }
