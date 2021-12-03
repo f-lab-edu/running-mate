@@ -12,9 +12,10 @@
                 , contents
                 , status
                 , image_id
+                , create_date
+                , update_date
             )
-            VALUES
-            (
+            VALUES (
                 #{leader}
                 , #{title}
                 , #{beginDate}
@@ -22,6 +23,8 @@
                 , #{contents}
                 , #{status}
                 , #{imageId}
+                , #{createDate}
+                , #{updateDate}
             )
     </insert>
 </mapper>
