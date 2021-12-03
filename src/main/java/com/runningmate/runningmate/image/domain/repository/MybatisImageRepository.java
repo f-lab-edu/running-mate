@@ -22,7 +22,7 @@ public class MybatisImageRepository implements ImageRepository {
     }
 
     @Override
-    public void delete(Image image) {
-        imageMapper.deleteImage(image);
+    public void update(Image image) {
+        imageMapper.updateImage(image);
     }
 }
