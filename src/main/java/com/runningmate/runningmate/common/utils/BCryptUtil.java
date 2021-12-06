@@ -17,7 +17,7 @@ public class BCryptUtil {
      * 
      * @author junsoo
      */
-    public static String setEncrypt(String password){
+    public static String setEncrypt(String password) {
         return BCrypt.hashpw(password, BCrypt.gensalt());
     }
 
@@ -30,7 +30,7 @@ public class BCryptUtil {
      * 
      * @author junsoo
      */
-    public static boolean comparePassword(String password, String hashPassword){
+    public static boolean comparePassword(String password, String hashPassword) {
         return BCrypt.checkpw(password, hashPassword);
     }
 }

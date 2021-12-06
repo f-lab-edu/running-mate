@@ -2,6 +2,7 @@ package com.runningmate.runningmate.user.controller;
 
 import com.runningmate.runningmate.user.dto.UserLoginRequestDto;
 import com.runningmate.runningmate.user.dto.UserSaveDto;
+import com.runningmate.runningmate.user.entity.User;
 import com.runningmate.runningmate.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -34,13 +35,13 @@ public class UserController {
      * @author junsoo
      */
     @PostMapping("/login")
-    public ResponseEntity login(@Valid @RequestBody UserLoginRequestDto userLoginRequestDto){
+    public ResponseEntity login(@Valid @RequestBody UserLoginRequestDto userLoginRequestDto) {
 
-        UserSaveDto userSaveDto = userService.login(userLoginRequestDto);
-        if(userSaveDto == null){
+        User user = userService.login(userLoginRequestDto);
+        if(user == null){
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }else {
-            userService.loginUser(userSaveDto.getUserId());
+            userService.loginUser(user.getUserId());
             return new ResponseEntity<>(HttpStatus.OK);
         }
     }
@@ -51,7 +52,7 @@ public class UserController {
      * @return
      */
     @GetMapping("/logout")
-    public ResponseEntity logout(){
+    public ResponseEntity logout() {
         userService.logout();
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -63,7 +64,7 @@ public class UserController {
      * @return
      */
     @PostMapping("/signUp")
-    public ResponseEntity signUp(@Valid @RequestBody UserSaveDto userSaveDto){
+    public ResponseEntity signUp(@Valid @RequestBody UserSaveDto userSaveDto) {
         userService.insertUser(userSaveDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }

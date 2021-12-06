@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
      *
      * @author junsoo
      */
-    public UserSaveDto login(UserLoginRequestDto userLoginRequestDto){
+    public User login(UserLoginRequestDto userLoginRequestDto) {
         String loginRequestEmail = userLoginRequestDto.getEmail();
         String loginRequestPassword = userLoginRequestDto.getPassword();
         
@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
         }
         // 세션등록
         this.loginUser(userInfo.getUserId());
-        return modelMapper.map(userInfo, UserSaveDto.class);
+        return userInfo;
     }
 
     /**
@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService {
      *
      * @author junsoo
      */
-    public void insertUser(UserSaveDto userSaveDto){
+    public void insertUser(UserSaveDto userSaveDto) {
         User insertUser = User.builder()
                 .email(userSaveDto.getEmail())
                 .password(BCryptUtil.setEncrypt(userSaveDto.getPassword()))
@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService {
      * @param userId
      * @author junsoo
      */
-    public void loginUser(long userId){
+    public void loginUser(long userId) {
         SessionUtils.setLoginSessionUserId(userId);
     }
 
