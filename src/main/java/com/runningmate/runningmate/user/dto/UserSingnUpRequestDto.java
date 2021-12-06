@@ -33,7 +33,7 @@ public class UserSingnUpRequestDto {
 
     private User.Level level;
 
-    List<Long> imageId;
+    long imageId;
 
     long positionId;
 }

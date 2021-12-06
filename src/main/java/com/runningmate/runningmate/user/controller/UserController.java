@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
+import java.util.Optional;
 
 /**
  * @author junsoo
@@ -37,11 +38,10 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity login(@Valid @RequestBody UserLoginRequestDto userLoginRequestDto) {
 
-        User user = userService.login(userLoginRequestDto);
-        if(user == null){
+        Optional<User> user = userService.login(userLoginRequestDto);
+        if(user.isEmpty()){
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }else {
-            userService.loginUser(user.getUserId());
             return new ResponseEntity<>(HttpStatus.OK);
         }
     }

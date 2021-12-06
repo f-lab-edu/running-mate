@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 
 @Service
 @RequiredArgsConstructor
@@ -29,17 +31,16 @@ public class UserServiceImpl implements UserService {
      *
      * @author junsoo
      */
-    public User login(UserLoginRequestDto userLoginRequestDto) {
+    public Optional<User> login(UserLoginRequestDto userLoginRequestDto) {
         String loginRequestEmail = userLoginRequestDto.getEmail();
         String loginRequestPassword = userLoginRequestDto.getPassword();
-        
-        User userInfo = userRepository.findByEmail(loginRequestEmail);
 
-        if(userInfo == null || !BCryptUtil.comparePassword(loginRequestPassword, userInfo.getPassword())){
-            return null;
+        Optional<User> userInfo = userRepository.findByEmail(loginRequestEmail);
+        if(userInfo.isEmpty() || !BCryptUtil.comparePassword(loginRequestPassword, userInfo.get().getPassword())){
+            return Optional.empty();
         }
         // 세션등록
-        this.loginUser(userInfo.getUserId());
+        this.loginUser(userInfo.get().getUserId());
         return userInfo;
     }
 

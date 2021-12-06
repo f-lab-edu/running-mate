@@ -4,10 +4,12 @@ import com.runningmate.runningmate.user.dto.UserLoginRequestDto;
 import com.runningmate.runningmate.user.dto.UserSaveDto;
 import com.runningmate.runningmate.user.entity.User;
 
+import java.util.Optional;
+
 
 public interface UserService {
 
-    User login(UserLoginRequestDto userLoginRequestDto);
+    Optional<User> login(UserLoginRequestDto userLoginRequestDto);
 
     void insertUser(UserSaveDto userSaveDto);
 

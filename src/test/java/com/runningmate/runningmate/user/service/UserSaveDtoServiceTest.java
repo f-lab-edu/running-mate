@@ -2,6 +2,8 @@ package com.runningmate.runningmate.user.service;
 
 import com.runningmate.runningmate.user.dto.UserLoginRequestDto;
 import com.runningmate.runningmate.user.entity.User;
+
+import java.util.Optional;
 import java.util.Set;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -43,8 +45,8 @@ class UserServiceTest {
                                             .email("tesA3t@naver.com")
                                             .password("testTEST1234!@#$")
                                             .build();
-        User user = userService.login(userLoginRequestDto);
-        assertEquals(true, user != null);
+        Optional<User> user = userService.login(userLoginRequestDto);
+        assertEquals(true, !user.isEmpty());
     }
 
     @Test
@@ -66,7 +68,7 @@ class UserServiceTest {
             .email("tesA3ttest@naver.com")
             .password("test")
             .build();
-        User user = userService.login(userLoginRequestDto);
-        assertEquals(false, user != null);
+        Optional<User> user = userService.login(userLoginRequestDto);
+        assertEquals(false, !user.isEmpty());
     }
 }
