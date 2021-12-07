@@ -6,6 +6,7 @@ import com.runningmate.runningmate.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
 
 
 @Repository
@@ -15,7 +16,7 @@ public class MybatisUserRepository implements UserRepository {
     private final UserMapper userMapper;
 
     @Override
-    public User findByEmail(String email) {
+    public Optional<User> findByEmail(String email) {
         return userMapper.findByEmail(email);
     }
 

@@ -3,6 +3,8 @@ package com.runningmate.runningmate.user.mapper;
 import com.runningmate.runningmate.user.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.Optional;
+
 /**
  * User 관련 mapper
  *
@@ -11,7 +13,7 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface UserMapper {
 
-    User findByEmail(String email);
+    Optional<User> findByEmail(String email);
 
     void save(User user);
 }
