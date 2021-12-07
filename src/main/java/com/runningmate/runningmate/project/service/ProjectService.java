@@ -8,7 +8,6 @@ import com.runningmate.runningmate.project.domain.repository.ProjectPositionRepo
 import com.runningmate.runningmate.project.domain.repository.ProjectRepository;
 import com.runningmate.runningmate.project.domain.repository.ProjectSkillRepository;
 import com.runningmate.runningmate.project.dto.ProjectSaveRequestDto;
-import com.runningmate.runningmate.user.entity.User;
 import com.runningmate.runningmate.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,12 +32,11 @@ public class ProjectService {
     private final ImageUploadService awsS3ImageUploadService;
 
     @Transactional
-    public void createProject(String email, ProjectSaveRequestDto projectSaveRequestDto, MultipartFile multipartFile) {
-        User leader = mybatisUserRepository.findByEmail(email);
+    public void createProject(long userId, ProjectSaveRequestDto projectSaveRequestDto, MultipartFile multipartFile) {
         Image image = awsS3ImageUploadService.upload(multipartFile);
 
         Project project = Project.builder()
-            .leader(leader.getUserId())
+            .leader(userId)
             .beginDate(projectSaveRequestDto.getBeginDate())
             .endDate(projectSaveRequestDto.getEndDate())
             .title(projectSaveRequestDto.getTitle())

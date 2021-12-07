@@ -1,6 +1,5 @@
 package com.runningmate.runningmate.project;
 
-import com.runningmate.runningmate.common.utils.SessionUtils;
 import com.runningmate.runningmate.image.domain.entity.Image;
 import com.runningmate.runningmate.image.service.ImageUploadService;
 import com.runningmate.runningmate.project.domain.entity.Project;
@@ -13,7 +12,6 @@ import com.runningmate.runningmate.project.dto.ProjectPositionSaveRequestDto;
 import com.runningmate.runningmate.project.dto.ProjectSaveRequestDto;
 import com.runningmate.runningmate.project.dto.ProjectSkillSaveRequestDto;
 import com.runningmate.runningmate.project.service.ProjectService;
-import com.runningmate.runningmate.user.entity.User;
 import com.runningmate.runningmate.user.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -52,9 +50,6 @@ class ProjectServiceTest {
     private ApplyQuestionRepository mybatisApplyQuestionRepository;
 
     @Mock
-    private UserRepository userRepositoryImpl;
-
-    @Mock
     private ImageUploadService awsS3ImageUploadService;
 
     @Test
@@ -85,10 +80,9 @@ class ProjectServiceTest {
 
         MockMultipartFile multipartFile = new MockMultipartFile("file", "file", "image/jpeg", "file".getBytes());
 
-        when(userRepositoryImpl.findByEmail(any(String.class))).thenReturn(new User());
         when(awsS3ImageUploadService.upload(multipartFile)).thenReturn(new Image(1L, "file", "file", LocalDateTime.now(), LocalDateTime.now()));
 
-        projectService.createProject("email@runningmate.com", projectSaveRequestDto, multipartFile);
+        projectService.createProject(1L, projectSaveRequestDto, multipartFile);
 
         verify(awsS3ImageUploadService, times(1)).upload(any(MultipartFile.class));
         verify(mybatisProjectRepository, times(1)).save(any(Project.class));
