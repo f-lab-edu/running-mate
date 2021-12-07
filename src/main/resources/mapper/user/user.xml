@@ -20,6 +20,22 @@
         WHERE email = #{email}
     </select>
 
+    <select id="findByUserId" resultType="com.runningmate.runningmate.user.entity.User">
+      SELECT
+        user_id
+           , email
+           , password
+           , nickname
+           , position_id
+           , image_id
+           , reset_token
+           , level
+           , create_date
+           , update_date
+      FROM user
+      WHERE user_id = #{userId}
+    </select>
+
     <insert id="saveUser" parameterType="com.runningmate.runningmate.user.entity.User">
         insert into
             user (

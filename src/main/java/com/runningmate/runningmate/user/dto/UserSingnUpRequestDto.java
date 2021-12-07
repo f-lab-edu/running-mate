@@ -1,7 +1,6 @@
 package com.runningmate.runningmate.user.dto;
 
-import com.runningmate.runningmate.user.entity.User;
-import java.util.List;
+import com.runningmate.runningmate.user.aop.LoginCheck;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -31,7 +30,7 @@ public class UserSingnUpRequestDto {
 
     private String nickName;
 
-    private User.Level level;
+    private LoginCheck.UserLevel level;
 
     long imageId;
 

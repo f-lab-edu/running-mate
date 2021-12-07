@@ -44,6 +44,11 @@ public class UserServiceImpl implements UserService {
         return userInfo;
     }
 
+    @Override
+    public Optional<User> findByUserId(long loginUserId) {
+        return userRepository.findByUserId(loginUserId);
+    }
+
     /**
      * 회원가입 로직 ( 미완 )
      *
