@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.runningmate.runningmate.project.domain.mapper.ProjectMapper">
+    <insert id="insertProject" parameterType="com.runningmate.runningmate.project.domain.entity.Project" useGeneratedKeys="true" keyProperty="projectId">
+        INSERT INTO
+            project (
+                leader
+                , title
+                , begin_date
+                , end_date
+                , contents
+                , status
+                , image_id
+                , create_date
+                , update_date
+            )
+            VALUES (
+                #{leader}
+                , #{title}
+                , #{beginDate}
+                , #{endDate}
+                , #{contents}
+                , #{status}
+                , #{imageId}
+                , #{createDate}
+                , #{updateDate}
+            )
+    </insert>
+</mapper>

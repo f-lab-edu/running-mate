@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.runningmate.runningmate.project.domain.mapper.ProjectPositionMapper">
+    <insert id="insertPosition">
+        INSERT INTO
+            project_position (
+                project_id
+                , position_id
+                , personnel
+                , create_date
+                , update_date
+            )
+        VALUES (
+            #{projectId}
+            , #{positionId}
+            , #{personnel}
+            , #{createDate}
+            , #{updateDate}
+        )
+    </insert>
+
+    <insert id="insertPositions" parameterType="java.util.List">
+        INSERT INTO
+            project_position (
+                project_id
+                , position_id
+                , personnel
+                , create_date
+                , update_date
+            )
+        VALUES
+            <foreach collection="list" item="item" separator=","> (
+               #{item.projectId}
+               , #{item.positionId}
+               , #{item.personnel}
+               , #{item.createDate}
+               , #{item.updateDate}
+            )
+           </foreach>
+    </insert>
+</mapper>
