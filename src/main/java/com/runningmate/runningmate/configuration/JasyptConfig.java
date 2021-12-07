@@ -17,7 +17,7 @@ public class JasyptConfig{
     public StringEncryptor  stringEncryptor() {
         PooledPBEStringEncryptor encryptor = new PooledPBEStringEncryptor();
         SimpleStringPBEConfig config = new SimpleStringPBEConfig();
-        String encryptKey = System.getProperty("jasypt.encryptor.password");
+        String encryptKey = System.getenv("JASYPT_PASSWORD");
 
         if (encryptKey == null) {
             throw new RuntimeException();
