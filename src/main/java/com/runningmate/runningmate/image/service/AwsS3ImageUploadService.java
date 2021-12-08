@@ -70,6 +70,7 @@ public class AwsS3ImageUploadService implements ImageUploadService {
     }
 
     @Override
+    @Transactional
     public void delete(long imageId) {
         Image image = mybatisImageRepository.findById(imageId);
         image.delete();
