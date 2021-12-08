@@ -2,6 +2,7 @@ package com.runningmate.runningmate.user.aop;
 
 import com.runningmate.runningmate.common.utils.SessionUtils;
 import com.runningmate.runningmate.user.aop.LoginCheck.UserLevel;
+import com.runningmate.runningmate.user.entity.User;
 import com.runningmate.runningmate.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.annotation.Aspect;
@@ -26,25 +27,13 @@ public class LoginCheckAspect {
         if(loginUserId <= 0){
             throw new HttpClientErrorException(HttpStatus.UNAUTHORIZED);
         }
-        if(loginCheck.userLevel() == LoginCheck.UserLevel.MANAGER) {
-            managerLoginCheck(loginUserId);
-        } else if(loginCheck.userLevel() == LoginCheck.UserLevel.CUSTOMER) {
-            customerLoginCheck(loginUserId);
-        }
-    }
 
-    private void managerLoginCheck(long loginUserId) throws HttpClientErrorException {
+        loginCheck(loginUserId, loginCheck.userLevel());
+    }
+    private void loginCheck(long loginUserId, UserLevel userLevel) throws HttpClientErrorException {
         LoginCheck.UserLevel level = userService.findByUserId(loginUserId).get().getLevel();
-        if(level == null || level != UserLevel.MANAGER){
+        if(level == null || level != userLevel){
             throw new HttpClientErrorException(HttpStatus.UNAUTHORIZED);
         }
     }
-
-    private void customerLoginCheck(long loginUserId) throws HttpClientErrorException {
-        LoginCheck.UserLevel level = userService.findByUserId(loginUserId).get().getLevel();
-        if(level == null || level != UserLevel.CUSTOMER){
-            throw new HttpClientErrorException(HttpStatus.UNAUTHORIZED);
-        }
-    }
-
 }

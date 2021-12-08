@@ -1,7 +1,5 @@
 package com.runningmate.runningmate.user.service;
 
-import com.runningmate.runningmate.user.aop.LoginCheck;
-import com.runningmate.runningmate.user.aop.LoginCheck.UserLevel;
 import com.runningmate.runningmate.user.dto.UserLoginRequestDto;
 import com.runningmate.runningmate.user.entity.User;
 

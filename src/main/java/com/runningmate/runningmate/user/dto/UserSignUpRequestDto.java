@@ -11,7 +11,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class UserSingnUpRequestDto {
+public class UserSignUpRequestDto {
 
     // 이메일
     @NotBlank(message = "이메일은 필수 입력 값입니다.")
