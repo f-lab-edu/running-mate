@@ -20,13 +20,9 @@ public class ProjectController {
 
     @PostMapping("/project")
     public ResponseEntity<?> addProject(@RequestPart("project") @Valid ProjectSaveRequestDto projectCreateRequestDto, @RequestPart("file") MultipartFile multipartFile, HttpSession session) {
-        String loginUserEmail = SessionUtils.getLoginSessionEmail(session);
+        long userId = SessionUtils.getLoginSessionUserId();
 
-        if (loginUserEmail.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        } else {
-            projectService.createProject(loginUserEmail, projectCreateRequestDto, multipartFile);
-        }
+        projectService.createProject(userId, projectCreateRequestDto, multipartFile);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
