@@ -41,7 +41,7 @@ class UserServiceTest {
     @Test
     @DisplayName("로그인 테스트")
     public void testUserLogin(){
-        UserLoginRequestDto userLoginRequestDto =UserLoginRequestDto.builder()
+        UserLoginRequestDto userLoginRequestDto = UserLoginRequestDto.builder()
             .email("tesA3t@naver.com")
             .password("testTEST1234!@#$")
             .build();
@@ -52,7 +52,7 @@ class UserServiceTest {
     @Test
     @DisplayName("이메일 형식에 안맞을 경우 실패")
     public void testUserLoginEmailNotValid(){
-        UserLoginRequestDto userLoginRequestDto =UserLoginRequestDto.builder()
+        UserLoginRequestDto userLoginRequestDto = UserLoginRequestDto.builder()
             .email("tesA3ttest")
             .password("testTEST1234!@#$")
             .build();
@@ -64,7 +64,7 @@ class UserServiceTest {
     @Test
     @DisplayName("비밀번호 안맞을 경우 실패")
     public void testUserLoginPasswordFail(){
-        UserLoginRequestDto userLoginRequestDto =UserLoginRequestDto.builder()
+        UserLoginRequestDto userLoginRequestDto = UserLoginRequestDto.builder()
             .email("tesA3ttest@naver.com")
             .password("test")
             .build();

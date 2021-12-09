@@ -23,5 +23,4 @@ public @interface LoginCheck {
     enum UserLevel{
         MANAGER, CUSTOMER;
     }
-
 }
