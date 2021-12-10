@@ -18,7 +18,7 @@ public @interface LoginCheck {
      * @return
      * @author junsoo
      */
-    UserLevel userLevel();
+    UserLevel userLevel() default UserLevel.CUSTOMER;
 
     enum UserLevel{
         MANAGER, CUSTOMER;
