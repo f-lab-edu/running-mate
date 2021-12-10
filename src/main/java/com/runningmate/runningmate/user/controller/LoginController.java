@@ -49,7 +49,6 @@ public class LoginController {
      *
      * @return
      */
-    @LoginCheck(userLevel = UserLevel.CUSTOMER)
     @GetMapping("/logout")
     public ResponseEntity logout() {
         loginService.logout();
