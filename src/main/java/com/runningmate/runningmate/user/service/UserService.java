@@ -11,6 +11,8 @@ public interface UserService {
 
     Optional<User> login(UserLoginRequestDto userLoginRequestDto);
 
+    Optional<User> findByUserId(long loginUserId);
+
     void insertUser(UserSaveDto userSaveDto);
 
     void loginUser(long userId);

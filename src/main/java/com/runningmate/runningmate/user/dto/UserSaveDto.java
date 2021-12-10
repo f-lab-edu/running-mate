@@ -1,6 +1,6 @@
 package com.runningmate.runningmate.user.dto;
 
-import com.runningmate.runningmate.user.entity.User;
+import com.runningmate.runningmate.user.aop.LoginCheck;
 import lombok.*;
 
 import javax.validation.constraints.*;
@@ -42,5 +42,5 @@ public class UserSaveDto {
     private String resetToken;
 
     // 권한
-    private User.Level level;
+    private LoginCheck.UserLevel level;
 }

@@ -9,5 +9,4 @@ public class RunningmateApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(RunningmateApplication.class, args);
 	}
-
 }
