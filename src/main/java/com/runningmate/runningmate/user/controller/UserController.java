@@ -53,7 +53,6 @@ public class UserController {
      *
      * @return
      */
-    @LoginCheck(userLevel = UserLevel.CUSTOMER)
     @GetMapping("/logout")
     public ResponseEntity logout() {
         userService.logout();
