@@ -1,6 +1,7 @@
 package com.runningmate.runningmate.project;
 
 import com.runningmate.runningmate.image.domain.entity.Image;
+import com.runningmate.runningmate.image.domain.entity.ImageStatus;
 import com.runningmate.runningmate.image.service.ImageUploadService;
 import com.runningmate.runningmate.project.domain.entity.Project;
 import com.runningmate.runningmate.project.domain.repository.ApplyQuestionRepository;
@@ -80,7 +81,7 @@ class ProjectServiceTest {
 
         MockMultipartFile multipartFile = new MockMultipartFile("file", "file", "image/jpeg", "file".getBytes());
 
-        when(awsS3ImageUploadService.upload(multipartFile)).thenReturn(new Image(1L, "file", "file", LocalDateTime.now(), LocalDateTime.now()));
+        when(awsS3ImageUploadService.upload(multipartFile)).thenReturn(new Image(1L, ImageStatus.BEING_USED, "file", "file", LocalDateTime.now(), LocalDateTime.now()));
 
         projectService.createProject(1L, projectSaveRequestDto, multipartFile);
 
