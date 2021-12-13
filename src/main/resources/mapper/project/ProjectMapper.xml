@@ -2,6 +2,95 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.runningmate.runningmate.project.domain.mapper.ProjectMapper">
+    <resultMap id="projectMap" type="com.runningmate.runningmate.project.domain.entity.Project">
+        <id column="project_id"         property="projectId"/>
+        <result column="title"          property="title"/>
+        <result column="begin_date"     property="beginDate"/>
+        <result column="end_date"       property="endDate"/>
+        <result column="contents"       property="contents"/>
+        <result column="p_status"       property="status"/>
+        <result column="create_date"    property="createDate"/>
+        <result column="update_date"    property="updateDate"/>
+
+        <association property="leader" javaType="com.runningmate.runningmate.user.entity.User">
+            <id column="user_id"                property="userId"/>
+            <result column="email"              property="email"/>
+            <result column="nickname"           property="nickName"/>
+        </association>
+
+        <association property="image" javaType="com.runningmate.runningmate.image.domain.entity.Image">
+            <id column="image_id"               property="imageId"/>
+            <result column="i_status"           property="status"/>
+            <result column="original_file_name" property="originalFileName"/>
+            <result column="storage_file_name"  property="storageFileName"/>
+        </association>
+
+        <collection property="projectPositions" resultMap="projectPositionMap"/>
+        <collection property="projectSkills" resultMap="projectSkillMap"/>
+        <collection property="applyQuestions" resultMap="applyQuestionMap"/>
+    </resultMap>
+
+    <resultMap id="projectPositionMap" type="com.runningmate.runningmate.project.domain.entity.ProjectPosition">
+        <id column="project_position_id"    property="projectPositionId"/>
+        <result column="personnel"          property="personnel"/>
+
+        <association property="position" javaType="com.runningmate.runningmate.position.domain.entity.Position">
+            <id column="position_id"            property="positionId"/>
+            <result column="position_name"      property="positionName"/>
+        </association>
+    </resultMap>
+
+    <resultMap id="projectSkillMap" type="com.runningmate.runningmate.project.domain.entity.ProjectSkill">
+        <id column="project_skill_id"   property="projectSkillId"/>
+
+        <association property="skill" javaType="com.runningmate.runningmate.skill.domain.entity.Skill">
+            <id column="skill_id"           property="skillId"/>
+            <result column="skill_name"     property="skillName"/>
+        </association>
+    </resultMap>
+
+    <resultMap id="applyQuestionMap" type="com.runningmate.runningmate.project.domain.entity.ApplyQuestion">
+        <id column="apply_question_id"  property="applyQuestionId"/>
+        <result column="question"       property="question"/>
+    </resultMap>
+
+    <select id="selectProject" parameterType="long" resultMap="projectMap">
+        SELECT
+            p.project_id
+            , p.begin_date
+            , p.end_date
+            , p.title
+            , p.contents
+            , p.status p_status
+            , p.create_date
+            , p.update_date
+            , u.user_id
+            , u.email
+            , u.nickname
+            , i.image_id
+            , i.status i_status
+            , i.original_file_name
+            , i.storage_file_name
+            , p_p.project_position_id
+            , p_p.personnel
+            , p_o.position_id
+            , p_o.position_name
+            , p_s.project_skill_id
+            , s.skill_id
+            , s.skill_name
+            , a_q.apply_question_id
+            , a_q.question
+        FROM project p
+            JOIN user u ON p.leader = u.user_id
+            JOIN image i ON p.image_id = i.image_id
+            JOIN project_position p_p ON p.project_id = p_p.project_id
+            JOIN position p_o ON p_p.position_id = p_o.position_id
+            JOIN project_skill p_s ON p.project_id = p_s.project_id
+            JOIN skill s ON p_s.skill_id = s.skill_id
+            JOIN apply_question a_q ON p.project_id = a_q.project_id
+        WHERE p.project_id = #{projectId}
+    </select>
+
     <insert id="insertProject" parameterType="com.runningmate.runningmate.project.domain.entity.Project" useGeneratedKeys="true" keyProperty="projectId">
         INSERT INTO
             project (
@@ -16,13 +105,13 @@
                 , update_date
             )
             VALUES (
-                #{leader}
+                #{leader.userId}
                 , #{title}
                 , #{beginDate}
                 , #{endDate}
                 , #{contents}
                 , #{status}
-                , #{imageId}
+                , #{image.imageId}
                 , #{createDate}
                 , #{updateDate}
             )

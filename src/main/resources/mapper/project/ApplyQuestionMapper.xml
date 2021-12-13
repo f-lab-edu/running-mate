@@ -11,7 +11,7 @@
                 , update_date
         )
         VALUES (
-            #{projectId}
+            #{project.projectId}
             , #{question}
             , #{createDate}
             , #{updateDate}
@@ -28,7 +28,7 @@
         )
         VALUES
             <foreach collection="list" item="item" separator=","> (
-                #{item.projectId}
+                #{item.project.projectId}
                 , #{item.question}
                 , #{item.createDate}
                 , #{item.updateDate}

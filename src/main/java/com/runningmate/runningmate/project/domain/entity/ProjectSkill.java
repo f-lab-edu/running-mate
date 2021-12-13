@@ -1,5 +1,6 @@
 package com.runningmate.runningmate.project.domain.entity;
 
+import com.runningmate.runningmate.skill.domain.entity.Skill;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,8 +15,8 @@ import java.time.LocalDateTime;
 public class ProjectSkill {
 
     private long projectSkillId;
-    private long projectId;
-    private long skillId;
+    private Project project;
+    private Skill skill;
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
 }

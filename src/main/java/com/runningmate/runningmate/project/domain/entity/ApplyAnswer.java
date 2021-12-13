@@ -1,21 +1,22 @@
 package com.runningmate.runningmate.project.domain.entity;
 
+import java.time.LocalDateTime;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Getter
 @Builder
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class ApplyQuestion {
+public class ApplyAnswer {
 
-    private long applyQuestionId;
-    private Project project;
-    private String question;
+    private long applyAnswerId;
+    private ApplyQuestion applyQuestion;
+    private ProjectApply projectApply;
+    private String answer;
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
 }
