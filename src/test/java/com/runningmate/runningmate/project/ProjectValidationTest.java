@@ -1,9 +1,11 @@
 package com.runningmate.runningmate.project;
 
-import com.runningmate.runningmate.project.dto.ApplyQuestionSaveRequestDto;
-import com.runningmate.runningmate.project.dto.ProjectPositionSaveRequestDto;
-import com.runningmate.runningmate.project.dto.ProjectSaveRequestDto;
-import com.runningmate.runningmate.project.dto.ProjectSkillSaveRequestDto;
+import com.runningmate.runningmate.common.utils.ValidList;
+import com.runningmate.runningmate.project.dto.request.ApplyQuestionSaveRequestDto;
+import com.runningmate.runningmate.project.dto.request.ProjectApplyRequestDto;
+import com.runningmate.runningmate.project.dto.request.ProjectPositionSaveRequestDto;
+import com.runningmate.runningmate.project.dto.request.ProjectSaveRequestDto;
+import com.runningmate.runningmate.project.dto.request.ProjectSkillSaveRequestDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -331,5 +333,29 @@ public class ProjectValidationTest {
         ConstraintViolation<ProjectSaveRequestDto> violation = violations.iterator().next();
 
         assertEquals("질문을 입력해주세요", violation.getMessage());
+    }
+
+    @Test
+    @DisplayName("프로젝트 신청 시 질문 아이디 미 입력시 등록 실패")
+    void projectApplyWithoutApplyQuestionId() {
+        List<ProjectApplyRequestDto> projectApplyRequestDto = new ValidList<>();
+        projectApplyRequestDto.add(new ProjectApplyRequestDto(0, "ANSWER_1"));
+
+        Set<ConstraintViolation<List<ProjectApplyRequestDto>>> violations = validator.validate(projectApplyRequestDto);
+        ConstraintViolation<List<ProjectApplyRequestDto>> violation = violations.iterator().next();
+
+        assertEquals("질문 아이디는 필수 입니다.", violation.getMessage());
+    }
+
+    @Test
+    @DisplayName("프로젝트 신청 시 답변 미 입력시 등록 실패")
+    void projectApplyWithoutAnswer() {
+        List<ProjectApplyRequestDto> projectApplyRequestDto = new ValidList<>();
+        projectApplyRequestDto.add(new ProjectApplyRequestDto(1L, ""));
+
+        Set<ConstraintViolation<List<ProjectApplyRequestDto>>> violations = validator.validate(projectApplyRequestDto);
+        ConstraintViolation<List<ProjectApplyRequestDto>> violation = violations.iterator().next();
+
+        assertEquals("답변을 입력해주세요.", violation.getMessage());
     }
 }
