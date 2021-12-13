@@ -54,6 +54,60 @@
         <result column="question"       property="question"/>
     </resultMap>
 
+    <select id="selectProjects" resultMap="projectMap">
+        SELECT
+            p.project_id
+             , p.begin_date
+             , p.end_date
+             , p.title
+             , p.contents
+             , p.status p_status
+             , p.create_date
+             , p.update_date
+             , u.user_id
+             , u.email
+             , u.nickname
+             , i.image_id
+             , i.status i_status
+             , i.original_file_name
+             , i.storage_file_name
+             , p_p.project_position_id
+             , p_p.personnel
+             , p_o.position_id
+             , p_o.position_name
+             , p_s.project_skill_id
+             , s.skill_id
+             , s.skill_name
+             , a_q.apply_question_id
+             , a_q.question
+        FROM
+            (
+                SELECT
+                    project_id
+                    , leader
+                    , image_id
+                    , begin_date
+                    , end_date
+                    , title
+                    , contents
+                    , status
+                    , create_date
+                    , update_date
+                FROM project
+                WHERE status = #{status}
+                ORDER BY project_id DESC
+                LIMIT #{size} OFFSET #{cursor}
+            ) p
+            JOIN user u ON p.leader = u.user_id
+            JOIN image i ON p.image_id = i.image_id
+            JOIN project_position p_p ON p.project_id = p_p.project_id
+            JOIN position p_o ON p_p.position_id = p_o.position_id
+            JOIN project_skill p_s ON p.project_id = p_s.project_id
+            JOIN skill s ON p_s.skill_id = s.skill_id
+            JOIN apply_question a_q ON p.project_id = a_q.project_id
+        ORDER BY p.project_id DESC
+    </select>
+
     <select id="selectProject" parameterType="long" resultMap="projectMap">
         SELECT
             p.project_id
