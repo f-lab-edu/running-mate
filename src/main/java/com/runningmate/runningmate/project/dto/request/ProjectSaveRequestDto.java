@@ -1,4 +1,4 @@
-package com.runningmate.runningmate.project.dto;
+package com.runningmate.runningmate.project.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
