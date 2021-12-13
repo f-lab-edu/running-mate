@@ -13,9 +13,12 @@ import com.runningmate.runningmate.project.domain.repository.ProjectRepository;
 import com.runningmate.runningmate.project.domain.repository.ProjectSkillRepository;
 import com.runningmate.runningmate.project.dto.request.ProjectApplyRequestDto;
 import com.runningmate.runningmate.project.dto.request.ProjectSaveRequestDto;
+import com.runningmate.runningmate.project.dto.request.ProjectSearchRequestDto;
 import com.runningmate.runningmate.skill.domain.entity.Skill;
 import com.runningmate.runningmate.user.entity.User;
+import com.runningmate.runningmate.user.repository.UserRepository;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,8 +39,14 @@ public class ProjectService {
     private final ApplyQuestionRepository mybatisApplyQuestionRepository;
     private final ApplyAnswerRepository mybatisApplyAnswerRepository;
     private final ProjectApplyRepository mybatisProjectApplyRepository;
+    private final UserRepository mybatisUserRepository;
 
     private final ImageUploadService awsS3ImageUploadService;
+
+    @Transactional(readOnly = true)
+    public List<Project> getProjects(ProjectSearchRequestDto projectSearchRequestDto) {
+        return mybatisProjectRepository.findAll(projectSearchRequestDto);
+    }
 
     @Transactional(readOnly = true)
     public Project getProject(long projectId) {
@@ -46,10 +55,11 @@ public class ProjectService {
 
     @Transactional
     public void createProject(long userId, ProjectSaveRequestDto projectSaveRequestDto, MultipartFile multipartFile) {
+        Optional<User> user = mybatisUserRepository.findByUserId(userId);
         Image image = awsS3ImageUploadService.upload(multipartFile);
 
         Project project = Project.builder()
-            .leader(User.builder().userId(userId).build())
+            .leader(user.orElseThrow(NullPointerException::new))
             .beginDate(projectSaveRequestDto.getBeginDate())
             .endDate(projectSaveRequestDto.getEndDate())
             .title(projectSaveRequestDto.getTitle())
@@ -93,6 +103,7 @@ public class ProjectService {
 
     @Transactional
     public void projectApply(long userId, long projectPositionId, List<ProjectApplyRequestDto> projectApplyRequestDto) {
+        Optional<User> user = mybatisUserRepository.findByUserId(userId);
         ProjectApply existProjectApply = mybatisProjectApplyRepository.findByUserId(userId);
 
         if(existProjectApply != null) {
@@ -101,7 +112,7 @@ public class ProjectService {
 
         ProjectApply projectApply = ProjectApply.builder()
             .projectPosition(ProjectPosition.builder().projectPositionId(projectPositionId).build())
-            .user(User.builder().userId(userId).build())
+            .user(user.orElseThrow(NullPointerException::new))
             .status(ProjectApplyStatus.WAIT)
             .createDate(LocalDateTime.now())
             .updateDate(LocalDateTime.now())
