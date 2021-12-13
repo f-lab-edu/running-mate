@@ -1,6 +1,7 @@
 package com.runningmate.runningmate.project.controller;
 
 import com.runningmate.runningmate.common.utils.SessionUtils;
+import com.runningmate.runningmate.common.utils.ValidList;
 import com.runningmate.runningmate.project.dto.request.ProjectApplyRequestDto;
 import com.runningmate.runningmate.project.dto.request.ProjectSearchRequestDto;
 import com.runningmate.runningmate.project.dto.response.ProjectInfoResponseDto;
@@ -22,7 +23,6 @@ import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
-@Validated
 @Slf4j
 public class ProjectController {
 
@@ -56,10 +56,10 @@ public class ProjectController {
 
     @LoginCheck(userLevel = UserLevel.CUSTOMER)
     @PostMapping("/project-apply/{projectPositionId}")
-    public ResponseEntity<?> modifyProject(@PathVariable("projectPositionId") long projectPositionId, @RequestBody @Valid List<ProjectApplyRequestDto> projectApplyRequestDto) {
+    public ResponseEntity<?> modifyProject(@PathVariable("projectPositionId") long projectPositionId, @RequestBody @Valid ValidList<ProjectApplyRequestDto> projectApplyRequestDto) {
         long userId = SessionUtils.getLoginSessionUserId();
 
-        projectService.projectApply(userId, projectPositionId, projectApplyRequestDto);
+        projectService.projectApply(userId, projectPositionId, projectApplyRequestDto.getList());
 
         return ResponseEntity.status(HttpStatus.OK).build();
     }
