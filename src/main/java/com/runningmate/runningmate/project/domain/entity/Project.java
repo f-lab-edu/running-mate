@@ -1,5 +1,7 @@
 package com.runningmate.runningmate.project.domain.entity;
 
+import com.runningmate.runningmate.image.domain.entity.Image;
+import com.runningmate.runningmate.user.entity.User;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -13,14 +15,14 @@ import java.util.List;
 public class Project {
 
     private long projectId;
-    private long leader;
+    private User leader;
     private LocalDate beginDate;
     private LocalDate endDate;
     private String title;
     private String contents;
     private ProjectStatus status;
     private int views;
-    private long imageId;
+    private Image image;
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
 

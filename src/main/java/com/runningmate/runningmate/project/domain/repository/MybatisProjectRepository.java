@@ -12,6 +12,11 @@ public class MybatisProjectRepository implements ProjectRepository {
     private final ProjectMapper projectMapper;
 
     @Override
+    public Project findByProjectId(long projectId) {
+        return projectMapper.selectProject(projectId);
+    }
+
+    @Override
     public void save(Project project) {
         projectMapper.insertProject(project);
     }

@@ -12,8 +12,8 @@
                 , update_date
             )
         VALUES (
-            #{projectId}
-            , #{positionId}
+            #{project.projectId}
+            , #{position.positionId}
             , #{personnel}
             , #{createDate}
             , #{updateDate}
@@ -31,8 +31,8 @@
             )
         VALUES
             <foreach collection="list" item="item" separator=","> (
-               #{item.projectId}
-               , #{item.positionId}
+               #{item.project.projectId}
+               , #{item.position.positionId}
                , #{item.personnel}
                , #{item.createDate}
                , #{item.updateDate}
