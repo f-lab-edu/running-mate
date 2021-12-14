@@ -25,7 +25,7 @@ class UserServiceTest {
     UserService userService;
 
     @Autowired
-    LoginService loginService;
+    SessionLoginService sessionLoginService;
 
     private static ValidatorFactory validatorFactory;
     private static Validator validator;
@@ -48,7 +48,7 @@ class UserServiceTest {
             .email("test3@test.test")
             .password("teastTEST1234!@#$")
             .build();
-        Optional<User> user = loginService.login(userLoginRequestDto);
+        Optional<User> user = sessionLoginService.login(userLoginRequestDto);
         assertEquals(true, !user.isEmpty());
     }
 
@@ -71,7 +71,7 @@ class UserServiceTest {
             .email("test3@test.test")
             .password("test")
             .build();
-        Optional<User> user = loginService.login(userLoginRequestDto);
+        Optional<User> user = sessionLoginService.login(userLoginRequestDto);
         assertEquals(false, !user.isEmpty());
     }
 }

@@ -5,9 +5,11 @@ import com.runningmate.runningmate.user.entity.User;
 import java.util.Optional;
 
 
-public interface LoginService {
+public interface SessionLoginService {
 
     Optional<User> login(UserLoginRequestDto userLoginRequestDto);
+
+    void loginUser(long userId);
 
     void logout();
 }

@@ -1,12 +1,11 @@
 package com.runningmate.runningmate.user.controller;
 
-import com.runningmate.runningmate.user.aop.LoginCheck;
-import com.runningmate.runningmate.user.aop.LoginCheck.UserLevel;
 import com.runningmate.runningmate.user.dto.UserLoginRequestDto;
 import com.runningmate.runningmate.user.entity.User;
-import com.runningmate.runningmate.user.service.LoginService;
 import java.util.Optional;
 import javax.validation.Valid;
+
+import com.runningmate.runningmate.user.service.SessionLoginService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoginController {
 
 
-    private final LoginService loginService;
+    private final SessionLoginService sessionLoginService;
 
     /**
      * 로그인
@@ -39,7 +38,7 @@ public class LoginController {
     @PostMapping("/login")
     public ResponseEntity login(@Valid @RequestBody UserLoginRequestDto userLoginRequestDto) {
 
-        Optional<User> user = loginService.login(userLoginRequestDto);
+        Optional<User> user = sessionLoginService.login(userLoginRequestDto);
 
         return user.isEmpty() ? new ResponseEntity(HttpStatus.NOT_FOUND) : new ResponseEntity<>(HttpStatus.OK);
     }
@@ -51,7 +50,7 @@ public class LoginController {
      */
     @GetMapping("/logout")
     public ResponseEntity logout() {
-        loginService.logout();
+        sessionLoginService.logout();
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

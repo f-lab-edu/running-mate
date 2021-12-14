@@ -5,7 +5,7 @@ import com.runningmate.runningmate.common.utils.SessionUtils;
 import com.runningmate.runningmate.user.dto.UserLoginRequestDto;
 import com.runningmate.runningmate.user.entity.User;
 import com.runningmate.runningmate.user.repository.UserRepository;
-import com.runningmate.runningmate.user.service.LoginService;
+import com.runningmate.runningmate.user.service.SessionLoginService;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class LoginServiceImpl implements LoginService {
+public class SessionLoginServiceImpl implements SessionLoginService {
 
 
     private final UserRepository userRepository;
