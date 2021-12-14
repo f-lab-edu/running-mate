@@ -1,8 +1,10 @@
-package com.runningmate.runningmate.user.service;
+package com.runningmate.runningmate.user;
 
 import com.runningmate.runningmate.user.dto.UserLoginRequestDto;
 import com.runningmate.runningmate.user.entity.User;
 
+import com.runningmate.runningmate.user.service.SessionLoginService;
+import com.runningmate.runningmate.user.service.UserService;
 import java.util.Optional;
 import java.util.Set;
 import javax.validation.ConstraintViolation;
@@ -49,14 +51,14 @@ class UserServiceTest {
             .password("teastTEST1234!@#$")
             .build();
         Optional<User> user = sessionLoginService.login(userLoginRequestDto);
-        assertEquals(true, !user.isEmpty());
+        assertTrue(user.isPresent());
     }
 
     @Test
     @DisplayName("이메일 형식에 안맞을 경우 실패")
     public void testUserLoginEmailNotValid(){
         UserLoginRequestDto userLoginRequestDto = UserLoginRequestDto.builder()
-            .email("tesA3ttest")
+            .email("test3")
             .password("testTEST1234!@#$")
             .build();
         Set<ConstraintViolation<UserLoginRequestDto>> violations = validator.validate(userLoginRequestDto);
@@ -72,6 +74,6 @@ class UserServiceTest {
             .password("test")
             .build();
         Optional<User> user = sessionLoginService.login(userLoginRequestDto);
-        assertEquals(false, !user.isEmpty());
+        assertTrue(user.isEmpty());
     }
 }
