@@ -45,8 +45,8 @@ class UserServiceTest {
     @DisplayName("로그인 테스트")
     public void testUserLogin(){
         UserLoginRequestDto userLoginRequestDto = UserLoginRequestDto.builder()
-            .email("tesA3t@naver.com")
-            .password("testTEST1234!@#$")
+            .email("test3@test.test")
+            .password("teastTEST1234!@#$")
             .build();
         Optional<User> user = loginService.login(userLoginRequestDto);
         assertEquals(true, !user.isEmpty());
@@ -68,7 +68,7 @@ class UserServiceTest {
     @DisplayName("비밀번호 안맞을 경우 실패")
     public void testUserLoginPasswordFail(){
         UserLoginRequestDto userLoginRequestDto = UserLoginRequestDto.builder()
-            .email("tesA3ttest@naver.com")
+            .email("test3@test.test")
             .password("test")
             .build();
         Optional<User> user = loginService.login(userLoginRequestDto);
