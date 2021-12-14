@@ -23,7 +23,7 @@ class LoginServiceTest {
 
     @Test
     @DisplayName("이메일이 없으면 실패")
-    public void testExistEmail(){
+    public void testExistEmail() {
         String email = "test@test.naver.com";
         Optional<User> user = mybatisUserRepository.findByEmail(email);
         assertFalse(user.isPresent());
@@ -31,7 +31,7 @@ class LoginServiceTest {
 
     @Test
     @DisplayName("비밀번호 안맞을 경우 실패")
-    public void testUserLoginPasswordFail(){
+    public void testUserLoginPasswordFail() {
         String email = "test@test.test";
         String password = "test";
         User returnUser = User.builder()

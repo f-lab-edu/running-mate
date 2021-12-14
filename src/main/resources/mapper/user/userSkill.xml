@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.runningmate.runningmate.user.mapper.UserSkillMapper">
+    <insert id="insertUserSkills" parameterType="com.runningmate.runningmate.user.entity.UserSkill">
+        INSERT INTO
+            user_skill (
+                  user_id
+                , skill_id
+                , create_date
+            )
+            VALUES
+                <foreach collection="list" item="item" separator=",">
+                (
+                    #{item.userId}
+                    , #{item.skillId}
+                    , #{item.createDate}
+                )
+                </foreach>
+
+    </insert>
+</mapper>

@@ -4,7 +4,7 @@
 
 <mapper namespace="com.runningmate.runningmate.user.mapper.UserMapper">
 
-    <select id="findByEmail" resultType="com.runningmate.runningmate.user.entity.User">
+    <select id="selsectUserByEmail" resultType="com.runningmate.runningmate.user.entity.User">
         SELECT
             user_id
              , email
@@ -20,7 +20,7 @@
         WHERE email = #{email}
     </select>
 
-    <select id="findByUserId" resultType="com.runningmate.runningmate.user.entity.User">
+    <select id="selectUserById" resultType="com.runningmate.runningmate.user.entity.User">
       SELECT
         user_id
            , email
@@ -36,21 +36,26 @@
       WHERE user_id = #{userId}
     </select>
 
-    <insert id="saveUser" parameterType="com.runningmate.runningmate.user.entity.User">
-        insert into
+    <insert id="insertUser" parameterType="com.runningmate.runningmate.user.entity.User" useGeneratedKeys="true" keyProperty="userId">
+        INSERT INTO
             user (
                 email
                 , password
                 , nickname
+                , position_id
+                , image_id
+                , level
                 , create_date
-                , update_date
+
             )
-            values(
+            VALUES(
                 #{email}
                 , #{password}
                 , #{nickName}
-                , now()
-                , now()
+                , #{positionId}
+                , #{imageId}
+                , #{level}
+                , #{createDate}
             )
     </insert>
 </mapper>
