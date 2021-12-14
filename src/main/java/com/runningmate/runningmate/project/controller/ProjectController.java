@@ -28,7 +28,7 @@ public class ProjectController {
 
     private final ProjectService projectService;
 
-    @GetMapping("/project")
+    @GetMapping("/projects")
     public ResponseEntity<List<ProjectInfoResponseDto>> getProjects(@RequestBody ProjectSearchRequestDto projectSearchRequestDto) {
         List<ProjectInfoResponseDto> response = projectService.getProjects(projectSearchRequestDto).stream()
             .map(ProjectInfoResponseDto::of)
@@ -46,7 +46,7 @@ public class ProjectController {
 
     @LoginCheck(userLevel = UserLevel.CUSTOMER)
     @PostMapping("/project")
-    public ResponseEntity<?> addProject(@RequestPart("project") @Valid ProjectSaveRequestDto projectCreateRequestDto, @RequestPart("file") MultipartFile multipartFile) {
+    public ResponseEntity<?> createProject(@RequestPart("project") @Valid ProjectSaveRequestDto projectCreateRequestDto, @RequestPart("file") MultipartFile multipartFile) {
         long userId = SessionUtils.getLoginSessionUserId();
 
         projectService.createProject(userId, projectCreateRequestDto, multipartFile);

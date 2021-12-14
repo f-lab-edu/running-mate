@@ -103,12 +103,13 @@ public class ProjectService {
 
     @Transactional
     public void projectApply(long userId, long projectPositionId, List<ProjectApplyRequestDto> projectApplyRequestDto) {
-        Optional<User> user = mybatisUserRepository.findByUserId(userId);
         ProjectApply existProjectApply = mybatisProjectApplyRepository.findByUserId(userId);
 
         if(existProjectApply != null) {
             throw new DuplicateApplyException("이미 신청한 프로젝트 입니다.");
         }
+
+        Optional<User> user = mybatisUserRepository.findByUserId(userId);
 
         ProjectApply projectApply = ProjectApply.builder()
             .projectPosition(ProjectPosition.builder().projectPositionId(projectPositionId).build())
