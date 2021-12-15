@@ -3,6 +3,7 @@ package com.runningmate.runningmate.user.service;
 import com.runningmate.runningmate.common.utils.BCryptUtil;
 import com.runningmate.runningmate.image.domain.entity.Image;
 import com.runningmate.runningmate.image.service.ImageUploadService;
+import com.runningmate.runningmate.position.domain.entity.Position;
 import com.runningmate.runningmate.user.dto.UserSignUpRequestDto;
 import com.runningmate.runningmate.user.entity.User;
 import com.runningmate.runningmate.user.entity.UserSkill;
@@ -44,8 +45,8 @@ public class UserService {
             .email(userSignUpRequestDto.getEmail())
             .password(BCryptUtil.setEncrypt(userSignUpRequestDto.getPassword()))
             .nickName(userSignUpRequestDto.getNickName())
-            .positionId(userSignUpRequestDto.getPositionId())
-            .imageId(image.getImageId())
+            .position(Position.builder().positionId(userSignUpRequestDto.getPositionId()).build())
+            .image(image)
             .createDate(LocalDateTime.now())
             .level(userSignUpRequestDto.getLevel())
             .build();

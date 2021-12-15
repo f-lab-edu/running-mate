@@ -8,11 +8,15 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserSignUpRequestDto {
 
     // 이메일
@@ -31,8 +35,6 @@ public class UserSignUpRequestDto {
     private String nickName;
 
     private LoginCheck.UserLevel level;
-
-    private long imageId;
 
     private long positionId;
 

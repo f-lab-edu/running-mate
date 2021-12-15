@@ -49,8 +49,8 @@ public class UserServiceTest {
     @DisplayName("회원가입 성공")
     void testSuccessUserSignUp() {
         List<UserSkillSaveReqeustDto> userSkills = new ArrayList<>();
-        userSkills.add( new UserSkillSaveReqeustDto(1,1) );
-        userSkills.add( new UserSkillSaveReqeustDto(2,2) );
+        userSkills.add( new UserSkillSaveReqeustDto(1) );
+        userSkills.add( new UserSkillSaveReqeustDto(2) );
 
         UserSignUpRequestDto userSignUpRequestDto = UserSignUpRequestDto.builder()
             .email("testtest@test.test")

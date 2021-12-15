@@ -52,8 +52,8 @@
                 #{email}
                 , #{password}
                 , #{nickName}
-                , #{positionId}
-                , #{imageId}
+                , #{position.positionId}
+                , #{image.imageId}
                 , #{level}
                 , #{createDate}
             )
