@@ -161,7 +161,6 @@ class ProjectServiceTest {
 
         ProjectApply projectApply = ProjectApply.builder().build();
 
-        when(mybatisUserRepository.findByUserId(userId)).thenReturn(Optional.of(user));
         when(mybatisProjectApplyRepository.findByUserId(userId)).thenReturn(projectApply);
 
         assertThrows(DuplicateApplyException.class, () -> {
