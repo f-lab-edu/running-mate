@@ -1,5 +1,7 @@
 package com.runningmate.runningmate.user.entity;
 
+import com.runningmate.runningmate.image.domain.entity.Image;
+import com.runningmate.runningmate.position.domain.entity.Position;
 import com.runningmate.runningmate.user.aop.LoginCheck.UserLevel;
 import lombok.*;
 
@@ -27,10 +29,10 @@ public class User {
     private String nickName;
 
     // 포지션
-    private long positionId;
+    private Position position;
 
     // 이미지
-    private long imageId;
+    private Image image;
 
     // 비밀번호 초기화 토큰
     private String resetToken;

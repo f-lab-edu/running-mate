@@ -1,22 +1,19 @@
-package com.runningmate.runningmate.user.service.impl;
+package com.runningmate.runningmate.user.service;
 
 import com.runningmate.runningmate.common.utils.BCryptUtil;
 import com.runningmate.runningmate.common.utils.SessionUtils;
 import com.runningmate.runningmate.user.dto.UserLoginRequestDto;
-import com.runningmate.runningmate.user.dto.UserSaveDto;
 import com.runningmate.runningmate.user.entity.User;
 import com.runningmate.runningmate.user.repository.UserRepository;
-import com.runningmate.runningmate.user.service.UserService;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService {
+public class SessionLoginService{
 
 
     private final UserRepository userRepository;
@@ -42,29 +39,6 @@ public class UserServiceImpl implements UserService {
         // 세션등록
         this.loginUser(userInfo.get().getUserId());
         return userInfo;
-    }
-
-    @Override
-    public Optional<User> findByUserId(long loginUserId) {
-        return userRepository.findByUserId(loginUserId);
-    }
-
-    /**
-     * 회원가입 로직 ( 미완 )
-     *
-     * @param userSaveDto
-     *
-     * @author junsoo
-     */
-    public void insertUser(UserSaveDto userSaveDto) {
-        User insertUser = User.builder()
-                .email(userSaveDto.getEmail())
-                .password(BCryptUtil.setEncrypt(userSaveDto.getPassword()))
-                .nickName(userSaveDto.getNickName())
-//                .resetToken(user.getResetToken())
-                .build();
-
-        userRepository.save(insertUser);
     }
 
     /**
