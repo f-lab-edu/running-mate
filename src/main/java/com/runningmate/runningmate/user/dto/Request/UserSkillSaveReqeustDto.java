@@ -1,4 +1,4 @@
-package com.runningmate.runningmate.user.dto;
+package com.runningmate.runningmate.user.dto.Request;
 
 import javax.validation.constraints.Min;
 import lombok.AllArgsConstructor;

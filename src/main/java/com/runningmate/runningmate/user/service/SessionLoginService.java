@@ -2,7 +2,7 @@ package com.runningmate.runningmate.user.service;
 
 import com.runningmate.runningmate.common.utils.BCryptUtil;
 import com.runningmate.runningmate.common.utils.SessionUtils;
-import com.runningmate.runningmate.user.dto.UserLoginRequestDto;
+import com.runningmate.runningmate.user.dto.Request.UserLoginRequestDto;
 import com.runningmate.runningmate.user.entity.User;
 import com.runningmate.runningmate.user.repository.UserRepository;
 import java.util.Optional;
