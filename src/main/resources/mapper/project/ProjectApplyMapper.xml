@@ -44,7 +44,7 @@
             EXISTS(
                 SELECT project_apply_id
                 FROM project_apply
-                WHERE project_id = #{projectId}
+                WHERE project_position_id IN (SELECT project_position_id FROM project_position WHERE project_id = #{projectId})
             )
     </select>
 
