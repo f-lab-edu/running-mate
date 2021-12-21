@@ -125,10 +125,21 @@ public class ProjectService {
     }
 
     @Transactional
-    public void projectApply(long userId, long projectPositionId, List<ProjectApplyRequestDto> projectApplyRequestDto) {
-        boolean existProjectApply = mybatisProjectApplyRepository.existsProjectPositionIdAndUserId(projectPositionId, userId);
+    public void deleteProject(long userId, long projectId) {
+        Project project = mybatisProjectRepository.findByProjectId(projectId);
 
-        if(existProjectApply) {
+        validationProjectLeader(userId, project.getLeader().getUserId());
+
+        if(mybatisProjectApplyRepository.existsByProjectId(projectId)) {
+            throw new IllegalStateException("해당 프로젝트의 신청이 존재합니다.");
+        }
+
+        mybatisProjectRepository.delete(project);
+    }
+
+    @Transactional
+    public void projectApply(long userId, long projectPositionId, List<ProjectApplyRequestDto> projectApplyRequestDto) {
+        if(mybatisProjectApplyRepository.existsProjectPositionIdAndUserId(projectPositionId, userId)) {
             throw new DuplicateApplyException("이미 신청한 프로젝트 입니다.");
         }
 

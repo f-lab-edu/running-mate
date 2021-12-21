@@ -13,4 +13,6 @@ public interface ProjectRepository {
     public void save(Project project);
 
     public void update(Project project);
+
+    public void delete(Project project);
 }

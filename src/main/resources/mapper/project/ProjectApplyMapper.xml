@@ -39,6 +39,15 @@
         WHERE p_a.user_id = #{userId}
     </select>
 
+    <select id="existsByProjectId" resultType="boolean">
+        SELECT
+            EXISTS(
+                SELECT project_apply_id
+                FROM project_apply
+                WHERE project_id = #{projectId}
+            )
+    </select>
+
     <select id="existsByProjectPositionIdAndUserId" resultType="boolean">
         SELECT
             EXISTS(

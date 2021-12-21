@@ -72,6 +72,16 @@ public class ProjectController {
     }
 
     @LoginCheck
+    @DeleteMapping("/project/{projectId}")
+    public ResponseEntity<?> deleteProject(@PathVariable("projectId") long projectId) {
+        long userId = SessionUtils.getLoginSessionUserId();
+
+        projectService.deleteProject(userId, projectId);
+
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @LoginCheck
     @PostMapping("/project-apply/{projectPositionId}")
     public ResponseEntity<?> projectApply(@PathVariable("projectPositionId") long projectPositionId, @RequestBody @Valid ValidList<ProjectApplyRequestDto> projectApplyRequestDto) {
         long userId = SessionUtils.getLoginSessionUserId();

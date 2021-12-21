@@ -181,4 +181,9 @@
              , update_date = #{updateDate}
          WHERE project_id = #{projectId}
     </update>
+
+    <delete id="deleteProject">
+        DELETE FROM project
+        WHERE project_id = #{projectId}
+    </delete>
 </mapper>
