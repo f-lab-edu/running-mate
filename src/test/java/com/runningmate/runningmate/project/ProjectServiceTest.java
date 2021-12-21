@@ -4,8 +4,10 @@ import com.runningmate.runningmate.common.exception.DuplicateApplyException;
 import com.runningmate.runningmate.image.domain.entity.Image;
 import com.runningmate.runningmate.image.domain.entity.ImageStatus;
 import com.runningmate.runningmate.image.service.ImageUploadService;
+import com.runningmate.runningmate.project.domain.entity.ApplyQuestion;
 import com.runningmate.runningmate.project.domain.entity.Project;
 import com.runningmate.runningmate.project.domain.entity.ProjectApply;
+import com.runningmate.runningmate.project.domain.entity.ProjectPosition;
 import com.runningmate.runningmate.project.domain.repository.ApplyAnswerRepository;
 import com.runningmate.runningmate.project.domain.repository.ApplyQuestionRepository;
 import com.runningmate.runningmate.project.domain.repository.ProjectApplyRepository;
@@ -134,7 +136,7 @@ class ProjectServiceTest {
             .build();
 
         when(mybatisUserRepository.findByUserId(userId)).thenReturn(Optional.of(user));
-        when(mybatisProjectApplyRepository.findByUserId(userId)).thenReturn(null);
+        when(mybatisProjectApplyRepository.existsProjectPositionIdAndUserId(projectPositionId, userId)).thenReturn(false);
 
         projectService.projectApply(userId, projectPositionId, projectApplyRequestDto);
 
@@ -161,11 +163,123 @@ class ProjectServiceTest {
 
         ProjectApply projectApply = ProjectApply.builder().build();
 
-        when(mybatisProjectApplyRepository.findByUserId(userId)).thenReturn(projectApply);
+        when(mybatisProjectApplyRepository.existsProjectPositionIdAndUserId(projectPositionId, userId)).thenReturn(true);
 
         assertThrows(DuplicateApplyException.class, () -> {
             projectService.projectApply(userId, projectPositionId, projectApplyRequestDto);
         });
     }
 
+    @Test
+    @DisplayName("프로젝트 포지션 추가 실패 - 이미 등록된 포지션")
+    void failProjectPositionAddExistPosition() {
+        long userId = 1L;
+        long projectId = 1L;
+        long positionId = 1L;
+
+        ProjectPositionSaveRequestDto request = new ProjectPositionSaveRequestDto(1L, 3);
+
+        Project project = Project.builder()
+            .projectId(projectId)
+            .leader(User.builder()
+                .userId(userId)
+                .email("test@gmail.com")
+                .password("test")
+                .nickName("tester")
+                .build())
+            .build();
+
+        when(mybatisProjectRepository.findByProjectId(projectId)).thenReturn(project);
+        when(mybatisProjectPositionRepository.existsByProjectIdAndPositionId(projectId, positionId)).thenReturn(true);
+
+        assertThrows(IllegalStateException.class, () -> {
+           projectService.addProjectPosition(userId, projectId, request);
+        });
+    }
+
+    @Test
+    @DisplayName("프로젝트 포지션 추가 성공")
+    void successProjectPositionAdd() {
+        long userId = 1L;
+        long projectId = 1L;
+
+        ProjectPositionSaveRequestDto request = new ProjectPositionSaveRequestDto(1L, 3);
+
+        Project project = Project.builder()
+            .projectId(projectId)
+            .leader(User.builder()
+                .userId(userId)
+                .email("test@gmail.com")
+                .password("test")
+                .nickName("tester")
+                .build())
+            .build();
+
+        when(mybatisProjectRepository.findByProjectId(projectId)).thenReturn(project);
+        when(mybatisProjectPositionRepository.existsByProjectIdAndPositionId(projectId, request.getPositionId())).thenReturn(false);
+
+        projectService.addProjectPosition(userId, projectId, request);
+
+        verify(mybatisProjectPositionRepository, times(1)).save(any(ProjectPosition.class));
+    }
+
+    @Test
+    @DisplayName("프로젝트 포지션 삭제 실패 - 신청 존재")
+    void failProjectPositionDeleteExistApply() {
+        long userId = 1L;
+        long projectId = 1L;
+        long projectPositionId = 1L;
+
+        Project project = Project.builder()
+            .projectId(projectId)
+            .leader(User.builder()
+                .userId(userId)
+                .email("test@gmail.com")
+                .password("test")
+                .nickName("tester")
+                .build())
+            .build();
+
+        ProjectPosition projectPosition = ProjectPosition.builder()
+            .projectPositionId(projectPositionId)
+            .project(project)
+            .build();
+
+        when(mybatisProjectPositionRepository.findById(projectPositionId)).thenReturn(projectPosition);
+        when(mybatisProjectApplyRepository.existsByProjectPositionId(projectPositionId)).thenReturn(true);
+
+        assertThrows(IllegalStateException.class, () -> {
+           projectService.deleteProjectPosition(userId, projectPositionId);
+        });
+    }
+
+    @Test
+    @DisplayName("프로젝트 포지션 삭제 성공")
+    void successProjectPositionDelete() {
+        long userId = 1L;
+        long projectId = 1L;
+        long projectPositionId = 1L;
+
+        Project project = Project.builder()
+            .projectId(projectId)
+            .leader(User.builder()
+                .userId(userId)
+                .email("test@gmail.com")
+                .password("test")
+                .nickName("tester")
+                .build())
+            .build();
+
+        ProjectPosition projectPosition = ProjectPosition.builder()
+            .projectPositionId(projectPositionId)
+            .project(project)
+            .build();
+
+        when(mybatisProjectPositionRepository.findById(projectPositionId)).thenReturn(projectPosition);
+        when(mybatisProjectApplyRepository.existsByProjectPositionId(projectPositionId)).thenReturn(false);
+
+        projectService.deleteProjectPosition(userId, projectPositionId);
+
+        verify(mybatisProjectPositionRepository, times(1)).delete(projectPosition);
+    }
 }
