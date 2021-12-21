@@ -2,6 +2,39 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.runningmate.runningmate.project.domain.mapper.ApplyQuestionMapper">
+    <resultMap id="applyQuestionMap" type="com.runningmate.runningmate.project.domain.entity.ApplyQuestion">
+        <id column="apply_question_id"      property="applyQuestionId"/>
+        <result column="question"           property="question"/>
+        <result column="create_date"        property="createDate"/>
+        <result column="update_date"        property="updateDate"/>
+
+        <association property="project" javaType="com.runningmate.runningmate.project.domain.entity.Project">
+            <id column="project_id"             property="projectId"/>
+
+            <association property="leader" javaType="com.runningmate.runningmate.user.entity.User">
+                <id column="user_id"                property="userId"/>
+                <result column="email"              property="email"/>
+                <result column="nickname"           property="nickName"/>
+            </association>
+        </association>
+    </resultMap>
+
+    <select id="selectApplyQuestion" resultMap="applyQuestionMap">
+        SELECT
+            a_q.apply_question_id,
+            a_q.question,
+            a_q.create_date,
+            a_q.update_date,
+            p.project_id,
+            u.user_id,
+            u.email,
+            u.nickname
+        FROM apply_question a_q
+            JOIN project p ON a_q.project_id = p.project_id
+            JOIN user u ON p.leader = u.user_id
+        WHERE apply_question_id = #{applyQuestionId}
+    </select>
+
     <insert id="insertApplyQuestion">
         INSERT INTO
             apply_question (
@@ -35,4 +68,16 @@
             )
             </foreach>
     </insert>
+
+    <update id="updateApplyQuestion">
+        UPDATE apply_question
+           SET question = #{question}
+             , update_date = #{updateDate}
+         WHERE apply_question_id = #{applyQuestionId}
+    </update>
+
+    <delete id="deleteApplyQuestion">
+        DELETE FROM apply_question
+        WHERE apply_question_id = #{applyQuestionId}
+    </delete>
 </mapper>

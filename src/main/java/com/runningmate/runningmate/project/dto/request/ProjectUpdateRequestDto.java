@@ -1,5 +1,6 @@
 package com.runningmate.runningmate.project.dto.request;
 
+import com.runningmate.runningmate.project.domain.entity.ProjectStatus;
 import java.time.LocalDate;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -30,4 +31,7 @@ public class ProjectUpdateRequestDto {
 
     @NotBlank(message = "프로젝트 내용을 입력해주세요")
     private String contents;
+
+    @NotNull(message = "프로젝트 진행상태를 선택해주세요")
+    private ProjectStatus status;
 }
