@@ -15,4 +15,6 @@ public interface ProjectMapper {
     public void insertProject(Project project);
 
     public void updateProject(Project project);
+
+    public void deleteProject(Project project);
 }

@@ -4,7 +4,6 @@ import com.runningmate.runningmate.common.exception.DuplicateApplyException;
 import com.runningmate.runningmate.image.domain.entity.Image;
 import com.runningmate.runningmate.image.domain.entity.ImageStatus;
 import com.runningmate.runningmate.image.service.ImageUploadService;
-import com.runningmate.runningmate.project.domain.entity.ApplyQuestion;
 import com.runningmate.runningmate.project.domain.entity.Project;
 import com.runningmate.runningmate.project.domain.entity.ProjectApply;
 import com.runningmate.runningmate.project.domain.entity.ProjectPosition;
@@ -116,6 +115,54 @@ class ProjectServiceTest {
         verify(mybatisProjectPositionRepository, times(1)).saveAll(anyList());
         verify(mybatisProjectSkillRepository, times(1)).saveAll(anyList());
         verify(mybatisApplyQuestionRepository, times(1)).saveAll(anyList());
+    }
+
+    @Test
+    @DisplayName("프로젝트 삭제 실패 - 신청 존재")
+    void failProjectDeleteDuplicateApply() {
+        long userId = 1L;
+        long projectId = 1L;
+
+        Project project = Project.builder()
+            .projectId(projectId)
+            .leader(User.builder()
+                .userId(userId)
+                .email("test@gmail.com")
+                .password("test")
+                .nickName("tester")
+                .build())
+            .build();
+
+        when(mybatisProjectRepository.findByProjectId(projectId)).thenReturn(project);
+        when(mybatisProjectApplyRepository.existsByProjectId(projectId)).thenReturn(true);
+
+        assertThrows(IllegalStateException.class, () -> {
+            projectService.deleteProject(userId, projectId);
+        });
+    }
+
+    @Test
+    @DisplayName("프로젝트 삭제 성공")
+    void successProjectDelete() {
+        long userId = 1L;
+        long projectId = 1L;
+
+        Project project = Project.builder()
+            .projectId(projectId)
+            .leader(User.builder()
+                .userId(userId)
+                .email("test@gmail.com")
+                .password("test")
+                .nickName("tester")
+                .build())
+            .build();
+
+        when(mybatisProjectRepository.findByProjectId(projectId)).thenReturn(project);
+        when(mybatisProjectApplyRepository.existsByProjectId(projectId)).thenReturn(false);
+
+        projectService.deleteProject(userId, projectId);
+
+        verify(mybatisProjectRepository, times(1)).delete(project);
     }
 
     @Test
