@@ -14,12 +14,32 @@ public class MybatisProjectPositionRepository implements ProjectPositionReposito
     private final ProjectPositionMapper projectPositionMapper;
 
     @Override
-    public void save(ProjectPosition position) {
-        projectPositionMapper.insertPosition(position);
+    public ProjectPosition findById(long projectPositionId) {
+        return projectPositionMapper.selectProjectPosition(projectPositionId);
     }
 
     @Override
-    public void saveAll(List<ProjectPosition> positions) {
-        projectPositionMapper.insertPositions(positions);
+    public boolean existsByProjectIdAndPositionId(long projectId, long positionId) {
+        return projectPositionMapper.existsByProjectIdAndPositionId(projectId, positionId);
+    }
+
+    @Override
+    public void save(ProjectPosition projectPosition) {
+        projectPositionMapper.insertProjectPosition(projectPosition);
+    }
+
+    @Override
+    public void saveAll(List<ProjectPosition> projectPositions) {
+        projectPositionMapper.insertProjectPositions(projectPositions);
+    }
+
+    @Override
+    public void update(ProjectPosition projectPosition) {
+        projectPositionMapper.updateProjectPosition(projectPosition);
+    }
+
+    @Override
+    public void delete(ProjectPosition projectPosition) {
+        projectPositionMapper.deleteProjectPosition(projectPosition);
     }
 }

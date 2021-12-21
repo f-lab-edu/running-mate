@@ -39,6 +39,25 @@
         WHERE p_a.user_id = #{userId}
     </select>
 
+    <select id="existsByProjectPositionIdAndUserId" resultType="boolean">
+        SELECT
+            EXISTS(
+                SELECT project_apply_id
+                FROM project_apply
+                WHERE project_position_id = #{projectPositionId}
+                AND user_id = #{userId}
+            ) exist
+    </select>
+    
+    <select id="existsByProjectPositionId" resultType="boolean">
+        SELECT
+            EXISTS(
+                SELECT project_apply_id
+                FROM project_apply
+                WHERE project_position_id = #{projectPositionId}
+            ) exist
+    </select>
+
     <insert id="insertProjectApply">
         INSERT INTO
             project_apply (

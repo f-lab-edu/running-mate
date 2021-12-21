@@ -4,7 +4,9 @@ import com.runningmate.runningmate.project.domain.entity.ProjectApply;
 
 public interface ProjectApplyRepository {
 
-    public ProjectApply findByUserId(long userId);
+    public boolean existsProjectPositionIdAndUserId(long projectPositionId, long userId);
 
     public void save(ProjectApply projectApply);
+
+    public boolean existsByProjectPositionId(long projectPositionId);
 }

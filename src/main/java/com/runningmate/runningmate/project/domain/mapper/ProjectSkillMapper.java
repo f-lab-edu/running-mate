@@ -8,7 +8,11 @@ import java.util.List;
 @Mapper
 public interface ProjectSkillMapper {
 
-    public void insertSkill(ProjectSkill skill);
+    public ProjectSkill selectProjectSkill(long projectSkillId);
 
-    public void insertSkills(List<ProjectSkill> skills);
+    public void insertProjectSkill(ProjectSkill skill);
+
+    public void insertProjectSkills(List<ProjectSkill> skills);
+
+    public void deleteProjectSkill(ProjectSkill projectSkill);
 }

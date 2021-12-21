@@ -170,4 +170,15 @@
                 , #{updateDate}
             )
     </insert>
+
+    <update id="updateProject">
+        UPDATE project
+           SET begin_date = #{beginDate}
+             , end_date = #{endDate}
+             , title = #{title}
+             , contents = #{contents}
+             , status = #{status}
+             , update_date = #{updateDate}
+         WHERE project_id = #{projectId}
+    </update>
 </mapper>

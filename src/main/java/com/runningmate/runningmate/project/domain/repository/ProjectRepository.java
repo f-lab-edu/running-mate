@@ -11,4 +11,6 @@ public interface ProjectRepository {
     public Project findByProjectId(long projectId);
 
     public void save(Project project);
+
+    public void update(Project project);
 }
