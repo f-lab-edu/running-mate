@@ -155,6 +155,7 @@ public class ProjectService {
             .collect(Collectors.toList()));
     }
 
+    @Transactional
     public void addProjectPosition(long userId, long projectId, ProjectPositionSaveRequestDto projectPositionSaveRequestDto) {
         Project project = mybatisProjectRepository.findByProjectId(projectId);
 
@@ -173,6 +174,7 @@ public class ProjectService {
             .build());
     }
 
+    @Transactional
     public void modifyProjectPosition(long userId, long projectPositionId, ProjectPositionUpdateRequestDto projectPositionUpdateRequestDto) {
         ProjectPosition projectPosition = mybatisProjectPositionRepository.findById(projectPositionId);
 
@@ -182,6 +184,7 @@ public class ProjectService {
         mybatisProjectPositionRepository.update(projectPosition);
     }
 
+    @Transactional
     public void deleteProjectPosition(long userId, long projectPositionId) {
         ProjectPosition projectPosition = mybatisProjectPositionRepository.findById(projectPositionId);
 
@@ -194,6 +197,7 @@ public class ProjectService {
         mybatisProjectPositionRepository.delete(projectPosition);
     }
 
+    @Transactional
     public void addProjectSKill(long userId, long projectId, ProjectSkillSaveRequestDto projectSkillSaveRequestDto) {
         Project project = mybatisProjectRepository.findByProjectId(projectId);
 
@@ -207,6 +211,7 @@ public class ProjectService {
             .build());
     }
 
+    @Transactional
     public void deleteProjectSKill(long userId, long projectSkillId) {
         ProjectSkill projectSkill = mybatisProjectSkillRepository.findByProjectSkillId(projectSkillId);
 
@@ -216,6 +221,7 @@ public class ProjectService {
 
     }
 
+    @Transactional
     public void addApplyQuestion(long userId, long projectId, ApplyQuestionSaveRequestDto applyQuestionSaveRequestDto) {
         Project project = mybatisProjectRepository.findByProjectId(projectId);
 
@@ -229,6 +235,7 @@ public class ProjectService {
             .build());
     }
 
+    @Transactional
     public void modifyApplyQuestion(long userId, long applyQuestionId, ApplyQuestionUpdateRequestDto applyQuestionUpdateRequestDto) {
         ApplyQuestion applyQuestion = mybatisApplyQuestionRepository.findByApplyQuestionId(applyQuestionId);
 
@@ -238,6 +245,7 @@ public class ProjectService {
         mybatisApplyQuestionRepository.update(applyQuestion);
     }
 
+    @Transactional
     public void deleteApplyQuestion(long userId, long applyQuestionId) {
         ApplyQuestion applyQuestion = mybatisApplyQuestionRepository.findByApplyQuestionId(applyQuestionId);
 
