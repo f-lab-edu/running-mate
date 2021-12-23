@@ -29,4 +29,14 @@ public class MybatisUserRepository implements UserRepository {
     public void save(User user) {
         userMapper.insertUser(user);
     }
+
+    @Override
+    public void update(User user) {
+        userMapper.updateUser(user);
+    }
+
+    @Override
+    public Optional<User> getUserByResetToken(String resetToken) {
+        return Optional.ofNullable(userMapper.selectUserByToken(resetToken));
+    }
 }

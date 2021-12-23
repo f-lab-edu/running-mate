@@ -17,4 +17,8 @@ public interface UserMapper {
     User selectUserById(long userId);
 
     void insertUser(User user);
+
+    void updateUser(User user);
+
+    User selectUserByToken(String resetToken);
 }

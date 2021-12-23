@@ -1,12 +1,16 @@
 package com.runningmate.runningmate.user.dto.Request;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
 import javax.validation.constraints.*;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserLoginRequestDto {
 
     // 이메일

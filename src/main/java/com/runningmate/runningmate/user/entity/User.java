@@ -1,8 +1,10 @@
 package com.runningmate.runningmate.user.entity;
 
+import com.runningmate.runningmate.common.utils.BCryptUtil;
 import com.runningmate.runningmate.image.domain.entity.Image;
 import com.runningmate.runningmate.position.domain.entity.Position;
 import com.runningmate.runningmate.user.aop.LoginCheck.UserLevel;
+import com.runningmate.runningmate.user.dto.Request.UserUpdateRequestDto;
 import java.util.List;
 import lombok.*;
 
@@ -49,4 +51,32 @@ public class User {
     
     // 유저스킬
     private List<UserSkill> userSkills;
+
+    private UserStatus status;
+
+    public void delete(){
+        status = UserStatus.DELETE;
+        updateDate = LocalDateTime.now();
+    }
+
+    public void update(UserUpdateRequestDto userUpdateRequestDto){
+        nickName = userUpdateRequestDto.getNickName();
+        position = Position.builder().positionId(userUpdateRequestDto.getPositionId()).build();
+        level = userUpdateRequestDto.getLevel();
+    }
+
+    public void updatePassword(String changePassword){
+        password = BCryptUtil.setEncrypt(changePassword);
+        updateDate = LocalDateTime.now();
+    }
+
+    public void updateImage(long imageId){
+        image = Image.builder().imageId(imageId).build();
+        updateDate = LocalDateTime.now();
+    }
+
+    public void findUserPassword(String findUserPasswordToken){
+        resetToken = findUserPasswordToken;
+        updateDate = LocalDateTime.now();
+    }
 }
