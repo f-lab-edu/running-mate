@@ -1,4 +1,4 @@
-package com.runningmate.runningmate.user.dto;
+package com.runningmate.runningmate.user.dto.Request;
 
 import com.runningmate.runningmate.user.aop.LoginCheck;
 import java.util.List;

@@ -3,6 +3,7 @@ package com.runningmate.runningmate.user.entity;
 import com.runningmate.runningmate.image.domain.entity.Image;
 import com.runningmate.runningmate.position.domain.entity.Position;
 import com.runningmate.runningmate.user.aop.LoginCheck.UserLevel;
+import java.util.List;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -45,4 +46,7 @@ public class User {
 
     // 권한
     private UserLevel level;
+    
+    // 유저스킬
+    private List<UserSkill> userSkills;
 }
