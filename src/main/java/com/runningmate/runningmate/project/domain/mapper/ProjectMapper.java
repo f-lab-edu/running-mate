@@ -13,4 +13,8 @@ public interface ProjectMapper {
     public Project selectProject(long projectId);
 
     public void insertProject(Project project);
+
+    public void updateProject(Project project);
+
+    public void deleteProject(Project project);
 }

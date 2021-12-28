@@ -27,4 +27,14 @@ public class MybatisProjectRepository implements ProjectRepository {
     public void save(Project project) {
         projectMapper.insertProject(project);
     }
+
+    @Override
+    public void update(Project project) {
+        projectMapper.updateProject(project);
+    }
+
+    @Override
+    public void delete(Project project) {
+        projectMapper.deleteProject(project);
+    }
 }

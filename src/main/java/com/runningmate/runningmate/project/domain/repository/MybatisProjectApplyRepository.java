@@ -12,12 +12,22 @@ public class MybatisProjectApplyRepository implements ProjectApplyRepository {
     private final ProjectApplyMapper projectApplyMapper;
 
     @Override
-    public ProjectApply findByUserId(long userId) {
-        return projectApplyMapper.selectProjectApplyByUserId(userId);
+    public void save(ProjectApply projectApply) {
+        projectApplyMapper.insertProjectApply(projectApply);
     }
 
     @Override
-    public void save(ProjectApply projectApply) {
-        projectApplyMapper.insertProjectApply(projectApply);
+    public boolean existsByProjectId(long projectId) {
+        return projectApplyMapper.existsByProjectId(projectId);
+    }
+
+    @Override
+    public boolean existsProjectPositionIdAndUserId(long projectPositionId, long userId) {
+        return projectApplyMapper.existsByProjectPositionIdAndUserId(projectPositionId, userId);
+    }
+
+    @Override
+    public boolean existsByProjectPositionId(long projectPositionId) {
+        return projectApplyMapper.existsByProjectPositionId(projectPositionId);
     }
 }

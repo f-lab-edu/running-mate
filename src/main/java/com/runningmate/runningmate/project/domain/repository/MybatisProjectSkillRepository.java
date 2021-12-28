@@ -14,12 +14,22 @@ public class MybatisProjectSkillRepository implements ProjectSkillRepository {
     private final ProjectSkillMapper projectSkillMapper;
 
     @Override
+    public ProjectSkill findByProjectSkillId(long projectSkillId) {
+        return projectSkillMapper.selectProjectSkill(projectSkillId);
+    }
+
+    @Override
     public void save(ProjectSkill skill) {
-        projectSkillMapper.insertSkill(skill);
+        projectSkillMapper.insertProjectSkill(skill);
     }
 
     @Override
     public void saveAll(List<ProjectSkill> skills) {
-        projectSkillMapper.insertSkills(skills);
+        projectSkillMapper.insertProjectSkills(skills);
+    }
+
+    @Override
+    public void delete(ProjectSkill projectSkill) {
+        projectSkillMapper.deleteProjectSkill(projectSkill);
     }
 }

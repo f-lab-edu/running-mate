@@ -1,5 +1,6 @@
 package com.runningmate.runningmate.project.domain.entity;
 
+import com.runningmate.runningmate.project.dto.request.ApplyQuestionUpdateRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,4 +19,9 @@ public class ApplyQuestion {
     private String question;
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
+
+    public void updateInfo(ApplyQuestionUpdateRequestDto applyQuestionUpdateRequestDto) {
+        this.question = applyQuestionUpdateRequestDto.getQuestion();
+        this.updateDate = LocalDateTime.now();
+    }
 }

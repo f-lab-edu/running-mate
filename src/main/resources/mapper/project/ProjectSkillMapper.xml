@@ -2,7 +2,47 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.runningmate.runningmate.project.domain.mapper.ProjectSkillMapper">
-    <insert id="insertSkill">
+    <resultMap id="projectSkillMap" type="com.runningmate.runningmate.project.domain.entity.ProjectSkill">
+        <id column="project_skill_id"       property="projectSkillId"/>
+        <result column="create_date"        property="createDate"/>
+        <result column="update_date"        property="updateDate"/>
+
+        <association property="skill" javaType="com.runningmate.runningmate.skill.domain.entity.Skill">
+            <id column="skill_id"            property="skillId"/>
+            <result column="skill_name"      property="skillName"/>
+        </association>
+
+        <association property="project" javaType="com.runningmate.runningmate.project.domain.entity.Project">
+            <id column="project_id"             property="projectId"/>
+
+            <association property="leader" javaType="com.runningmate.runningmate.user.entity.User">
+                <id column="user_id"                property="userId"/>
+                <result column="email"              property="email"/>
+                <result column="nickname"           property="nickName"/>
+            </association>
+        </association>
+    </resultMap>
+
+    <select id="selectProjectSkill" resultMap="projectSkillMap">
+        SELECT
+            p_s.project_skill_id,
+            p_s.create_date,
+            p_s.update_date,
+            s.skill_id,
+            s.skill_name,
+            p.project_id,
+            u.user_id,
+            u.email,
+            u.nickname
+        FROM project_skill p_s
+            JOIN skill s ON p_s.skill_id = s.skill_id
+            JOIN project p ON p_s.project_id = p.project_id
+            JOIN user u ON p.leader = u.user_id
+        WHERE project_skill_id = #{projectSkillId}
+    </select>
+
+
+    <insert id="insertProjectSkill">
         INSERT INTO
             project_skill (
                 project_id
@@ -18,7 +58,7 @@
         )
     </insert>
 
-    <insert id="insertSkills" parameterType="java.util.List">
+    <insert id="insertProjectSkills" parameterType="java.util.List">
         INSERT INTO
             project_skill (
                 project_id
@@ -35,4 +75,9 @@
             )
             </foreach>
     </insert>
+
+    <delete id="deleteProjectSkill">
+        DELETE FROM project_skill
+        WHERE project_skill_id = #{projectSkillId}
+    </delete>
 </mapper>
