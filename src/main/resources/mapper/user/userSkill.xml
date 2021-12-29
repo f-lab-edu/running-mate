@@ -13,8 +13,8 @@
             VALUES
                 <foreach collection="list" item="item" separator=",">
                 (
-                    #{item.userId}
-                    , #{item.skillId}
+                    #{item.user.userId}
+                    , #{item.skill.skillId}
                     , #{item.createDate}
                 )
                 </foreach>

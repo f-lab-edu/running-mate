@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserUpdatePasswordRequestDto {
-    String resetToken;
-    String password;
+    private String resetToken;
+    private String password;
 }

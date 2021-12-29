@@ -12,6 +12,7 @@ import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -67,13 +68,13 @@ public class UserController {
      * @return
      */
     @LoginCheck
-    @PatchMapping("/update/{userId}")
+    @PatchMapping("/{userId}")
     public ResponseEntity<UserInfoResponseDto> modifyUser(@PathVariable("userId") long userId, @RequestBody UserUpdateRequestDto userUpdateRequestDto) {
         userService.updateUser(userId, userUpdateRequestDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping("/userPassword")
+    @PatchMapping("/userPassword")
     public ResponseEntity<UserInfoResponseDto> modifyUserPassword(@RequestBody UserUpdatePasswordRequestDto userUpdatePasswordRequestDto) {
         userService.updateUserPassword(userUpdatePasswordRequestDto);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -86,7 +87,7 @@ public class UserController {
      * @return
      */
     @LoginCheck
-    @PatchMapping("/image/{userId}")
+    @PatchMapping("/{userId}/image")
     public ResponseEntity modifyUserImage(@PathVariable("userId") long userId, @RequestPart("file") MultipartFile multipartFile) {
         userService.updateUserImage(userId, multipartFile);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -99,13 +100,13 @@ public class UserController {
      * @return
      */
     @LoginCheck
-    @PatchMapping("/delete/{userId}")
+    @DeleteMapping("/{userId}")
     public ResponseEntity deleteUser(@PathVariable("userId") long userId, @RequestPart String password ) {
         userService.deleteUser(userId, password);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/findPassword/{userEmail}")
+    @GetMapping("/user-password/{userEmail}")
     public ResponseEntity findUserPassword(@PathVariable("userEmail") String userEmail) {
         userService.findUserPassword(userEmail);
         return new ResponseEntity<>(HttpStatus.OK);

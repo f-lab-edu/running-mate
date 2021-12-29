@@ -142,12 +142,10 @@ public class UserService {
         if(user.isEmpty()) throw new NotFoundUserException("유저 정보를 찾을 수 없습니다.");
         User updateUser = user.get();
 
-        if(multipartFile != null) {
-            awsS3ImageUploadService.delete(user.get().getImage().getImageId());
-            Image image = awsS3ImageUploadService.upload(multipartFile);
-            updateUser.updateImage(image.getImageId());
-            mybatisUserRepository.update(updateUser);
-        }
+        awsS3ImageUploadService.delete(user.get().getImage().getImageId());
+        Image image = awsS3ImageUploadService.upload(multipartFile);
+        updateUser.updateImage(image.getImageId());
+        mybatisUserRepository.update(updateUser);
     }
 
     /**

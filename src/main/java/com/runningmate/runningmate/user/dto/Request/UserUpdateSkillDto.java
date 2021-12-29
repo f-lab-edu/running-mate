@@ -9,7 +9,7 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 public class UserUpdateSkillDto {
-    long skillId;
+    private long skillId;
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
 }

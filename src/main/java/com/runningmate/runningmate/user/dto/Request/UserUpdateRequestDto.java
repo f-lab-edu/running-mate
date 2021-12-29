@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserUpdateRequestDto {
-    String nickName;
-    String password;
-    long positionId;
-    UserLevel level;
+    private String nickName;
+    private String password;
+    private long positionId;
+    private UserLevel level;
 }

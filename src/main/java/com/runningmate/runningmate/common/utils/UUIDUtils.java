@@ -5,11 +5,11 @@ import java.util.UUID;
 public class UUIDUtils {
 
     public static String getUUID(){
-        return UUID.randomUUID().toString().replaceAll("-", "");
+        return UUID.randomUUID().toString();
     }
 
     public static String getUUID(String addValue){
-        return UUID.randomUUID().toString().replaceAll("-", "") + addValue;
+        return UUID.randomUUID().toString() + addValue;
     }
 
 }
