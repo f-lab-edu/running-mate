@@ -13,11 +13,25 @@
             VALUES
                 <foreach collection="list" item="item" separator=",">
                 (
-                    #{item.userId}
-                    , #{item.skillId}
+                    #{item.user.userId}
+                    , #{item.skill.skillId}
                     , #{item.createDate}
                 )
                 </foreach>
 
     </insert>
+
+    <update id="updateUserSkill" parameterType="com.runningmate.runningmate.user.entity.UserSkill">
+        UPDATE user_skill
+            SET update_date = #{updateDate}
+                ,skill_id = #{skill.skillId}
+
+            WHERE user_skill_id = #{userSkillId}
+                    AND user_id = #{user.userId}
+    </update>
+
+    <delete id="deleteUserSkill">
+        DELETE user_skill
+            WHERE user_skill_id = #{userSkillId}
+    </delete>
 </mapper>
