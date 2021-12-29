@@ -80,8 +80,8 @@ public class UserService {
      * @param userId
      * @return
      */
-    public Optional<User> getUserById(long userId) {
-        return mybatisUserRepository.findByUserId(userId);
+    public User getUserById(long userId) {
+        return mybatisUserRepository.findByUserId(userId).orElseThrow(() -> new NotFoundUserException("유저 정보를 찾을 수 없습니다."));
     }
 
     /**
@@ -89,8 +89,8 @@ public class UserService {
      * @param userEmail 
      * @return
      */
-    public Optional<User> getUserByEmail(String userEmail) {
-        return mybatisUserRepository.findByEmail(userEmail);
+    public User getUserByEmail(String userEmail) {
+        return mybatisUserRepository.findByEmail(userEmail).orElseThrow(() -> new NotFoundUserException("유저 정보를 찾을 수 없습니다."));
     }
     
     /**
@@ -121,10 +121,7 @@ public class UserService {
 
 
     public void updateUserPassword(UserUpdatePasswordRequestDto userUpdatePasswordRequestDto) {
-        Optional<User> user = mybatisUserRepository.getUserByResetToken(userUpdatePasswordRequestDto.getResetToken());
-        if(user.isEmpty()) throw new NotFoundUserException("유저 정보를 찾을 수 없습니다.");
-
-        User updateUser = user.get();
+        User updateUser = mybatisUserRepository.getUserByResetToken(userUpdatePasswordRequestDto.getResetToken()).orElseThrow(() -> new NotFoundUserException("유저 정보를 찾을 수 없습니다."));
         updateUser.updatePassword(userUpdatePasswordRequestDto.getPassword());
         mybatisUserRepository.update(updateUser);
     }
@@ -138,11 +135,9 @@ public class UserService {
      */
     @Transactional
     public void updateUserImage(long userId, MultipartFile multipartFile) {
-        Optional<User> user = getUserById(userId);
-        if(user.isEmpty()) throw new NotFoundUserException("유저 정보를 찾을 수 없습니다.");
-        User updateUser = user.get();
+        User updateUser = getUserById(userId);
 
-        awsS3ImageUploadService.delete(user.get().getImage().getImageId());
+        awsS3ImageUploadService.delete(updateUser.getImage().getImageId());
         Image image = awsS3ImageUploadService.upload(multipartFile);
         updateUser.updateImage(image.getImageId());
         mybatisUserRepository.update(updateUser);
@@ -155,12 +150,11 @@ public class UserService {
      * @param userEmail
      */
     public void findUserPassword(String userEmail){
-        Optional<User> user = getUserByEmail(userEmail);
-        if(user.isEmpty()) throw new NotFoundUserException("유저 정보를 찾을 수 없습니다.");
+        User user = getUserByEmail(userEmail);
 
         // 중복을 막기위한 userId 추가
-        user.get().findUserPassword(UUIDUtils.getUUID(String.valueOf(user.get().getUserId())));
-        mybatisUserRepository.update(user.get());
+        user.findUserPassword(UUIDUtils.getUUID(String.valueOf(user.getUserId())));
+        mybatisUserRepository.update(user);
     }
 
     /**
@@ -170,10 +164,9 @@ public class UserService {
      * @param password
      * @return
      */
-    public User userExistAndPasswordValid(long userId, String password){
-        Optional<User> user = getUserById(userId);
-        if(user.isEmpty()) throw new NotFoundUserException("유저 정보를 찾을 수 없습니다.");
-        if(!BCryptUtil.comparePassword(password, user.get().getPassword())) throw new AuthenticationPasswordException("비밀번호가 맞지 않습니다.");
-        return user.get();
+    public User userExistAndPasswordValid(long userId, String password) {
+        User user = getUserById(userId);
+        if(!BCryptUtil.comparePassword(password, user.getPassword())) throw new AuthenticationPasswordException("비밀번호가 맞지 않습니다.");
+        return user;
     }
 }

@@ -7,7 +7,6 @@ import com.runningmate.runningmate.user.dto.Response.UserInfoResponseDto;
 import com.runningmate.runningmate.user.dto.Request.UserSignUpRequestDto;
 import com.runningmate.runningmate.user.entity.User;
 import com.runningmate.runningmate.user.service.UserService;
-import java.util.Optional;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -56,8 +55,8 @@ public class UserController {
      */
     @GetMapping("/{userId}")
     public ResponseEntity<UserInfoResponseDto> getUser(@PathVariable("userId") long userId) {
-        Optional<User> user = userService.getUserById(userId);
-        return user.isEmpty() ? new ResponseEntity<>(HttpStatus.NOT_FOUND) : new ResponseEntity<>(UserInfoResponseDto.of(user.get()), HttpStatus.OK);
+        User user = userService.getUserById(userId);
+        return new ResponseEntity<>(UserInfoResponseDto.of(user), HttpStatus.OK);
     }
 
     /**
