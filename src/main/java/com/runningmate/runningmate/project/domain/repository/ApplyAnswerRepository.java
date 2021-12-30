@@ -5,5 +5,7 @@ import java.util.List;
 
 public interface ApplyAnswerRepository {
 
+    List<ApplyAnswer> findByProjectApplyId(long projectApplyId);
+
     public void saveAll(List<ApplyAnswer> applyAnswers);
 }

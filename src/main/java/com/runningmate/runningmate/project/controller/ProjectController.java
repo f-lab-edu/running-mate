@@ -5,11 +5,14 @@ import com.runningmate.runningmate.common.utils.ValidList;
 import com.runningmate.runningmate.project.dto.request.ApplyQuestionSaveRequestDto;
 import com.runningmate.runningmate.project.dto.request.ApplyQuestionUpdateRequestDto;
 import com.runningmate.runningmate.project.dto.request.ProjectApplyRequestDto;
+import com.runningmate.runningmate.project.dto.request.ProjectApplyUpdateRequestDto;
 import com.runningmate.runningmate.project.dto.request.ProjectPositionSaveRequestDto;
 import com.runningmate.runningmate.project.dto.request.ProjectPositionUpdateRequestDto;
 import com.runningmate.runningmate.project.dto.request.ProjectSearchRequestDto;
 import com.runningmate.runningmate.project.dto.request.ProjectSkillSaveRequestDto;
 import com.runningmate.runningmate.project.dto.request.ProjectUpdateRequestDto;
+import com.runningmate.runningmate.project.dto.response.ApplyAnswerInfoResponseDto;
+import com.runningmate.runningmate.project.dto.response.ProjectApplyInfoResponseDto;
 import com.runningmate.runningmate.project.dto.response.ProjectInfoResponseDto;
 import com.runningmate.runningmate.project.dto.request.ProjectSaveRequestDto;
 import com.runningmate.runningmate.project.service.ProjectService;
@@ -167,6 +170,41 @@ public class ProjectController {
         long userId = SessionUtils.getLoginSessionUserId();
 
         projectService.deleteApplyQuestion(userId, applyQuestionId);
+
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @LoginCheck
+    @GetMapping("/project/{projectId}/project-applies")
+    public ResponseEntity<List<ProjectApplyInfoResponseDto>> getProjectApplies(@PathVariable("projectId") long projectId) {
+        long userId = SessionUtils.getLoginSessionUserId();
+
+        List<ProjectApplyInfoResponseDto> response = projectService.getProjectApplies(userId, projectId).stream()
+            .map(ProjectApplyInfoResponseDto::of)
+            .collect(Collectors.toList());
+
+        return ResponseEntity.ok().body(response);
+    }
+
+    @LoginCheck
+    @GetMapping("/project-apply/{projectApplyId}/apply-answer")
+    public ResponseEntity<List<ApplyAnswerInfoResponseDto>> getApplyAnswers(@PathVariable("projectApplyId")long projectApplyId) {
+        long userId = SessionUtils.getLoginSessionUserId();
+
+        List<ApplyAnswerInfoResponseDto> response = projectService.getApplyAnswers(userId, projectApplyId).stream()
+            .map(ApplyAnswerInfoResponseDto::of)
+            .collect(Collectors.toList());
+
+        return ResponseEntity.ok().body(response);
+    }
+
+    @LoginCheck
+    @PatchMapping("/project-apply/{projectApplyId}")
+    public ResponseEntity<?> modifyProjectApply(@PathVariable("projectApplyId")long projectApplyId,
+                                                @RequestBody @Valid ProjectApplyUpdateRequestDto projectApplyUpdateRequestDto) {
+        long userId = SessionUtils.getLoginSessionUserId();
+
+        projectService.modifyProjectApply(userId, projectApplyId, projectApplyUpdateRequestDto);
 
         return ResponseEntity.status(HttpStatus.OK).build();
     }
