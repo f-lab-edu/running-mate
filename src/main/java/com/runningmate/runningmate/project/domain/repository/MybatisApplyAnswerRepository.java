@@ -13,6 +13,11 @@ public class MybatisApplyAnswerRepository implements ApplyAnswerRepository {
     private final ApplyAnswerMapper applyAnswerMapper;
 
     @Override
+    public List<ApplyAnswer> findByProjectApplyId(long projectApplyId) {
+        return applyAnswerMapper.selectApplyAnswerByProjectApplyId(projectApplyId);
+    }
+
+    @Override
     public void saveAll(List<ApplyAnswer> applyAnswers) {
         applyAnswerMapper.insertApplyAnswers(applyAnswers);
     }

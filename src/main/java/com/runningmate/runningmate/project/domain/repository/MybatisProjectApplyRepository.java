@@ -2,6 +2,7 @@ package com.runningmate.runningmate.project.domain.repository;
 
 import com.runningmate.runningmate.project.domain.entity.ProjectApply;
 import com.runningmate.runningmate.project.domain.mapper.ProjectApplyMapper;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -10,6 +11,16 @@ import org.springframework.stereotype.Repository;
 public class MybatisProjectApplyRepository implements ProjectApplyRepository {
 
     private final ProjectApplyMapper projectApplyMapper;
+
+    @Override
+    public ProjectApply findByProjectApplyId(long projectApplyId) {
+        return projectApplyMapper.selectProjectApplyByProjectApplyId(projectApplyId);
+    }
+
+    @Override
+    public List<ProjectApply> findByProjectId(long projectId) {
+        return projectApplyMapper.selectProjectApplyByProjectId(projectId);
+    }
 
     @Override
     public void save(ProjectApply projectApply) {
@@ -29,5 +40,10 @@ public class MybatisProjectApplyRepository implements ProjectApplyRepository {
     @Override
     public boolean existsByProjectPositionId(long projectPositionId) {
         return projectApplyMapper.existsByProjectPositionId(projectPositionId);
+    }
+
+    @Override
+    public void update(ProjectApply projectApply) {
+        projectApplyMapper.updateProjectApply(projectApply);
     }
 }
