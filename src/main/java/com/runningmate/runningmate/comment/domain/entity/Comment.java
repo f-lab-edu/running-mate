@@ -21,7 +21,6 @@ public class Comment {
     private Project project;
     private User user;
     private String contents;
-    private Long parentCommentId;
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
 
@@ -30,9 +29,5 @@ public class Comment {
     public void updateInfo(CommentUpdateRequestDto commentUpdateRequestDto) {
         this.contents = commentUpdateRequestDto.getContents();
         this.updateDate = LocalDateTime.now();
-    }
-
-    public void updateParentCommentId(Long commentId) {
-        this.parentCommentId = commentId;
     }
 }
