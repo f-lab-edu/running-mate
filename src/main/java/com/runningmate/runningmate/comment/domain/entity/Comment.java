@@ -1,0 +1,38 @@
+package com.runningmate.runningmate.comment.domain.entity;
+
+import com.runningmate.runningmate.comment.dto.request.CommentUpdateRequestDto;
+import com.runningmate.runningmate.project.domain.entity.Project;
+import com.runningmate.runningmate.user.entity.User;
+import java.time.LocalDateTime;
+import java.util.List;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+public class Comment {
+
+    private long commentId;
+    private Project project;
+    private User user;
+    private String contents;
+    private Long parentCommentId;
+    private LocalDateTime createDate;
+    private LocalDateTime updateDate;
+
+    private List<CommentReply> replies;
+
+    public void updateInfo(CommentUpdateRequestDto commentUpdateRequestDto) {
+        this.contents = commentUpdateRequestDto.getContents();
+        this.updateDate = LocalDateTime.now();
+    }
+
+    public void updateParentCommentId(Long commentId) {
+        this.parentCommentId = commentId;
+    }
+}
