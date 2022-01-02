@@ -63,6 +63,7 @@ public class CommentService {
         mybatisCommentRepository.delete(comment);
     }
 
+    @Transactional
     public void addCommentReply(long userId, long commentId, CommentReplySaveRequestDto commentReplySaveRequestDto) {
         Comment comment = mybatisCommentRepository.findByCommentId(commentId);
         Optional<User> user = mybatisUserRepository.findByUserId(userId);
@@ -76,6 +77,7 @@ public class CommentService {
             .build());
     }
 
+    @Transactional
     public void modifyCommentReply(long userId, long commentReplyId, CommentReplyUpdateRequestDto commentReplyUpdateRequestDto) {
         CommentReply commentReply = mybatisCommentReplyRepository.findByCommentReplyId(commentReplyId);
 
@@ -85,6 +87,7 @@ public class CommentService {
         mybatisCommentReplyRepository.update(commentReply);
     }
 
+    @Transactional
     public void deleteCommentReply(long userId, long commentReplyId) {
         CommentReply commentReply = mybatisCommentReplyRepository.findByCommentReplyId(commentReplyId);
 
