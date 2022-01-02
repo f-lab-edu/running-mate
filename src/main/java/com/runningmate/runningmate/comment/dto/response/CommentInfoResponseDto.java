@@ -21,7 +21,6 @@ public class CommentInfoResponseDto {
     private String email;
     private String nickname;
     private String contents;
-    private Long parentCommentId;
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
 
@@ -35,7 +34,6 @@ public class CommentInfoResponseDto {
             .email(comment.getUser().getEmail())
             .nickname(comment.getUser().getNickName())
             .contents(comment.getContents())
-            .parentCommentId(comment.getParentCommentId())
             .createDate(comment.getCreateDate())
             .updateDate(comment.getUpdateDate())
             .replies(comment.getReplies().stream()
