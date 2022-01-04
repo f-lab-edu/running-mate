@@ -1,20 +1,20 @@
 package com.runningmate.runningmate.comment.service;
 
 import com.runningmate.runningmate.comment.domain.entity.Comment;
-import com.runningmate.runningmate.comment.domain.entity.CommentReply;
-import com.runningmate.runningmate.comment.domain.repository.CommentReplyRepository;
 import com.runningmate.runningmate.comment.domain.repository.CommentRepository;
-import com.runningmate.runningmate.comment.dto.request.CommentReplySaveRequestDto;
-import com.runningmate.runningmate.comment.dto.request.CommentReplyUpdateRequestDto;
 import com.runningmate.runningmate.comment.dto.request.CommentSaveRequestDto;
 import com.runningmate.runningmate.comment.dto.request.CommentUpdateRequestDto;
 import com.runningmate.runningmate.project.domain.entity.Project;
 import com.runningmate.runningmate.user.entity.User;
 import com.runningmate.runningmate.user.repository.UserRepository;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,12 +23,19 @@ import org.springframework.transaction.annotation.Transactional;
 public class CommentService {
 
     private final CommentRepository mybatisCommentRepository;
-    private final CommentReplyRepository mybatisCommentReplyRepository;
     private final UserRepository mybatisUserRepository;
 
     @Transactional(readOnly = true)
-    public List<Comment> getComments(long projectId) {
-        return mybatisCommentRepository.findByProjectId(projectId);
+    public List<Comment> getComments(long projectId, int cursor, int size) {
+        Map<Long, Comment> commentMap = new HashMap<>();
+
+        mybatisCommentRepository.findByProjectId(projectId, PageRequest.of(cursor, size))
+            .forEach(comment -> {
+                if(comment.getParentId() == 0) commentMap.put(comment.getCommentId(), comment);
+                else commentMap.get(comment.getParentId()).getReplies().add(comment);
+            });
+
+        return new ArrayList<>(commentMap.values());
     }
 
     @Transactional
@@ -39,6 +46,20 @@ public class CommentService {
             .project(Project.builder().projectId(projectId).build())
             .user(user.orElseThrow(NullPointerException::new))
             .contents(commentSaveRequestDto.getContents())
+            .createDate(LocalDateTime.now())
+            .updateDate(LocalDateTime.now())
+            .build());
+    }
+
+    @Transactional
+    public void createComment(long userId, long projectId, long commentId, CommentSaveRequestDto commentSaveRequestDto) {
+        Optional<User> user = mybatisUserRepository.findByUserId(userId);
+
+        mybatisCommentRepository.save(Comment.builder()
+            .project(Project.builder().projectId(projectId).build())
+            .user(user.orElseThrow(NullPointerException::new))
+            .contents(commentSaveRequestDto.getContents())
+            .parentId(commentId)
             .createDate(LocalDateTime.now())
             .updateDate(LocalDateTime.now())
             .build());
@@ -61,39 +82,6 @@ public class CommentService {
         validationWriter(userId, comment.getUser().getUserId());
 
         mybatisCommentRepository.delete(comment);
-    }
-
-    @Transactional
-    public void addCommentReply(long userId, long commentId, CommentReplySaveRequestDto commentReplySaveRequestDto) {
-        Comment comment = mybatisCommentRepository.findByCommentId(commentId);
-        Optional<User> user = mybatisUserRepository.findByUserId(userId);
-
-        mybatisCommentReplyRepository.save(CommentReply.builder()
-            .comment(comment)
-            .user(user.orElseThrow(NullPointerException::new))
-            .contents(commentReplySaveRequestDto.getContents())
-            .createDate(LocalDateTime.now())
-            .updateDate(LocalDateTime.now())
-            .build());
-    }
-
-    @Transactional
-    public void modifyCommentReply(long userId, long commentReplyId, CommentReplyUpdateRequestDto commentReplyUpdateRequestDto) {
-        CommentReply commentReply = mybatisCommentReplyRepository.findByCommentReplyId(commentReplyId);
-
-        validationWriter(userId, commentReply.getUser().getUserId());
-
-        commentReply.updateInfo(commentReplyUpdateRequestDto);
-        mybatisCommentReplyRepository.update(commentReply);
-    }
-
-    @Transactional
-    public void deleteCommentReply(long userId, long commentReplyId) {
-        CommentReply commentReply = mybatisCommentReplyRepository.findByCommentReplyId(commentReplyId);
-
-        validationWriter(userId, commentReply.getUser().getUserId());
-
-        mybatisCommentReplyRepository.delete(commentReply);
     }
 
     private void validationWriter(long loginUserId, long writerUserId) {

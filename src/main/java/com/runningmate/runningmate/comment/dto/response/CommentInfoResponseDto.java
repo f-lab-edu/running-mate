@@ -24,7 +24,7 @@ public class CommentInfoResponseDto {
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
 
-    private List<CommentReplyInfoResponseDto> replies;
+    private List<CommentInfoResponseDto> replies;
 
     public static CommentInfoResponseDto of(Comment comment) {
         return CommentInfoResponseDto.builder()
@@ -37,7 +37,7 @@ public class CommentInfoResponseDto {
             .createDate(comment.getCreateDate())
             .updateDate(comment.getUpdateDate())
             .replies(comment.getReplies().stream()
-                .map(CommentReplyInfoResponseDto::of)
+                .map(CommentInfoResponseDto::of)
                 .collect(Collectors.toList()))
             .build();
     }

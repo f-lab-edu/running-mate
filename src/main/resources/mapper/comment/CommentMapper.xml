@@ -5,6 +5,7 @@
     <resultMap id="commentMap" type="com.runningmate.runningmate.comment.domain.entity.Comment">
         <id column="comment_id"         property="commentId"/>
         <result column="contents"       property="contents"/>
+        <result column="parent_id"      property="parentId"/>
         <result column="create_date"    property="createDate"/>
         <result column="update_date"    property="updateDate"/>
 
@@ -17,21 +18,6 @@
             <result column="email"          property="email"/>
             <result column="nickname"       property="nickName"/>
         </association>
-
-        <collection property="replies" resultMap="replyMap"/>
-    </resultMap>
-
-    <resultMap id="replyMap" type="com.runningmate.runningmate.comment.domain.entity.CommentReply">
-        <id column="comment_reply_id"   property="commentReplyId"/>
-        <result column="r_contents"     property="contents"/>
-        <result column="r_create_date"  property="createDate"/>
-        <result column="r_update_date"  property="updateDate"/>
-
-        <association property="user" javaType="com.runningmate.runningmate.user.entity.User">
-            <id column="r_user_id"          property="userId"/>
-            <result column="r_email"        property="email"/>
-            <result column="r_nickname"     property="nickName"/>
-        </association>
     </resultMap>
 
     <select id="selectCommentByCommentId" resultMap="commentMap">
@@ -42,19 +28,11 @@
             u.email,
             u.nickname,
             c.contents,
+            c.parent_id,
             c.create_date,
-            c.update_date,
-            c_r.comment_reply_id,
-            c_r.contents as r_contents,
-            c_r.create_date as r_create_date,
-            c_r.update_date as r_update_date,
-            c_r_u.user_id as r_user_id,
-            c_r_u.email as r_email,
-            c_r_u.nickname as r_nickname
+            c.update_date
         FROM comment c
             JOIN user u ON c.user_id = u.user_id
-            LEFT JOIN comment_reply c_r ON c.comment_id = c_r.comment_id
-            LEFT JOIN user c_r_u ON c_r.user_id = c_r_u.user_id
         WHERE c.comment_id = #{commentId}
     </select>
 
@@ -66,25 +44,25 @@
             u.email,
             u.nickname,
             c.contents,
+            c.parent_id,
             c.create_date,
-            c.update_date,
-            c_r.comment_reply_id,
-            c_r.contents as r_contents,
-            c_r.create_date as r_create_date,
-            c_r.update_date as r_update_date,
-            c_r_u.user_id as r_user_id,
-            c_r_u.email as r_email,
-            c_r_u.nickname as r_nickname
-        FROM comment c
+            c.update_date
+        FROM
+            (
+                SELECT
+                    comment_id
+                FROM comment
+                WHERE project_id = #{projectId}
+                AND parent_id IS NULL
+                LIMIT #{pageable.pageSize} OFFSET #{pageable.pageNumber}
+            ) c_c
+            JOIN comment c ON c_c.comment_id = c.comment_id OR c_c.comment_id = c.parent_id
             JOIN user u ON c.user_id = u.user_id
-            LEFT JOIN comment_reply c_r ON c.comment_id = c_r.comment_id
-            LEFT JOIN user c_r_u ON c_r.user_id = c_r_u.user_id
-        WHERE c.project_id = #{projectId}
     </select>
 
     <insert id="insertComment" useGeneratedKeys="true" keyProperty="commentId">
-        INSERT INTO comment(project_id, user_id, contents, create_date, update_date)
-        VALUES(#{project.projectId}, #{user.userId}, #{contents}, #{createDate}, #{updateDate})
+        INSERT INTO comment(project_id, user_id, contents, parent_id, create_date, update_date)
+        VALUES(#{project.projectId}, #{user.userId}, #{contents}, #{parentId}, #{createDate}, #{updateDate})
     </insert>
 
     <update id="updateComment">
