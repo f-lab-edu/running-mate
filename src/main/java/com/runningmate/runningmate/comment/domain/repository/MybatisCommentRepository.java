@@ -4,6 +4,7 @@ import com.runningmate.runningmate.comment.domain.entity.Comment;
 import com.runningmate.runningmate.comment.domain.mapper.CommentMapper;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -18,8 +19,8 @@ public class MybatisCommentRepository implements CommentRepository {
     }
 
     @Override
-    public List<Comment> findByProjectId(long projectId) {
-        return commentMapper.selectCommentByProjectId(projectId);
+    public List<Comment> findByProjectId(long projectId, Pageable pageable) {
+        return commentMapper.selectCommentByProjectId(projectId, pageable);
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.runningmate.runningmate.comment.dto.request.CommentUpdateRequestDto;
 import com.runningmate.runningmate.project.domain.entity.Project;
 import com.runningmate.runningmate.user.entity.User;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -21,10 +22,11 @@ public class Comment {
     private Project project;
     private User user;
     private String contents;
+    private long parentId;
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
 
-    private List<CommentReply> replies;
+    private List<Comment> replies = new ArrayList<>();
 
     public void updateInfo(CommentUpdateRequestDto commentUpdateRequestDto) {
         this.contents = commentUpdateRequestDto.getContents();
