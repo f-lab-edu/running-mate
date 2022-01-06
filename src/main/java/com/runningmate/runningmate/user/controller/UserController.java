@@ -1,7 +1,6 @@
 package com.runningmate.runningmate.user.controller;
 
-import com.runningmate.runningmate.common.exception.NotFoundUserException;
-import com.runningmate.runningmate.common.utils.SessionUtils;
+import com.runningmate.runningmate.common.annotation.SessionLoginUser;
 import com.runningmate.runningmate.user.dto.Request.UserUpdatePasswordRequestDto;
 import com.runningmate.runningmate.user.aop.LoginCheck;
 import com.runningmate.runningmate.user.dto.Request.UserUpdateRequestDto;
@@ -51,28 +50,26 @@ public class UserController {
 
     /**
      * 유저 상세정보
-     * 
-     * @param userId 
+     *
+     * @param loginUser
      * @return
      */
     @GetMapping("/{userId}")
-    public ResponseEntity<UserInfoResponseDto> getUser(@PathVariable("userId") long userId) {
-        User user = userService.getUserById(userId);
-        return new ResponseEntity<>(UserInfoResponseDto.of(user), HttpStatus.OK);
+    public ResponseEntity<UserInfoResponseDto> getUser(@SessionLoginUser User loginUser) {
+        return new ResponseEntity<>(UserInfoResponseDto.of(loginUser), HttpStatus.OK);
     }
 
     /**
      * 유저 업데이트
      *
-     * @param userId
+     * @param loginUser
      * @param userUpdateRequestDto
      * @return
      */
     @LoginCheck
     @PatchMapping("/{userId}")
-    public ResponseEntity<UserInfoResponseDto> modifyUser(@PathVariable("userId") long userId, @RequestBody UserUpdateRequestDto userUpdateRequestDto) {
-        if(SessionUtils.getLoginSessionUserId() != userId) return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
-        userService.updateUser(userId, userUpdateRequestDto);
+    public ResponseEntity<UserInfoResponseDto> modifyUser(@SessionLoginUser User loginUser, @RequestBody UserUpdateRequestDto userUpdateRequestDto) {
+        userService.updateUser(loginUser, userUpdateRequestDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -90,23 +87,22 @@ public class UserController {
      */
     @LoginCheck
     @PatchMapping("/{userId}/image")
-    public ResponseEntity modifyUserImage(@PathVariable("userId") long userId, @RequestPart("file") MultipartFile multipartFile) {
-        if(SessionUtils.getLoginSessionUserId() != userId) return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
-        userService.updateUserImage(userId, multipartFile);
+    public ResponseEntity modifyUserImage(@SessionLoginUser User loginUser, @RequestPart("file") MultipartFile multipartFile) {
+        userService.updateUserImage(loginUser, multipartFile);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /**
      * 유저 삭제 ( ststus 변경 )
      *
-     * @param userId
+     * @param loginUser
+     * @param password
      * @return
      */
     @LoginCheck
     @DeleteMapping("/{userId}")
-    public ResponseEntity deleteUser(@PathVariable("userId") long userId, @RequestBody String password ) {
-        if(SessionUtils.getLoginSessionUserId() != userId) return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
-        userService.deleteUser(userId, password);
+    public ResponseEntity deleteUser(@SessionLoginUser User loginUser, @RequestBody String password ) {
+        userService.deleteUser(loginUser, password);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
