@@ -1,8 +1,7 @@
-package com.runningmate.runningmate.configuration;
+package com.runningmate.runningmate.common.configuration;
 
 import com.runningmate.runningmate.image.domain.entity.ImageStatus;
 import com.runningmate.runningmate.project.domain.entity.ProjectApplyStatus;
-import com.runningmate.runningmate.user.entity.UserStatus;
 import com.zaxxer.hikari.HikariDataSource;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.type.TypeHandler;
@@ -35,7 +34,7 @@ public class DataBaseConfiguration {
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
         sqlSessionFactoryBean.setDataSource(dataSource);
         sqlSessionFactoryBean.setMapperLocations(applicationContext.getResources("classpath:mapper/**/**.xml"));
-        sqlSessionFactoryBean.setTypeHandlers(new TypeHandler[]{ new ImageStatus.TypeHandler() , new ProjectApplyStatus.TypeHandler() , new UserStatus.TypeHandler()});
+        sqlSessionFactoryBean.setTypeHandlers(new TypeHandler[]{new ImageStatus.TypeHandler(), new ProjectApplyStatus.TypeHandler()});
         return sqlSessionFactoryBean.getObject();
     }
 

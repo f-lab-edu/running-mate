@@ -1,4 +1,4 @@
-package com.runningmate.runningmate.configuration;
+package com.runningmate.runningmate.common.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -15,6 +15,8 @@ import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
@@ -60,6 +62,24 @@ public class CacheConfiguration {
         redisStandaloneConfiguration.setPassword(cachePassword);
 
         return new LettuceConnectionFactory(redisStandaloneConfiguration);
+    }
+
+    @Bean
+    RedisTemplate<String, Object> redisCacheTemplate() {
+        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(redisCacheConnectionFactory());
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+        redisTemplate.setDefaultSerializer(new GenericJackson2JsonRedisSerializer());
+        return redisTemplate;
+    }
+
+    @Bean
+    public StringRedisTemplate stringCacheRedisTemplate() {
+        StringRedisTemplate strRedisTemplate = new StringRedisTemplate();
+        strRedisTemplate.setConnectionFactory(redisCacheConnectionFactory());
+        strRedisTemplate.setDefaultSerializer(new GenericJackson2JsonRedisSerializer());
+        return strRedisTemplate;
     }
 
     @Bean
