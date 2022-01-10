@@ -1,5 +1,6 @@
 package com.runningmate.runningmate.user.service;
 
+import com.runningmate.runningmate.common.annotation.SessionLoginUser;
 import com.runningmate.runningmate.common.exception.AuthenticationPasswordException;
 import com.runningmate.runningmate.common.exception.DuplicateUserException;
 import com.runningmate.runningmate.common.exception.NotFoundUserException;
@@ -78,7 +79,7 @@ public class UserService {
      * 유저 상세정보
      *
      * @param userId
-     * @return
+     * @return user
      */
     public User getUserById(long userId) {
         return mybatisUserRepository.findByUserId(userId).orElseThrow(() -> new NotFoundUserException("유저 정보를 찾을 수 없습니다."));
@@ -86,8 +87,8 @@ public class UserService {
 
     /**
      * 유저 상세정보
-     * @param userEmail 
-     * @return
+     * @param userEmail
+     * @return user
      */
     public User getUserByEmail(String userEmail) {
         return mybatisUserRepository.findByEmail(userEmail).orElseThrow(() -> new NotFoundUserException("유저 정보를 찾을 수 없습니다."));
@@ -97,11 +98,11 @@ public class UserService {
      * 유저 정보 업데이트
      * nickname, position, level 정보만 업데이트
      *
-     * @param userId
+     * @param user
      * @param userUpdateRequestDto
      */
-    public void updateUser(long userId, UserUpdateRequestDto userUpdateRequestDto) {
-        User user = userExistAndPasswordValid(userId, userUpdateRequestDto.getPassword());
+    public void updateUser(@SessionLoginUser User user, UserUpdateRequestDto userUpdateRequestDto) {
+        userPasswordValid(user, userUpdateRequestDto.getPassword());
         user.update(userUpdateRequestDto);
         mybatisUserRepository.update(user);
     }
@@ -110,11 +111,11 @@ public class UserService {
      * 유저 삭제
      * DB 삭제를 하는 것이 아닌 user status 상태만 변경
      *
-     * @param userId
+     * @param user
      * @param password
      */
-    public void deleteUser(long userId, String password) {
-        User user = userExistAndPasswordValid(userId, password);
+    public void deleteUser(@SessionLoginUser User user, String password) {
+        userPasswordValid(user, password);
         user.delete();
         mybatisUserRepository.update(user);
     }
@@ -130,12 +131,12 @@ public class UserService {
      * 유저 이미지 변경
      * 기존 이미지는 삭제
      *
-     * @param userId
+     * @param loginUser
      * @param multipartFile
      */
     @Transactional
-    public void updateUserImage(long userId, MultipartFile multipartFile) {
-        User updateUser = getUserById(userId);
+    public void updateUserImage(@SessionLoginUser User loginUser, MultipartFile multipartFile) {
+        User updateUser = getUserById(loginUser.getUserId());
 
         awsS3ImageUploadService.delete(updateUser.getImage().getImageId());
         Image image = awsS3ImageUploadService.upload(multipartFile);
@@ -158,15 +159,12 @@ public class UserService {
     }
 
     /**
-     * 유저 정보가 있는지 체크 후 비밀번호 체크
+     * 유저 비밀번호 체크
      *
-     * @param userId
+     * @param user
      * @param password
-     * @return
      */
-    public User userExistAndPasswordValid(long userId, String password) {
-        User user = getUserById(userId);
+    public void userPasswordValid(User user, String password) {
         if(!BCryptUtil.comparePassword(password, user.getPassword())) throw new AuthenticationPasswordException("비밀번호가 맞지 않습니다.");
-        return user;
     }
 }
