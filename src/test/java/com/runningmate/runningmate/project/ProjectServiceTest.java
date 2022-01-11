@@ -347,7 +347,7 @@ class ProjectServiceTest {
 
         when(mybatisProjectPositionRepository.findById(projectPositionId)).thenReturn(projectPosition);
 
-        projectService.modifyProjectPosition(userId, projectPositionId, projectPositionUpdateRequestDto);
+        projectService.modifyProjectPosition(userId, projectId, projectPositionId, projectPositionUpdateRequestDto);
 
         verify(mybatisProjectPositionRepository, times(1)).update(projectPosition);
     }
@@ -378,7 +378,7 @@ class ProjectServiceTest {
         when(mybatisProjectApplyRepository.existsByProjectPositionId(projectPositionId)).thenReturn(true);
 
         assertThrows(IllegalStateException.class, () -> {
-           projectService.deleteProjectPosition(userId, projectPositionId);
+           projectService.deleteProjectPosition(userId, projectId, projectPositionId);
         });
     }
 
@@ -407,7 +407,7 @@ class ProjectServiceTest {
         when(mybatisProjectPositionRepository.findById(projectPositionId)).thenReturn(projectPosition);
         when(mybatisProjectApplyRepository.existsByProjectPositionId(projectPositionId)).thenReturn(false);
 
-        projectService.deleteProjectPosition(userId, projectPositionId);
+        projectService.deleteProjectPosition(userId, projectId, projectPositionId);
 
         verify(mybatisProjectPositionRepository, times(1)).delete(projectPosition);
     }
@@ -463,7 +463,7 @@ class ProjectServiceTest {
 
         when(mybatisProjectSkillRepository.findByProjectSkillId(projectSkillId)).thenReturn(projectSkill);
 
-        projectService.deleteProjectSKill(userId, projectSkillId);
+        projectService.deleteProjectSKill(userId, projectId, projectSkillId);
 
         verify(mybatisProjectSkillRepository, times(1)).delete(projectSkill);
     }
@@ -566,7 +566,7 @@ class ProjectServiceTest {
 
         when(mybatisApplyQuestionRepository.findByApplyQuestionId(applyQuestionId)).thenReturn(applyQuestion);
 
-        projectService.modifyApplyQuestion(userId, applyQuestionId, applyQuestionUpdateRequestDto);
+        projectService.modifyApplyQuestion(userId, projectId, applyQuestionId, applyQuestionUpdateRequestDto);
 
         verify(mybatisApplyQuestionRepository, times(1)).update(any(ApplyQuestion.class));
     }
@@ -595,7 +595,7 @@ class ProjectServiceTest {
 
         when(mybatisApplyQuestionRepository.findByApplyQuestionId(applyQuestionId)).thenReturn(applyQuestion);
 
-        projectService.deleteApplyQuestion(userId, applyQuestionId);
+        projectService.deleteApplyQuestion(userId, projectId, applyQuestionId);
 
         verify(mybatisApplyQuestionRepository, times(1)).delete(any(ApplyQuestion.class));
     }
