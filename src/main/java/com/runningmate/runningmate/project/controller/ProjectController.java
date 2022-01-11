@@ -105,21 +105,24 @@ public class ProjectController {
     }
 
     @LoginCheck
-    @PatchMapping("/project-position/{projectPositionId}")
-    public ResponseEntity<?> modifyProjectPosition(@PathVariable("projectPositionId") long projectPositionId, @RequestBody @Valid ProjectPositionUpdateRequestDto projectPositionUpdateRequestDto) {
+    @PatchMapping("/project/{projectId}/project-position/{projectPositionId}")
+    public ResponseEntity<?> modifyProjectPosition(@PathVariable("projectId")long projectId,
+                                                    @PathVariable("projectPositionId") long projectPositionId,
+                                                    @RequestBody @Valid ProjectPositionUpdateRequestDto projectPositionUpdateRequestDto) {
         long userId = SessionUtils.getLoginSessionUserId();
 
-        projectService.modifyProjectPosition(userId, projectPositionId, projectPositionUpdateRequestDto);
+        projectService.modifyProjectPosition(userId, projectId, projectPositionId, projectPositionUpdateRequestDto);
 
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @LoginCheck
-    @DeleteMapping("/project-position/{projectPositionId}")
-    public ResponseEntity<?> deleteProjectPosition(@PathVariable("projectPositionId") long projectPositionId) {
+    @DeleteMapping("/project/{projectId}/project-position/{projectPositionId}")
+    public ResponseEntity<?> deleteProjectPosition(@PathVariable("projectId") long projectId,
+                                                    @PathVariable("projectPositionId") long projectPositionId) {
         long userId = SessionUtils.getLoginSessionUserId();
 
-        projectService.deleteProjectPosition(userId, projectPositionId);
+        projectService.deleteProjectPosition(userId, projectId, projectPositionId);
 
         return ResponseEntity.status(HttpStatus.OK).build();
     }
@@ -135,11 +138,12 @@ public class ProjectController {
     }
 
     @LoginCheck
-    @DeleteMapping("/project-skill/{projectSkillId}")
-    public ResponseEntity<?> deleteProjectSkill(@PathVariable("projectSkillId") long projectSkillId) {
+    @DeleteMapping("/project/{projectId}/project-skill/{projectSkillId}")
+    public ResponseEntity<?> deleteProjectSkill(@PathVariable("projectId") long projectId,
+                                                @PathVariable("projectSkillId") long projectSkillId) {
         long userId = SessionUtils.getLoginSessionUserId();
 
-        projectService.deleteProjectSKill(userId, projectSkillId);
+        projectService.deleteProjectSKill(userId, projectId, projectSkillId);
 
         return ResponseEntity.status(HttpStatus.OK).build();
     }
@@ -155,21 +159,24 @@ public class ProjectController {
     }
 
     @LoginCheck
-    @PatchMapping("/apply-question/{applyQuestionId}")
-    public ResponseEntity<?> modifyApplyQuestion(@PathVariable("applyQuestionId") long applyQuestionId, @RequestBody @Valid ApplyQuestionUpdateRequestDto applyQuestionUpdateRequestDto) {
+    @PatchMapping("/project/{projectId}/apply-question/{applyQuestionId}")
+    public ResponseEntity<?> modifyApplyQuestion(@PathVariable("projectId") long projectId,
+                                                    @PathVariable("applyQuestionId") long applyQuestionId,
+                                                    @RequestBody @Valid ApplyQuestionUpdateRequestDto applyQuestionUpdateRequestDto) {
         long userId = SessionUtils.getLoginSessionUserId();
 
-        projectService.modifyApplyQuestion(userId, applyQuestionId, applyQuestionUpdateRequestDto);
+        projectService.modifyApplyQuestion(userId, projectId, applyQuestionId, applyQuestionUpdateRequestDto);
 
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @LoginCheck
-    @DeleteMapping("/apply-question/{applyQuestionId}")
-    public ResponseEntity<?> deleteApplyQuestion(@PathVariable("applyQuestionId") long applyQuestionId) {
+    @DeleteMapping("/project/{projectId}/apply-question/{applyQuestionId}")
+    public ResponseEntity<?> deleteApplyQuestion(@PathVariable("projectId") long projectId,
+                                                @PathVariable("applyQuestionId") long applyQuestionId) {
         long userId = SessionUtils.getLoginSessionUserId();
 
-        projectService.deleteApplyQuestion(userId, applyQuestionId);
+        projectService.deleteApplyQuestion(userId, projectId, applyQuestionId);
 
         return ResponseEntity.status(HttpStatus.OK).build();
     }

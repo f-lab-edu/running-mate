@@ -29,6 +29,8 @@ import com.runningmate.runningmate.user.repository.UserRepository;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -58,6 +60,7 @@ public class ProjectService {
         return mybatisProjectRepository.findAll(projectSearchRequestDto);
     }
 
+    @Cacheable(value = "project", key = "#projectId")
     @Transactional(readOnly = true)
     public Project getProject(long projectId) {
         return mybatisProjectRepository.findByProjectId(projectId);
@@ -111,6 +114,7 @@ public class ProjectService {
             .collect(Collectors.toList()));
     }
 
+    @CacheEvict(value = "project", key = "#projectId")
     @Transactional
     public void modifyProject(long userId, long projectId, ProjectUpdateRequestDto projectUpdateRequestDto, MultipartFile multipartFile) {
         Project project = mybatisProjectRepository.findByProjectId(projectId);
@@ -126,6 +130,7 @@ public class ProjectService {
         mybatisProjectRepository.update(project);
     }
 
+    @CacheEvict(value = "project", key = "#projectId")
     @Transactional
     public void deleteProject(long userId, long projectId) {
         Project project = mybatisProjectRepository.findByProjectId(projectId);
@@ -168,6 +173,7 @@ public class ProjectService {
             .collect(Collectors.toList()));
     }
 
+    @CacheEvict(value = "project", key = "#projectId")
     @Transactional
     public void addProjectPosition(long userId, long projectId, ProjectPositionSaveRequestDto projectPositionSaveRequestDto) {
         Project project = mybatisProjectRepository.findByProjectId(projectId);
@@ -187,8 +193,9 @@ public class ProjectService {
             .build());
     }
 
+    @CacheEvict(value = "project", key = "#projectId")
     @Transactional
-    public void modifyProjectPosition(long userId, long projectPositionId, ProjectPositionUpdateRequestDto projectPositionUpdateRequestDto) {
+    public void modifyProjectPosition(long userId, long projectId, long projectPositionId, ProjectPositionUpdateRequestDto projectPositionUpdateRequestDto) {
         ProjectPosition projectPosition = mybatisProjectPositionRepository.findById(projectPositionId);
 
         validationProjectLeader(userId, projectPosition.getProject().getLeader().getUserId());
@@ -197,8 +204,9 @@ public class ProjectService {
         mybatisProjectPositionRepository.update(projectPosition);
     }
 
+    @CacheEvict(value = "project", key = "#projectId")
     @Transactional
-    public void deleteProjectPosition(long userId, long projectPositionId) {
+    public void deleteProjectPosition(long userId, long projectId, long projectPositionId) {
         ProjectPosition projectPosition = mybatisProjectPositionRepository.findById(projectPositionId);
 
         validationProjectLeader(userId, projectPosition.getProject().getLeader().getUserId());
@@ -210,6 +218,7 @@ public class ProjectService {
         mybatisProjectPositionRepository.delete(projectPosition);
     }
 
+    @CacheEvict(value = "project", key = "#projectId")
     @Transactional
     public void addProjectSKill(long userId, long projectId, ProjectSkillSaveRequestDto projectSkillSaveRequestDto) {
         Project project = mybatisProjectRepository.findByProjectId(projectId);
@@ -224,8 +233,9 @@ public class ProjectService {
             .build());
     }
 
+    @CacheEvict(value = "project", key = "#projectId")
     @Transactional
-    public void deleteProjectSKill(long userId, long projectSkillId) {
+    public void deleteProjectSKill(long userId, long projectId, long projectSkillId) {
         ProjectSkill projectSkill = mybatisProjectSkillRepository.findByProjectSkillId(projectSkillId);
 
         validationProjectLeader(userId, projectSkill.getProject().getLeader().getUserId());
@@ -234,6 +244,7 @@ public class ProjectService {
 
     }
 
+    @CacheEvict(value = "project", key = "#projectId")
     @Transactional
     public void addApplyQuestion(long userId, long projectId, ApplyQuestionSaveRequestDto applyQuestionSaveRequestDto) {
         Project project = mybatisProjectRepository.findByProjectId(projectId);
@@ -248,8 +259,9 @@ public class ProjectService {
             .build());
     }
 
+    @CacheEvict(value = "project", key = "#projectId")
     @Transactional
-    public void modifyApplyQuestion(long userId, long applyQuestionId, ApplyQuestionUpdateRequestDto applyQuestionUpdateRequestDto) {
+    public void modifyApplyQuestion(long userId, long projectId, long applyQuestionId, ApplyQuestionUpdateRequestDto applyQuestionUpdateRequestDto) {
         ApplyQuestion applyQuestion = mybatisApplyQuestionRepository.findByApplyQuestionId(applyQuestionId);
 
         validationProjectLeader(userId, applyQuestion.getProject().getLeader().getUserId());
@@ -258,8 +270,9 @@ public class ProjectService {
         mybatisApplyQuestionRepository.update(applyQuestion);
     }
 
+    @CacheEvict(value = "project", key = "#projectId")
     @Transactional
-    public void deleteApplyQuestion(long userId, long applyQuestionId) {
+    public void deleteApplyQuestion(long userId, long projectId, long applyQuestionId) {
         ApplyQuestion applyQuestion = mybatisApplyQuestionRepository.findByApplyQuestionId(applyQuestionId);
 
         validationProjectLeader(userId, applyQuestion.getProject().getLeader().getUserId());
