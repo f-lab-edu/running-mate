@@ -18,4 +18,14 @@ public class MybatisUserSkillRepository implements UserSkillRepository {
     public void saveAll(List<UserSkill> userSkills) {
         userSkillMapper.insertUserSkills(userSkills);
     }
+
+    @Override
+    public void save(UserSkill updateUserSkill) {
+        userSkillMapper.updateUserSkill(updateUserSkill);
+    }
+
+    @Override
+    public void delete(long deleteUserSkillId) {
+        userSkillMapper.deleteUserSkill(deleteUserSkillId);
+    }
 }

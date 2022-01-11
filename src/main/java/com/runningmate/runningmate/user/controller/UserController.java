@@ -111,4 +111,24 @@ public class UserController {
         userService.findUserPassword(userEmail);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+    @LoginCheck
+    @PatchMapping("/user-skill/{userId}/{userSkillId}")
+    public ResponseEntity<UserInfoResponseDto> modifyUserSkill(@PathVariable("userId") long userId, @PathVariable("userSkillId") long userSkillId, @RequestBody @Valid UserSkillSaveReqeustDto UpdateUserSkillReqeustDto){
+        userService.updateUserSkill(userId, userSkillId, UpdateUserSkillReqeustDto);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @LoginCheck
+    @DeleteMapping("/user-skill/{userSkillId}")
+    public ResponseEntity<UserInfoResponseDto> deleteUserSkill(@PathVariable("userSkillId") long deleteUserSkillId){
+        userService.deleteUserSkill(deleteUserSkillId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @LoginCheck
+    @PostMapping("/user-skill/{userId}")
+    public ResponseEntity<UserInfoResponseDto> addUserSkill(@PathVariable("userId") long userId, @RequestBody @Valid UserSkillAddReqeustDto userSkillAddReqeustDto){
+        userService.insertUserSkills(userId, userSkillAddReqeustDto);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

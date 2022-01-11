@@ -11,6 +11,8 @@ import com.runningmate.runningmate.image.service.ImageUploadService;
 import com.runningmate.runningmate.position.domain.entity.Position;
 import com.runningmate.runningmate.user.dto.Request.UserUpdatePasswordRequestDto;
 import com.runningmate.runningmate.skill.domain.entity.Skill;
+import com.runningmate.runningmate.user.dto.Request.UserSkillAddReqeustDto;
+import com.runningmate.runningmate.user.dto.Request.UserSkillSaveReqeustDto;
 import com.runningmate.runningmate.user.dto.Request.UserSignUpRequestDto;
 import com.runningmate.runningmate.user.dto.Request.UserUpdateRequestDto;
 import com.runningmate.runningmate.user.entity.User;
@@ -72,7 +74,7 @@ public class UserService {
                 .build())
             .collect(Collectors.toList());
 
-        mybatisUserSkillRepository.saveAll(userSkills);
+        insertUserSkills(userSkills);
     }
 
     /**
@@ -166,5 +168,50 @@ public class UserService {
      */
     public void userPasswordValid(User user, String password) {
         if(!BCryptUtil.comparePassword(password, user.getPassword())) throw new AuthenticationPasswordException("비밀번호가 맞지 않습니다.");
+    }
+
+
+    /**
+     *  유저 스킬 변경
+     *
+     * @param userId
+     * @param userSkillId
+     * @param updateUserSkillReqeustDto
+     */
+    public void updateUserSkill(long userId, long userSkillId, UserSkillSaveReqeustDto updateUserSkillReqeustDto) {
+        Optional<User> user =  mybatisUserRepository.findByUserId(userId);
+        UserSkill updateUserSkill = UserSkill.builder()
+            .userSkillId(userSkillId)
+            .user(user.get())
+            .skill(Skill.builder().skillId(updateUserSkillReqeustDto.getSkillId()).build())
+            .updateDate(LocalDateTime.now())
+            .build();
+        mybatisUserSkillRepository.save(updateUserSkill);
+    }
+
+    /**
+     * 유저 스킬 삭제
+     * 
+     * @param deleteUserSkillId 
+     */
+    public void deleteUserSkill(long deleteUserSkillId) {
+        mybatisUserSkillRepository.delete(deleteUserSkillId);
+    }
+
+    public void insertUserSkills(List<UserSkill> userSkills){
+        mybatisUserSkillRepository.saveAll(userSkills);
+    }
+
+    public void insertUserSkills(long userId, UserSkillAddReqeustDto userSkillAddReqeustDto) {
+        Optional<User> user =  mybatisUserRepository.findByUserId(userId);
+
+        List<UserSkill> userSkills = userSkillAddReqeustDto.getUserSkills().stream()
+            .map(userSkill -> UserSkill.builder()
+                .user(user.get())
+                .skill(Skill.builder().skillId(userSkill.getSkillId()).build())
+                .createDate(LocalDateTime.now())
+                .build())
+            .collect(Collectors.toList());
+        insertUserSkills(userSkills);
     }
 }

@@ -14,4 +14,8 @@ import org.apache.ibatis.annotations.Mapper;
 public interface UserSkillMapper {
 
     void insertUserSkills(List<UserSkill> userSkills);
+
+    void updateUserSkill(UserSkill updateUserSkill);
+
+    void deleteUserSkill(long deleteUserSkillId);
 }

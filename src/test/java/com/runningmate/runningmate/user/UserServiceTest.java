@@ -10,6 +10,7 @@ import com.runningmate.runningmate.common.utils.BCryptUtil;
 import com.runningmate.runningmate.image.domain.entity.Image;
 import com.runningmate.runningmate.image.domain.entity.ImageStatus;
 import com.runningmate.runningmate.image.service.ImageUploadService;
+import com.runningmate.runningmate.skill.domain.entity.Skill;
 import com.runningmate.runningmate.user.aop.LoginCheck.UserLevel;
 import com.runningmate.runningmate.user.dto.Request.UserSignUpRequestDto;
 import com.runningmate.runningmate.user.dto.Request.UserSkillSaveReqeustDto;
@@ -49,6 +50,8 @@ public class UserServiceTest {
     @DisplayName("회원가입 성공")
     void testSuccessUserSignUp() {
         List<UserSkillSaveReqeustDto> userSkills = new ArrayList<>();
+//        Skill skill1 = Skill.builder().skillId(1).build();
+//        Skill skill2 = Skill.builder().skillId(2).build();
         userSkills.add( new UserSkillSaveReqeustDto(1) );
         userSkills.add( new UserSkillSaveReqeustDto(2) );
 
