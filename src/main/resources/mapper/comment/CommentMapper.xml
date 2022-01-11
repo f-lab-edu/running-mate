@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.runningmate.runningmate.comment.domain.mapper.CommentMapper">
+    <resultMap id="commentMap" type="com.runningmate.runningmate.comment.domain.entity.Comment">
+        <id column="comment_id"         property="commentId"/>
+        <result column="contents"       property="contents"/>
+        <result column="parent_id"      property="parentId"/>
+        <result column="create_date"    property="createDate"/>
+        <result column="update_date"    property="updateDate"/>
+
+        <association property="project" javaType="com.runningmate.runningmate.project.domain.entity.Project">
+            <id column="project_id"         property="projectId"/>
+        </association>
+
+        <association property="user" javaType="com.runningmate.runningmate.user.entity.User">
+            <id column="user_id"            property="userId"/>
+            <result column="email"          property="email"/>
+            <result column="nickname"       property="nickName"/>
+        </association>
+    </resultMap>
+
+    <select id="selectCommentByCommentId" resultMap="commentMap">
+        SELECT
+            c.comment_id,
+            c.project_id,
+            c.user_id,
+            u.email,
+            u.nickname,
+            c.contents,
+            c.parent_id,
+            c.create_date,
+            c.update_date
+        FROM comment c
+            JOIN user u ON c.user_id = u.user_id
+        WHERE c.comment_id = #{commentId}
+    </select>
+
+    <select id="selectCommentByProjectId" resultMap="commentMap">
+        SELECT
+            c.comment_id,
+            c.project_id,
+            c.user_id,
+            u.email,
+            u.nickname,
+            c.contents,
+            c.parent_id,
+            c.create_date,
+            c.update_date
+        FROM
+            (
+                SELECT
+                    comment_id
+                FROM comment
+                WHERE project_id = #{projectId}
+                AND parent_id IS NULL
+                LIMIT #{pageable.pageSize} OFFSET #{pageable.pageNumber}
+            ) c_c
+            JOIN comment c ON c_c.comment_id = c.comment_id OR c_c.comment_id = c.parent_id
+            JOIN user u ON c.user_id = u.user_id
+    </select>
+
+    <insert id="insertComment" useGeneratedKeys="true" keyProperty="commentId">
+        INSERT INTO comment(project_id, user_id, contents, parent_id, create_date, update_date)
+        VALUES(#{project.projectId}, #{user.userId}, #{contents}, #{parentId}, #{createDate}, #{updateDate})
+    </insert>
+
+    <update id="updateComment">
+        UPDATE comment
+           SET contents = #{contents}
+             , update_date = #{updateDate}
+         WHERE comment_id = #{commentId}
+    </update>
+
+    <delete id="deleteComment">
+        DELETE FROM comment
+        WHERE comment_id = #{commentId}
+    </delete>
+</mapper>

@@ -11,4 +11,8 @@ public interface UserRepository {
     Optional<User> findByUserId(long userId);
 
     void save(User user);
+
+    void update(User user);
+
+    Optional<User> getUserByResetToken(String resetToken);
 }

@@ -4,6 +4,7 @@ import com.runningmate.runningmate.common.utils.BCryptUtil;
 import com.runningmate.runningmate.common.utils.SessionUtils;
 import com.runningmate.runningmate.user.dto.Request.UserLoginRequestDto;
 import com.runningmate.runningmate.user.entity.User;
+import com.runningmate.runningmate.user.entity.UserStatus;
 import com.runningmate.runningmate.user.repository.UserRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,8 @@ public class SessionLoginService{
         String loginRequestPassword = userLoginRequestDto.getPassword();
 
         Optional<User> userInfo = userRepository.findByEmail(loginRequestEmail);
-        if(userInfo.isEmpty() || !BCryptUtil.comparePassword(loginRequestPassword, userInfo.get().getPassword())){
+        if(userInfo.isEmpty() || !BCryptUtil.comparePassword(loginRequestPassword, userInfo.get().getPassword())
+            || userInfo.get().getStatus() == UserStatus.DELETE){
             return Optional.empty();
         }
         // 세션등록

@@ -9,12 +9,14 @@ import com.runningmate.runningmate.project.domain.entity.*;
 import com.runningmate.runningmate.project.domain.repository.ApplyAnswerRepository;
 import com.runningmate.runningmate.project.domain.repository.ApplyQuestionRepository;
 import com.runningmate.runningmate.project.domain.repository.ProjectApplyRepository;
+import com.runningmate.runningmate.project.domain.repository.ProjectMemberRepository;
 import com.runningmate.runningmate.project.domain.repository.ProjectPositionRepository;
 import com.runningmate.runningmate.project.domain.repository.ProjectRepository;
 import com.runningmate.runningmate.project.domain.repository.ProjectSkillRepository;
 import com.runningmate.runningmate.project.dto.request.ApplyQuestionSaveRequestDto;
 import com.runningmate.runningmate.project.dto.request.ApplyQuestionUpdateRequestDto;
 import com.runningmate.runningmate.project.dto.request.ProjectApplyRequestDto;
+import com.runningmate.runningmate.project.dto.request.ProjectApplyUpdateRequestDto;
 import com.runningmate.runningmate.project.dto.request.ProjectPositionSaveRequestDto;
 import com.runningmate.runningmate.project.dto.request.ProjectPositionUpdateRequestDto;
 import com.runningmate.runningmate.project.dto.request.ProjectSaveRequestDto;
@@ -29,7 +31,6 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
@@ -44,6 +45,7 @@ public class ProjectService {
     private final ProjectRepository mybatisProjectRepository;
     private final ProjectPositionRepository mybatisProjectPositionRepository;
     private final ProjectSkillRepository mybatisProjectSkillRepository;
+    private final ProjectMemberRepository mybatisProjectMemberRepository;
     private final ApplyQuestionRepository mybatisApplyQuestionRepository;
     private final ApplyAnswerRepository mybatisApplyAnswerRepository;
     private final ProjectApplyRepository mybatisProjectApplyRepository;
@@ -268,6 +270,42 @@ public class ProjectService {
     private void validationProjectLeader(long loginUserId, long projectLeaderId) {
         if(loginUserId != projectLeaderId) {
             throw new NonCreatorException("프로젝트 리더가 아닙니다.");
+        }
+    }
+
+    public List<ProjectApply> getProjectApplies(long userId, long projectId) {
+        Project project = mybatisProjectRepository.findByProjectId(projectId);
+
+        validationProjectLeader(userId, project.getLeader().getUserId());
+
+        return mybatisProjectApplyRepository.findByProjectId(projectId);
+    }
+
+    public List<ApplyAnswer> getApplyAnswers(long userId, long projectApplyId) {
+        ProjectApply projectApply = mybatisProjectApplyRepository.findByProjectApplyId(projectApplyId);
+
+        validationProjectLeader(userId, projectApply.getProjectPosition().getProject().getLeader().getUserId());
+
+        return mybatisApplyAnswerRepository.findByProjectApplyId(projectApplyId);
+    }
+
+    public void modifyProjectApply(long userId, long projectApplyId, ProjectApplyUpdateRequestDto projectApplyUpdateRequestDto) {
+        ProjectApply projectApply = mybatisProjectApplyRepository.findByProjectApplyId(projectApplyId);
+
+        validationProjectLeader(userId, projectApply.getProjectPosition().getProject().getLeader().getUserId());
+
+        projectApply.updateInfo(projectApplyUpdateRequestDto);
+        mybatisProjectApplyRepository.update(projectApply);
+
+        if(projectApply.getStatus().equals(ProjectApplyStatus.APPROVE)) {
+            mybatisProjectMemberRepository.save(ProjectMember.builder()
+                .projectPosition(projectApply.getProjectPosition())
+                .user(projectApply.getUser())
+                .createDate(LocalDateTime.now())
+                .updateDate(LocalDateTime.now())
+                .build());
+        } else {
+            mybatisProjectMemberRepository.deleteProjectMemberByProjectPositionIdAndUserId(projectApply.getProjectPosition().getProjectPositionId(), projectApply.getUser().getUserId());
         }
     }
 }

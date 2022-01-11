@@ -7,5 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface ApplyAnswerMapper {
 
+    public List<ApplyAnswer> selectApplyAnswerByProjectApplyId(long projectApplyId);
+
     public void insertApplyAnswers(List<ApplyAnswer> applyAnswers);
 }

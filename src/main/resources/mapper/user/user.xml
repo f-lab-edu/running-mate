@@ -7,7 +7,7 @@
         <id column="user_id"                property="userId"/>
         <result column="email"              property="email"/>
         <result column="password"           property="password"/>
-        <result column="nick_name"          property="nickName"/>
+        <result column="nickname"          property="nickName"/>
         <result column="reset_token"        property="resetToken"/>
         <result column="level"              property="level"/>
         <result column="create_date"        property="createDate"/>
@@ -93,6 +93,33 @@
         WHERE u.user_id = #{userId}
     </select>
 
+    <select id="selectUserByToken" resultMap="userMap">
+        SELECT
+            u.user_id
+             , u.email
+             , u.password
+             , u.nickname
+             , u.reset_token
+             , u.level
+             , u.create_date
+             , u.update_date
+             , p.position_id
+             , p.position_name
+             , i.image_id
+             , i.status
+             , i.original_file_name
+             , i.storage_file_name
+             , u_s.user_skill_id
+             , s.skill_id
+             , s.skill_name
+        FROM user u
+                 JOIN image i on u.image_id = u.image_id
+                 JOIN position p on p.position_id = u.position_id
+                 JOIN user_skill u_s on u_s.user_id = u.user_id
+                 JOIN skill s ON s.skill_id = u_s.skill_id
+        WHERE u.reset_token = #{resetToken}
+    </select>
+
     <insert id="insertUser" parameterType="com.runningmate.runningmate.user.entity.User" useGeneratedKeys="true" keyProperty="userId">
         INSERT INTO
             user (
@@ -114,4 +141,18 @@
                 , #{createDate}
             )
     </insert>
+
+    <update id="updateUser">
+        UPDATE user
+        SET update_date = #{updateDate}
+                , nickname = #{nickName}
+                , position_id = #{position.positionId}
+                , image_id = #{image.imageId}
+                , password = #{password}
+                , reset_token = #{resetToken}
+                , status = #{status}
+                , level = #{level}
+
+        WHERE user_id = #{userId}
+    </update>
 </mapper>

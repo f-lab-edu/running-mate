@@ -1,13 +1,13 @@
 package com.runningmate.runningmate.user.controller;
 
+import com.runningmate.runningmate.common.annotation.SessionLoginUser;
+import com.runningmate.runningmate.user.dto.Request.UserUpdatePasswordRequestDto;
 import com.runningmate.runningmate.user.aop.LoginCheck;
-import com.runningmate.runningmate.user.dto.Request.UserSkillAddReqeustDto;
-import com.runningmate.runningmate.user.dto.Request.UserSkillSaveReqeustDto;
+import com.runningmate.runningmate.user.dto.Request.UserUpdateRequestDto;
 import com.runningmate.runningmate.user.dto.Response.UserInfoResponseDto;
 import com.runningmate.runningmate.user.dto.Request.UserSignUpRequestDto;
 import com.runningmate.runningmate.user.entity.User;
 import com.runningmate.runningmate.user.service.UserService;
-import java.util.Optional;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -43,23 +43,73 @@ public class UserController {
      * @return
      */
     @PostMapping("/signUp")
-    public ResponseEntity signUp(@Valid @RequestPart("userSignUpRequestDto") UserSignUpRequestDto userSignUpRequestDto, @RequestPart("file") MultipartFile multipartFile) {
+    public ResponseEntity signUp(@Valid @RequestPart("user") UserSignUpRequestDto userSignUpRequestDto, @RequestPart("file") MultipartFile multipartFile) {
         userService.userRegister(userSignUpRequestDto, multipartFile);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /**
      * 유저 상세정보
-     * 
-     * @param userId 
+     *
+     * @param loginUser
+     * @return
+     */
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserInfoResponseDto> getUser(@SessionLoginUser User loginUser) {
+        return new ResponseEntity<>(UserInfoResponseDto.of(loginUser), HttpStatus.OK);
+    }
+
+    /**
+     * 유저 업데이트
+     *
+     * @param loginUser
+     * @param userUpdateRequestDto
      * @return
      */
     @LoginCheck
-    @GetMapping("/{userId}")
-    public ResponseEntity<UserInfoResponseDto> getUser(@PathVariable("userId") long userId) {
-        Optional<User> user = userService.getUser(userId);
+    @PatchMapping("/{userId}")
+    public ResponseEntity<UserInfoResponseDto> modifyUser(@SessionLoginUser User loginUser, @RequestBody UserUpdateRequestDto userUpdateRequestDto) {
+        userService.updateUser(loginUser, userUpdateRequestDto);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
-        return user.isEmpty() ? new ResponseEntity<>(HttpStatus.NOT_FOUND) : new ResponseEntity<>(UserInfoResponseDto.of(user.get()), HttpStatus.OK);
+    @PatchMapping("/userPassword")
+    public ResponseEntity<UserInfoResponseDto> modifyUserPassword(@RequestBody UserUpdatePasswordRequestDto userUpdatePasswordRequestDto) {
+        userService.updateUserPassword(userUpdatePasswordRequestDto);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    /**
+     * 유저 이미지 업데이트
+     *
+     * @param multipartFile
+     * @return
+     */
+    @LoginCheck
+    @PatchMapping("/{userId}/image")
+    public ResponseEntity modifyUserImage(@SessionLoginUser User loginUser, @RequestPart("file") MultipartFile multipartFile) {
+        userService.updateUserImage(loginUser, multipartFile);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    /**
+     * 유저 삭제 ( ststus 변경 )
+     *
+     * @param loginUser
+     * @param password
+     * @return
+     */
+    @LoginCheck
+    @DeleteMapping("/{userId}")
+    public ResponseEntity deleteUser(@SessionLoginUser User loginUser, @RequestBody String password ) {
+        userService.deleteUser(loginUser, password);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/user-password/{userEmail}")
+    public ResponseEntity findUserPassword(@PathVariable("userEmail") String userEmail) {
+        userService.findUserPassword(userEmail);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
     @LoginCheck
     @PatchMapping("/user-skill/{userId}/{userSkillId}")

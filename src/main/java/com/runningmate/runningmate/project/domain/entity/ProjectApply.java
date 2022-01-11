@@ -1,5 +1,6 @@
 package com.runningmate.runningmate.project.domain.entity;
 
+import com.runningmate.runningmate.project.dto.request.ProjectApplyUpdateRequestDto;
 import com.runningmate.runningmate.user.entity.User;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
@@ -20,4 +21,9 @@ public class ProjectApply {
     private ProjectApplyStatus status;
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
+
+    public void updateInfo(ProjectApplyUpdateRequestDto projectApplyUpdateRequestDto) {
+        this.status = projectApplyUpdateRequestDto.getStatus();
+        this.updateDate = LocalDateTime.now();
+    }
 }
