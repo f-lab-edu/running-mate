@@ -56,11 +56,7 @@ public class LikeCacheRepository {
         for(int i = 0; i < counts.size(); i++) {
             String count = counts.get(i);
 
-            if(count != null) {
-                countMap.put(ids.get(i), Integer.parseInt(counts.get(i)));
-            } else {
-                countMap.put(ids.get(i), 0);
-            }
+            countMap.put(ids.get(i), count == null ? 0 : Integer.parseInt(count));
         }
 
         return countMap;

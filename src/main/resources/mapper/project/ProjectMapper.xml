@@ -186,4 +186,14 @@
         DELETE FROM project
         WHERE project_id = #{projectId}
     </delete>
+
+    <select id="existsByProjectId" resultType="boolean">
+        SELECT
+            EXISTS(
+                SELECT
+                    project_id
+                FROM project
+                WHERE project_id = #{projectId}
+            ) exist
+    </select>
 </mapper>

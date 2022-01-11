@@ -15,4 +15,6 @@ public interface ProjectRepository {
     public void update(Project project);
 
     public void delete(Project project);
+
+    public boolean existsByProjectId(long projectId);
 }
