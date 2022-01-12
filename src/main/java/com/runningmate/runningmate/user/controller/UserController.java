@@ -1,6 +1,8 @@
 package com.runningmate.runningmate.user.controller;
 
 import com.runningmate.runningmate.common.annotation.SessionLoginUser;
+import com.runningmate.runningmate.user.dto.Request.UserSkillAddReqeustDto;
+import com.runningmate.runningmate.user.dto.Request.UserSkillSaveReqeustDto;
 import com.runningmate.runningmate.user.dto.Request.UserUpdatePasswordRequestDto;
 import com.runningmate.runningmate.user.aop.LoginCheck;
 import com.runningmate.runningmate.user.dto.Request.UserUpdateRequestDto;
