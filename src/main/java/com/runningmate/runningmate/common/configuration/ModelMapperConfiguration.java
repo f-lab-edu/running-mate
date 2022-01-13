@@ -1,4 +1,4 @@
-package com.runningmate.runningmate.configuration;
+package com.runningmate.runningmate.common.configuration;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;

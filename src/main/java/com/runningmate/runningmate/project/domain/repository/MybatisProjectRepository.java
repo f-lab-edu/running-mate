@@ -37,4 +37,9 @@ public class MybatisProjectRepository implements ProjectRepository {
     public void delete(Project project) {
         projectMapper.deleteProject(project);
     }
+
+    @Override
+    public boolean existsByProjectId(long projectId) {
+        return projectMapper.existsByProjectId(projectId);
+    }
 }

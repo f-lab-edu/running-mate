@@ -1,4 +1,4 @@
-package com.runningmate.runningmate.configuration;
+package com.runningmate.runningmate.common.configuration;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.jasypt.encryption.StringEncryptor;

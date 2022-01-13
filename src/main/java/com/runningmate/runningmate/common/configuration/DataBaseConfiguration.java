@@ -1,10 +1,9 @@
-package com.runningmate.runningmate.configuration;
+package com.runningmate.runningmate.common.configuration;
 
 import com.runningmate.runningmate.dataSource.DataSourceType;
 import com.runningmate.runningmate.dataSource.ReplicationRoutingDataSource;
 import com.runningmate.runningmate.image.domain.entity.ImageStatus;
 import com.runningmate.runningmate.project.domain.entity.ProjectApplyStatus;
-import com.runningmate.runningmate.user.entity.UserStatus;
 import com.zaxxer.hikari.HikariDataSource;
 import java.util.HashMap;
 import java.util.Map;
@@ -73,7 +72,7 @@ public class DataBaseConfiguration {
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
         sqlSessionFactoryBean.setDataSource(dataSource);
         sqlSessionFactoryBean.setMapperLocations(applicationContext.getResources("classpath:mapper/**/**.xml"));
-        sqlSessionFactoryBean.setTypeHandlers(new TypeHandler[]{ new ImageStatus.TypeHandler() , new ProjectApplyStatus.TypeHandler() , new UserStatus.TypeHandler()});
+        sqlSessionFactoryBean.setTypeHandlers(new TypeHandler[]{new ImageStatus.TypeHandler(), new ProjectApplyStatus.TypeHandler()});
         return sqlSessionFactoryBean.getObject();
     }
 

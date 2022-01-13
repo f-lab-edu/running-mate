@@ -17,4 +17,6 @@ public interface ProjectMapper {
     public void updateProject(Project project);
 
     public void deleteProject(Project project);
+
+    public boolean existsByProjectId(long projectId);
 }
