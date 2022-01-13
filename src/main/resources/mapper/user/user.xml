@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.runningmate.runningmate.user.mapper.UserMapper">
+    <resultMap id="userMap" type="com.runningmate.runningmate.user.entity.User">
+        <id column="user_id"                property="userId"/>
+        <result column="email"              property="email"/>
+        <result column="password"           property="password"/>
+        <result column="nickname"          property="nickName"/>
+        <result column="reset_token"        property="resetToken"/>
+        <result column="level"              property="level"/>
+        <result column="create_date"        property="createDate"/>
+        <result column="update_date"        property="updateDate"/>
+
+        <association property="position" javaType="com.runningmate.runningmate.position.domain.entity.Position">
+            <id column="position_id"            property="positionId"/>
+            <result column="position_name"      property="positionName"/>
+        </association>
+
+        <association property="image" javaType="com.runningmate.runningmate.image.domain.entity.Image">
+            <id column="image_id"               property="imageId"/>
+            <result column="i_status"           property="status"/>
+            <result column="original_file_name" property="originalFileName"/>
+            <result column="storage_file_name"  property="storageFileName"/>
+        </association>
+
+        <collection property="userSkills" resultMap="userSkillMap"/>
+    </resultMap>
+
+    <resultMap id="userSkillMap" type="com.runningmate.runningmate.user.entity.UserSkill">
+        <id column="user_skill_id"   property="userSkillId"/>
+
+        <association property="skill" javaType="com.runningmate.runningmate.skill.domain.entity.Skill">
+            <id column="skill_id"           property="skillId"/>
+            <result column="skill_name"     property="skillName"/>
+        </association>
+    </resultMap>
+
+
+
+    <select id="selsectUserByEmail" resultMap="userMap">
+        SELECT
+            u.user_id
+             , u.email
+             , u.password
+             , u.nickname
+             , u.reset_token
+             , u.level
+             , u.create_date
+             , u.update_date
+             , p.position_id
+             , p.position_name
+             , i.image_id
+             , i.status
+             , i.original_file_name
+             , i.storage_file_name
+             , u_s.user_skill_id
+             , s.skill_id
+             , s.skill_name
+        FROM user u
+            JOIN image i on u.image_id = u.image_id
+            JOIN position p on p.position_id = u.position_id
+            JOIN user_skill u_s on u_s.user_id = u.user_id
+            JOIN skill s ON s.skill_id = u_s.skill_id
+        WHERE u.email = #{email}
+    </select>
+
+    <select id="selectUserById" resultMap="userMap">
+        SELECT
+            u.user_id
+             , u.email
+             , u.password
+             , u.nickname
+             , u.reset_token
+             , u.level
+             , u.create_date
+             , u.update_date
+             , p.position_id
+             , p.position_name
+             , i.image_id
+             , i.status
+             , i.original_file_name
+             , i.storage_file_name
+             , u_s.user_skill_id
+             , s.skill_id
+             , s.skill_name
+        FROM user u
+            JOIN image i on u.image_id = u.image_id
+            JOIN position p on p.position_id = u.position_id
+            JOIN user_skill u_s on u_s.user_id = u.user_id
+            JOIN skill s ON s.skill_id = u_s.skill_id
+        WHERE u.user_id = #{userId}
+    </select>
+
+    <select id="selectUserByToken" resultMap="userMap">
+        SELECT
+            u.user_id
+             , u.email
+             , u.password
+             , u.nickname
+             , u.reset_token
+             , u.level
+             , u.create_date
+             , u.update_date
+             , p.position_id
+             , p.position_name
+             , i.image_id
+             , i.status
+             , i.original_file_name
+             , i.storage_file_name
+             , u_s.user_skill_id
+             , s.skill_id
+             , s.skill_name
+        FROM user u
+                 JOIN image i on u.image_id = u.image_id
+                 JOIN position p on p.position_id = u.position_id
+                 JOIN user_skill u_s on u_s.user_id = u.user_id
+                 JOIN skill s ON s.skill_id = u_s.skill_id
+        WHERE u.reset_token = #{resetToken}
+    </select>
+
+    <insert id="insertUser" parameterType="com.runningmate.runningmate.user.entity.User" useGeneratedKeys="true" keyProperty="userId">
+        INSERT INTO
+            user (
+                email
+                , password
+                , nickname
+                , position_id
+                , image_id
+                , level
+                , create_date
+            )
+            VALUES(
+                #{email}
+                , #{password}
+                , #{nickName}
+                , #{position.positionId}
+                , #{image.imageId}
+                , #{level}
+                , #{createDate}
+            )
+    </insert>
+
+    <update id="updateUser">
+        UPDATE user
+        SET update_date = #{updateDate}
+                , nickname = #{nickName}
+                , position_id = #{position.positionId}
+                , image_id = #{image.imageId}
+                , password = #{password}
+                , reset_token = #{resetToken}
+                , status = #{status}
+                , level = #{level}
+
+        WHERE user_id = #{userId}
+    </update>
+</mapper>

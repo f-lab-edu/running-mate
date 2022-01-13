@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.runningmate.runningmate.project.domain.mapper.ProjectApplyMapper">
+    <resultMap id="projectApplyMap" type="com.runningmate.runningmate.project.domain.entity.ProjectApply">
+        <id column="project_apply_id"   property="projectApplyId"/>
+        <result column="status"         property="status"/>
+
+        <association property="projectPosition" javaType="com.runningmate.runningmate.project.domain.entity.ProjectPosition">
+            <id column="project_position_id"    property="projectPositionId"/>
+
+            <association property="position" javaType="com.runningmate.runningmate.position.domain.entity.Position">
+                <id column="position_id"            property="positionId"/>
+                <result column="position_name"      property="positionName"/>
+            </association>
+
+            <association property="project" javaType="com.runningmate.runningmate.project.domain.entity.Project">
+                <id column="project_id"             property="projectId"/>
+
+                <association property="leader" javaType="com.runningmate.runningmate.user.entity.User">
+                    <id column="user_id"                property="userId"/>
+                    <result column="email"              property="email"/>
+                    <result column="nickname"           property="nickName"/>
+                </association>
+            </association>
+        </association>
+
+        <association property="user" javaType="com.runningmate.runningmate.user.entity.User">
+            <id column="user_id"                property="userId"/>
+            <result column="email"              property="email"/>
+            <result column="nickname"           property="nickName"/>
+        </association>
+    </resultMap>
+
+    <select id="selectProjectApplyByProjectApplyId" resultMap="projectApplyMap">
+        SELECT
+            p_a.project_apply_id
+             , p_a.status
+             , p_p.project_position_id
+             , p_o.position_id
+             , p_o.position_name
+             , p.project_id
+             , l.user_id
+             , l.email
+             , l.nickname
+             , u.user_id
+             , u.email
+             , u.nickname
+        FROM project_apply p_a
+                 JOIN project_position p_p ON p_a.project_position_id = p_p.project_position_id
+                 JOIN project p ON p_p.project_id = p.project_id
+                 JOIN user l ON p.leader = l.user_id
+                 JOIN position p_o ON p_p.position_id = p_o.position_id
+                 JOIN user u ON p_a.user_id = u.user_id
+        WHERE p_a.project_apply_id = #{projectApplyId}
+    </select>
+
+    <select id="selectProjectApplyByProjectId" resultMap="projectApplyMap">
+        SELECT
+            p_a.project_apply_id
+             , p_a.status
+             , p_p.project_position_id
+             , p.position_id
+             , p.position_name
+             , u.user_id
+             , u.email
+             , u.nickname
+        FROM project_apply p_a
+                 JOIN project_position p_p ON p_a.project_position_id = p_p.project_position_id
+                 JOIN position p ON p_p.position_id = p.position_id
+                 JOIN user u ON p_a.user_id = u.user_id
+        WHERE p_p.project_id = #{projectId}
+    </select>
+
+    <select id="selectProjectApplyByUserId" resultMap="projectApplyMap">
+        SELECT
+            p_a.project_apply_id
+            , p_a.status
+            , p_p.project_position_id
+            , p.position_id
+            , p.position_name
+            , u.user_id
+            , u.email
+            , u.nickname
+        FROM project_apply p_a
+            JOIN project_position p_p ON p_a.project_position_id = p_p.project_position_id
+            JOIN position p ON p_p.position_id = p.position_id
+            JOIN user u ON p_a.user_id = u.user_id
+        WHERE p_a.user_id = #{userId}
+    </select>
+
+    <select id="existsByProjectId" resultType="boolean">
+        SELECT
+            EXISTS(
+                SELECT project_apply_id
+                FROM project_apply
+                WHERE project_position_id IN (SELECT project_position_id FROM project_position WHERE project_id = #{projectId})
+            )
+    </select>
+
+    <select id="existsByProjectPositionIdAndUserId" resultType="boolean">
+        SELECT
+            EXISTS(
+                SELECT project_apply_id
+                FROM project_apply
+                WHERE project_position_id = #{projectPositionId}
+                AND user_id = #{userId}
+            ) exist
+    </select>
+    
+    <select id="existsByProjectPositionId" resultType="boolean">
+        SELECT
+            EXISTS(
+                SELECT project_apply_id
+                FROM project_apply
+                WHERE project_position_id = #{projectPositionId}
+            ) exist
+    </select>
+
+    <insert id="insertProjectApply">
+        INSERT INTO
+            project_apply (
+                project_position_id
+                , user_id
+                , status
+                , create_date
+                , update_date
+        )
+        VALUES (
+            #{projectPosition.projectPositionId}
+            , #{user.userId}
+            , #{status}
+            , #{createDate}
+            , #{updateDate}
+        )
+    </insert>
+
+    <update id="updateProjectApply">
+        UPDATE project_apply
+           SET status = #{status}
+             , update_date = #{updateDate}
+         WHERE project_apply_id = #{projectApplyId}
+    </update>
+</mapper>

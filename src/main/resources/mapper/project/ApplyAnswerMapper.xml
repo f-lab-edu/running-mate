@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.runningmate.runningmate.project.domain.mapper.ApplyAnswerMapper">
+    <resultMap id="applyAnswerMap" type="com.runningmate.runningmate.project.domain.entity.ApplyAnswer">
+        <id column="apply_answer_id"        property="applyAnswerId"/>
+        <result column="answer"             property="answer"/>
+
+        <association property="applyQuestion" javaType="com.runningmate.runningmate.project.domain.entity.ApplyQuestion">
+            <id column="apply_question_id"       property="applyQuestionId"/>
+            <result column="question"           property="question"/>
+        </association>
+    </resultMap>
+
+    <select id="selectApplyAnswerByProjectApplyId" resultMap="applyAnswerMap">
+        SELECT
+            a_a.apply_answer_id,
+            a_a.answer,
+            a_q.apply_question_id,
+            a_q.question
+        FROM apply_answer a_a
+            JOIN apply_question a_q ON a_a.apply_question_id = a_q.apply_question_id
+        WHERE a_a.project_apply_id = #{projectApplyId}
+    </select>
+
+    <insert id="insertApplyAnswers" parameterType="java.util.List">
+        INSERT INTO
+            apply_answer (
+                apply_question_id
+                , project_apply_id
+                , answer
+                , create_date
+                , update_date
+        )
+        VALUES
+            <foreach collection="list" item="item" separator=","> (
+                #{item.applyQuestion.applyQuestionId}
+                , #{item.projectApply.projectApplyId}
+                , #{item.answer}
+                , #{item.createDate}
+                , #{item.updateDate}
+            )
+            </foreach>
+    </insert>
+</mapper>

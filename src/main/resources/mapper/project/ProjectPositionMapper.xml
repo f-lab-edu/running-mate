@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.runningmate.runningmate.project.domain.mapper.ProjectPositionMapper">
+    <resultMap id="projectPositionMap" type="com.runningmate.runningmate.project.domain.entity.ProjectPosition">
+        <id column="project_position_id"    property="projectPositionId"/>
+        <result column="personnel"          property="personnel"/>
+        <result column="create_date"        property="createDate"/>
+        <result column="update_date"        property="updateDate"/>
+
+        <association property="position" javaType="com.runningmate.runningmate.position.domain.entity.Position">
+            <id column="position_id"            property="positionId"/>
+            <result column="position_name"      property="positionName"/>
+        </association>
+
+        <association property="project" javaType="com.runningmate.runningmate.project.domain.entity.Project">
+            <id column="project_id"             property="projectId"/>
+
+            <association property="leader" javaType="com.runningmate.runningmate.user.entity.User">
+                <id column="user_id"                property="userId"/>
+                <result column="email"              property="email"/>
+                <result column="nickname"           property="nickName"/>
+            </association>
+        </association>
+    </resultMap>
+
+    <select id="selectProjectPosition" resultMap="projectPositionMap">
+        SELECT
+            p_p.project_position_id,
+            p_p.personnel,
+            p_p.create_date,
+            p_p.update_date,
+            p_o.position_id,
+            p_o.position_name,
+            p.project_id,
+            u.user_id,
+            u.email,
+            u.nickname
+        FROM project_position p_p
+            JOIN position p_o ON p_p.position_id = p_o.position_id
+            JOIN project p ON p_p.project_id = p.project_id
+            JOIN user u ON p.leader = u.user_id
+        WHERE p_p.project_position_id = #{projectPositionId}
+    </select>
+
+    <select id="existsByProjectIdAndPositionId" resultType="boolean">
+        SELECT
+            EXISTS (
+                SELECT
+                    project_position_id
+                FROM project_position
+                WHERE project_id = #{projectId}
+                AND position_id = #{positionId}
+            ) exist
+    </select>
+
+    <insert id="insertProjectPosition">
+        INSERT INTO
+            project_position (
+                project_id
+                , position_id
+                , personnel
+                , create_date
+                , update_date
+            )
+        VALUES (
+            #{project.projectId}
+            , #{position.positionId}
+            , #{personnel}
+            , #{createDate}
+            , #{updateDate}
+        )
+    </insert>
+
+    <insert id="insertProjectPositions" parameterType="java.util.List">
+        INSERT INTO
+            project_position (
+                project_id
+                , position_id
+                , personnel
+                , create_date
+                , update_date
+            )
+        VALUES
+            <foreach collection="list" item="item" separator=","> (
+               #{item.project.projectId}
+               , #{item.position.positionId}
+               , #{item.personnel}
+               , #{item.createDate}
+               , #{item.updateDate}
+            )
+           </foreach>
+    </insert>
+
+    <update id="updateProjectPosition">
+        UPDATE project_position
+           SET position_id = #{position.positionId}
+             , personnel = #{personnel}
+             , update_date = #{updateDate}
+         WHERE project_position_id = #{projectPositionId}
+    </update>
+
+    <delete id="deleteProjectPosition">
+        DELETE FROM project_position
+        WHERE project_position_id = #{projectPositionId}
+    </delete>
+</mapper>
