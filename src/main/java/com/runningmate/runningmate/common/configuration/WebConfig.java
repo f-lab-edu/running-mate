@@ -1,4 +1,4 @@
-package com.runningmate.runningmate.configuration;
+package com.runningmate.runningmate.common.configuration;
 
 import com.runningmate.runningmate.common.Resolver.LoginUserIdArgumentResolver;
 import java.util.List;

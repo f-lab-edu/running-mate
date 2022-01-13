@@ -1,7 +1,7 @@
 package com.runningmate.runningmate.common.configuration;
 
-import com.runningmate.runningmate.dataSource.DataSourceType;
-import com.runningmate.runningmate.dataSource.ReplicationRoutingDataSource;
+import com.runningmate.runningmate.common.dataSource.DataSourceType;
+import com.runningmate.runningmate.common.dataSource.ReplicationRoutingDataSource;
 import com.runningmate.runningmate.image.domain.entity.ImageStatus;
 import com.runningmate.runningmate.project.domain.entity.ProjectApplyStatus;
 import com.zaxxer.hikari.HikariDataSource;

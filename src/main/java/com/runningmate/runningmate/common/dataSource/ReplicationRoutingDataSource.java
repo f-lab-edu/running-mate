@@ -1,4 +1,4 @@
-package com.runningmate.runningmate.dataSource;
+package com.runningmate.runningmate.common.dataSource;
 
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
