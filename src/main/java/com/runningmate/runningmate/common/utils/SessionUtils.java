@@ -52,7 +52,9 @@ public class SessionUtils{
      * @author junsoo
      */
     public static long getLoginSessionUserId() {
-        return Long.valueOf(StringUtils.getStringSafeFromObj(SessionUtils.getSession().getAttribute(LOGIN_USER_ID)));
+        String userId = (String) SessionUtils.getSession().getAttribute(LOGIN_USER_ID);
+
+        return Long.parseLong(userId == null ? "0" : userId);
     }
 
     /**
