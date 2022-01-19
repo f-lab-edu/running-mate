@@ -54,6 +54,9 @@ public class User {
 
     private UserStatus status;
 
+    private List<UserProject> userProjects;
+
+
     public void delete(){
         status = UserStatus.DELETE;
         updateDate = LocalDateTime.now();
