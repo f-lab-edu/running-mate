@@ -83,6 +83,7 @@ public class UserService {
      * @param userId
      * @return user
      */
+    @Transactional(readOnly = true)
     public User getUserById(long userId) {
         return mybatisUserRepository.findByUserId(userId).orElseThrow(() -> new NotFoundUserException("유저 정보를 찾을 수 없습니다."));
     }
@@ -92,6 +93,7 @@ public class UserService {
      * @param userEmail
      * @return user
      */
+    @Transactional(readOnly = true)
     public User getUserByEmail(String userEmail) {
         return mybatisUserRepository.findByEmail(userEmail).orElseThrow(() -> new NotFoundUserException("유저 정보를 찾을 수 없습니다."));
     }
