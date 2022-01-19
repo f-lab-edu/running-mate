@@ -26,6 +26,7 @@ public class UserInfoResponseDto {
     private LocalDateTime createDate;
     private UserLevel level;
     private List<UserSkillInfoResponseDto> skills;
+    private List<UserProjectResponseDto> userProjects;
 
     public static UserInfoResponseDto of(User user) {
         return UserInfoResponseDto.builder()
@@ -40,6 +41,9 @@ public class UserInfoResponseDto {
             .imagePath(user.getImage().getStorageFileName())
             .skills(user.getUserSkills().stream()
                 .map(UserSkillInfoResponseDto::of)
+                .collect(Collectors.toList()))
+            .userProjects(user.getUserProjects().stream()
+                .map(UserProjectResponseDto::of)
                 .collect(Collectors.toList()))
             .build();
     }

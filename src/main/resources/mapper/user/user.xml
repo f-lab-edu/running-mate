@@ -7,7 +7,7 @@
         <id column="user_id"                property="userId"/>
         <result column="email"              property="email"/>
         <result column="password"           property="password"/>
-        <result column="nickname"          property="nickName"/>
+        <result column="nickname"           property="nickName"/>
         <result column="reset_token"        property="resetToken"/>
         <result column="level"              property="level"/>
         <result column="create_date"        property="createDate"/>
@@ -26,6 +26,7 @@
         </association>
 
         <collection property="userSkills" resultMap="userSkillMap"/>
+        <collection property="userProjects" resultMap="userProjectMap"/>
     </resultMap>
 
     <resultMap id="userSkillMap" type="com.runningmate.runningmate.user.entity.UserSkill">
@@ -37,6 +38,20 @@
         </association>
     </resultMap>
 
+    <resultMap id="userProjectMap" type="com.runningmate.runningmate.user.entity.UserProject">
+        <id column="project_id"         property="projectId"/>
+        <result column="title"          property="title"/>
+        <result column="begin_date"     property="beginDate"/>
+        <result column="end_date"       property="endDate"/>
+        <result column="project_status"       property="status"/>
+
+        <collection property="position" resultMap="userProjectPositionMap"/>
+    </resultMap>
+
+    <resultMap id="userProjectPositionMap" type="com.runningmate.runningmate.position.domain.entity.Position">
+        <id column="position_id"            property="positionId"/>
+        <result column="position_name"      property="positionName"/>
+    </resultMap>
 
 
     <select id="selsectUserByEmail" resultMap="userMap">
@@ -52,17 +67,26 @@
              , p.position_id
              , p.position_name
              , i.image_id
-             , i.status
+             , i.status AS i_status
              , i.original_file_name
              , i.storage_file_name
              , u_s.user_skill_id
              , s.skill_id
              , s.skill_name
+             , pj.project_id
+             , pj.begin_date
+             , pj.end_date
+             , pj.title
+             , pj.status AS project_status
         FROM user u
-            JOIN image i on u.image_id = u.image_id
-            JOIN position p on p.position_id = u.position_id
-            JOIN user_skill u_s on u_s.user_id = u.user_id
-            JOIN skill s ON s.skill_id = u_s.skill_id
+             JOIN image i on u.image_id = u.image_id
+             JOIN position p on p.position_id = u.position_id
+             JOIN user_skill u_s on u_s.user_id = u.user_id
+             JOIN skill s ON s.skill_id = u_s.skill_id
+             JOIN project_member p_m ON u.user_id = p_m.user_id
+             JOIN project_position p_p ON p_m.project_position_id = p_p.project_position_id
+             JOIN project_apply p_a ON p_a.project_position_id = p_p.project_position_id AND p_a.status = 1
+             JOIN project pj ON pj.project_id = p_p.project_id
         WHERE u.email = #{email}
     </select>
 
@@ -79,17 +103,26 @@
              , p.position_id
              , p.position_name
              , i.image_id
-             , i.status
+             , i.status AS i_status
              , i.original_file_name
              , i.storage_file_name
              , u_s.user_skill_id
              , s.skill_id
              , s.skill_name
+             , pj.project_id
+             , pj.begin_date
+             , pj.end_date
+             , pj.title
+             , pj.status AS project_status
         FROM user u
             JOIN image i on u.image_id = u.image_id
             JOIN position p on p.position_id = u.position_id
             JOIN user_skill u_s on u_s.user_id = u.user_id
             JOIN skill s ON s.skill_id = u_s.skill_id
+            JOIN project_member p_m ON u.user_id = p_m.user_id
+            JOIN project_position p_p ON p_m.project_position_id = p_p.project_position_id
+            JOIN project_apply p_a ON p_a.project_position_id = p_p.project_position_id AND p_a.status = 1
+            JOIN project pj ON pj.project_id = p_p.project_id
         WHERE u.user_id = #{userId}
     </select>
 
