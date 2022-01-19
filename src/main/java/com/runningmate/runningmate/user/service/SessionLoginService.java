@@ -10,6 +10,7 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
@@ -29,6 +30,7 @@ public class SessionLoginService{
      *
      * @author junsoo
      */
+    @Transactional(readOnly = true)
     public Optional<User> login(UserLoginRequestDto userLoginRequestDto) {
         String loginRequestEmail = userLoginRequestDto.getEmail();
         String loginRequestPassword = userLoginRequestDto.getPassword();
