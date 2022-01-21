@@ -37,18 +37,16 @@ public class ProjectController {
 
     @GetMapping("/projects")
     public ResponseEntity<List<ProjectInfoResponseDto>> getProjects(@RequestBody ProjectSearchRequestDto projectSearchRequestDto) {
-        List<ProjectInfoResponseDto> response = projectService.getProjects(projectSearchRequestDto).stream()
-            .map(ProjectInfoResponseDto::of)
-            .collect(Collectors.toList());
+        long userId = SessionUtils.getLoginSessionUserId();
 
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.ok().body(projectService.getProjects(userId, projectSearchRequestDto));
     }
 
     @GetMapping("/project/{projectId}")
     public ResponseEntity<ProjectInfoResponseDto> getProject(@PathVariable("projectId") long projectId) {
-        ProjectInfoResponseDto response = ProjectInfoResponseDto.of(projectService.getProject(projectId));
+        long userId = SessionUtils.getLoginSessionUserId();
 
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.ok().body(projectService.getProject(userId, projectId));
     }
 
     @LoginCheck

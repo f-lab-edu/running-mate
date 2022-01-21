@@ -21,6 +21,15 @@ public class LikeCacheRepository {
     private final RedisTemplate<String, Object> redisCacheTemplate;
     private final StringRedisTemplate stringCacheRedisTemplate;
 
+    public Map<Long, Boolean> existLike(long userId, long id) {
+        Boolean exist = redisCacheTemplate.opsForSet().isMember(redisCacheService.generateKey(KeyPrefix.LIKE, id), userId);
+
+        Map<Long, Boolean> result = new HashMap<>();
+        result.put(id, exist);
+
+        return result;
+    }
+
     public Map<Long, Boolean> existLike(long userId, List<Long> ids) {
         RedisSerializer keySerializer = redisCacheTemplate.getKeySerializer();
         RedisSerializer valueSerializer = redisCacheTemplate.getValueSerializer();
@@ -45,6 +54,15 @@ public class LikeCacheRepository {
         }
 
         return existMap;
+    }
+
+    public Map<Long, Integer> findLikeCount(long id) {
+        String count = stringCacheRedisTemplate.opsForValue().get(redisCacheService.generateKey(KeyPrefix.LIKE_COUNT, id));
+
+        Map<Long, Integer> countMap = new HashMap<>();
+        countMap.put(id, count == null ? 0 : Integer.parseInt(count));
+
+        return countMap;
     }
 
     public Map<Long, Integer> findLikeCount(List<Long> ids) {

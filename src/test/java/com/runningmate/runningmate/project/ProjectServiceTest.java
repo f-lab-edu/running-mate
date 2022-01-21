@@ -4,6 +4,7 @@ import com.runningmate.runningmate.common.exception.DuplicateApplyException;
 import com.runningmate.runningmate.image.domain.entity.Image;
 import com.runningmate.runningmate.image.domain.entity.ImageStatus;
 import com.runningmate.runningmate.image.service.ImageUploadService;
+import com.runningmate.runningmate.like.domain.repository.LikeCacheRepository;
 import com.runningmate.runningmate.position.domain.entity.Position;
 import com.runningmate.runningmate.project.domain.entity.ApplyQuestion;
 import com.runningmate.runningmate.project.domain.entity.Project;
@@ -29,7 +30,11 @@ import com.runningmate.runningmate.project.dto.request.ProjectUpdateRequestDto;
 import com.runningmate.runningmate.project.service.ProjectService;
 import com.runningmate.runningmate.user.entity.User;
 import com.runningmate.runningmate.user.repository.UserRepository;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
+import org.apache.tomcat.jni.Local;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -79,26 +84,106 @@ class ProjectServiceTest {
     @Mock
     private ImageUploadService awsS3ImageUploadService;
 
+    @Mock
+    private LikeCacheRepository likeCacheRepository;
+
+    private Project project;
+
+    @BeforeEach
+    void setUp() {
+        project = Project.builder()
+            .projectId(1L)
+            .title("Title")
+            .contents("Contents")
+            .leader(User.builder()
+                .userId(1L)
+                .password("Password")
+                .nickName("Nickname")
+                .email("email@gmail.com")
+                .build())
+            .status(ProjectStatus.RECRUIT)
+            .beginDate(LocalDate.now().minusDays(1))
+            .endDate(LocalDate.now())
+            .createDate(LocalDateTime.now().minusDays(1))
+            .updateDate(LocalDateTime.now())
+            .image(Image.builder()
+                .imageId(1L)
+                .originalFileName("FILE.jpg")
+                .storageFileName("FILE.jpg")
+                .build())
+            .projectPositions(new ArrayList<>())
+            .projectSkills(new ArrayList<>())
+            .applyQuestions(new ArrayList<>())
+            .projectMembers(new ArrayList<>())
+            .build();
+    }
+
     @Test
-    @DisplayName("프로젝트 목록 조회 성공")
-    void successGetProjects() {
+    @DisplayName("프로젝트 목록 조회 성공 - 로그인 시")
+    void successGetProjectsWithLogin() {
         ProjectSearchRequestDto projectSearchRequestDto = ProjectSearchRequestDto.builder()
             .cursor(0)
             .size(10)
             .status(ProjectStatus.RECRUIT)
             .build();
 
-        projectService.getProjects(projectSearchRequestDto);
+        projectService.getProjects(1L, projectSearchRequestDto);
 
         verify(mybatisProjectRepository, times(1)).findAll(projectSearchRequestDto);
+        verify(likeCacheRepository, times(1)).findLikeCount(anyList());
+        verify(likeCacheRepository, times(1)).existLike(anyLong(), anyList());
     }
 
     @Test
-    @DisplayName("프로젝트 조회 성공")
-    void successGetProject() {
-        projectService.getProject(1L);
+    @DisplayName("프로젝트 목록 조회 성공 - 비로그인 시")
+    void successGetProjectsWithNonLogin() {
+        ProjectSearchRequestDto projectSearchRequestDto = ProjectSearchRequestDto.builder()
+            .cursor(0)
+            .size(10)
+            .status(ProjectStatus.RECRUIT)
+            .build();
+
+        projectService.getProjects(0, projectSearchRequestDto);
+
+        verify(mybatisProjectRepository, times(1)).findAll(projectSearchRequestDto);
+        verify(likeCacheRepository, times(1)).findLikeCount(anyList());
+        verify(likeCacheRepository, times(0)).existLike(anyLong(), anyList());
+    }
+
+    @Test
+    @DisplayName("프로젝트 조회 성공 - 로그인 시")
+    void successGetProjectWithLogin() {
+        Map<Long, Integer> likeCountMap = new HashMap<>();
+        likeCountMap.put(1L, 0);
+
+        Map<Long, Boolean> likeExistMap = new HashMap<>();
+        likeExistMap.put(1L, false);
+
+        when(mybatisProjectRepository.findByProjectId(1L)).thenReturn(project);
+        when(likeCacheRepository.findLikeCount(1L)).thenReturn(likeCountMap);
+        when(likeCacheRepository.existLike(1L, 1L)).thenReturn(likeExistMap);
+
+        projectService.getProject(1L, 1L);
 
         verify(mybatisProjectRepository, times(1)).findByProjectId(1L);
+        verify(likeCacheRepository, times(1)).findLikeCount(anyLong());
+        verify(likeCacheRepository, times(1)).existLike(anyLong(), anyLong());
+    }
+
+    @Test
+    @DisplayName("프로젝트 조회 성공 - 비로그인 시")
+    void successGetProjectWithNonLogin() {
+        Map<Long, Integer> likeCountMap = new HashMap<>();
+        likeCountMap.put(1L, 0);
+
+        when(mybatisProjectRepository.findByProjectId(1L)).thenReturn(project);
+        when(likeCacheRepository.findLikeCount(1L)).thenReturn(likeCountMap);
+
+        projectService.getProject(0, 1L);
+
+        verify(mybatisProjectRepository, times(1)).findByProjectId(1L);
+        verify(likeCacheRepository, times(1)).findLikeCount(anyLong());
+        verify(likeCacheRepository, times(0)).existLike(anyLong(), anyLong());
     }
 
     @Test
@@ -163,17 +248,6 @@ class ProjectServiceTest {
             .status(ProjectStatus.RECRUIT)
             .build();
 
-        Project project = Project.builder()
-            .projectId(projectId)
-            .leader(User.builder()
-                .userId(userId)
-                .email("test@gmail.com")
-                .password("test")
-                .nickName("tester")
-                .build())
-            .image(Image.builder().imageId(1L).build())
-            .build();
-
         when(mybatisProjectRepository.findByProjectId(projectId)).thenReturn(project);
 
         projectService.modifyProject(userId, projectId, projectUpdateRequestDto, multipartFile);
@@ -197,17 +271,6 @@ class ProjectServiceTest {
             .status(ProjectStatus.RECRUIT)
             .build();
 
-        Project project = Project.builder()
-            .projectId(projectId)
-            .leader(User.builder()
-                .userId(userId)
-                .email("test@gmail.com")
-                .password("test")
-                .nickName("tester")
-                .build())
-            .image(Image.builder().imageId(1L).build())
-            .build();
-
         when(mybatisProjectRepository.findByProjectId(projectId)).thenReturn(project);
 
         projectService.modifyProject(userId, projectId, projectUpdateRequestDto, null);
@@ -223,16 +286,6 @@ class ProjectServiceTest {
         long userId = 1L;
         long projectId = 1L;
 
-        Project project = Project.builder()
-            .projectId(projectId)
-            .leader(User.builder()
-                .userId(userId)
-                .email("test@gmail.com")
-                .password("test")
-                .nickName("tester")
-                .build())
-            .build();
-
         when(mybatisProjectRepository.findByProjectId(projectId)).thenReturn(project);
         when(mybatisProjectApplyRepository.existsByProjectId(projectId)).thenReturn(true);
 
@@ -246,16 +299,6 @@ class ProjectServiceTest {
     void successProjectDelete() {
         long userId = 1L;
         long projectId = 1L;
-
-        Project project = Project.builder()
-            .projectId(projectId)
-            .leader(User.builder()
-                .userId(userId)
-                .email("test@gmail.com")
-                .password("test")
-                .nickName("tester")
-                .build())
-            .build();
 
         when(mybatisProjectRepository.findByProjectId(projectId)).thenReturn(project);
         when(mybatisProjectApplyRepository.existsByProjectId(projectId)).thenReturn(false);
@@ -274,16 +317,6 @@ class ProjectServiceTest {
 
         ProjectPositionSaveRequestDto request = new ProjectPositionSaveRequestDto(1L, 3);
 
-        Project project = Project.builder()
-            .projectId(projectId)
-            .leader(User.builder()
-                .userId(userId)
-                .email("test@gmail.com")
-                .password("test")
-                .nickName("tester")
-                .build())
-            .build();
-
         when(mybatisProjectRepository.findByProjectId(projectId)).thenReturn(project);
         when(mybatisProjectPositionRepository.existsByProjectIdAndPositionId(projectId, positionId)).thenReturn(true);
 
@@ -299,16 +332,6 @@ class ProjectServiceTest {
         long projectId = 1L;
 
         ProjectPositionSaveRequestDto request = new ProjectPositionSaveRequestDto(1L, 3);
-
-        Project project = Project.builder()
-            .projectId(projectId)
-            .leader(User.builder()
-                .userId(userId)
-                .email("test@gmail.com")
-                .password("test")
-                .nickName("tester")
-                .build())
-            .build();
 
         when(mybatisProjectRepository.findByProjectId(projectId)).thenReturn(project);
         when(mybatisProjectPositionRepository.existsByProjectIdAndPositionId(projectId, request.getPositionId())).thenReturn(false);
@@ -330,16 +353,6 @@ class ProjectServiceTest {
             .personnel(3)
             .build();
 
-        Project project = Project.builder()
-            .projectId(projectId)
-            .leader(User.builder()
-                .userId(userId)
-                .email("test@gmail.com")
-                .password("test")
-                .nickName("tester")
-                .build())
-            .build();
-
         ProjectPosition projectPosition = ProjectPosition.builder()
             .projectPositionId(projectPositionId)
             .project(project)
@@ -358,16 +371,6 @@ class ProjectServiceTest {
         long userId = 1L;
         long projectId = 1L;
         long projectPositionId = 1L;
-
-        Project project = Project.builder()
-            .projectId(projectId)
-            .leader(User.builder()
-                .userId(userId)
-                .email("test@gmail.com")
-                .password("test")
-                .nickName("tester")
-                .build())
-            .build();
 
         ProjectPosition projectPosition = ProjectPosition.builder()
             .projectPositionId(projectPositionId)
@@ -388,16 +391,6 @@ class ProjectServiceTest {
         long userId = 1L;
         long projectId = 1L;
         long projectPositionId = 1L;
-
-        Project project = Project.builder()
-            .projectId(projectId)
-            .leader(User.builder()
-                .userId(userId)
-                .email("test@gmail.com")
-                .password("test")
-                .nickName("tester")
-                .build())
-            .build();
 
         ProjectPosition projectPosition = ProjectPosition.builder()
             .projectPositionId(projectPositionId)
@@ -422,16 +415,6 @@ class ProjectServiceTest {
             .skillId(1L)
             .build();
 
-        Project project = Project.builder()
-            .projectId(projectId)
-            .leader(User.builder()
-                .userId(userId)
-                .email("test@gmail.com")
-                .password("test")
-                .nickName("tester")
-                .build())
-            .build();
-
         when(mybatisProjectRepository.findByProjectId(projectId)).thenReturn(project);
 
         projectService.addProjectSKill(userId, projectId, projectSkillSaveRequestDto);
@@ -445,16 +428,6 @@ class ProjectServiceTest {
         long userId = 1L;
         long projectId = 1L;
         long projectSkillId = 1L;
-
-        Project project = Project.builder()
-            .projectId(projectId)
-            .leader(User.builder()
-                .userId(userId)
-                .email("test@gmail.com")
-                .password("test")
-                .nickName("tester")
-                .build())
-            .build();
 
         ProjectSkill projectSkill = ProjectSkill.builder()
             .projectSkillId(projectSkillId)
@@ -521,16 +494,6 @@ class ProjectServiceTest {
             .question("Question")
             .build();
 
-        Project project = Project.builder()
-            .projectId(projectId)
-            .leader(User.builder()
-                .userId(userId)
-                .email("test@gmail.com")
-                .password("test")
-                .nickName("tester")
-                .build())
-            .build();
-
         when(mybatisProjectRepository.findByProjectId(projectId)).thenReturn(project);
 
         projectService.addApplyQuestion(userId, projectId, applyQuestionSaveRequestDto);
@@ -547,16 +510,6 @@ class ProjectServiceTest {
 
         ApplyQuestionUpdateRequestDto applyQuestionUpdateRequestDto = ApplyQuestionUpdateRequestDto.builder()
             .question("Question")
-            .build();
-
-        Project project = Project.builder()
-            .projectId(projectId)
-            .leader(User.builder()
-                .userId(userId)
-                .email("test@gmail.com")
-                .password("test")
-                .nickName("tester")
-                .build())
             .build();
 
         ApplyQuestion applyQuestion = ApplyQuestion.builder()
@@ -577,16 +530,6 @@ class ProjectServiceTest {
         long userId = 1L;
         long projectId = 1L;
         long applyQuestionId = 1L;
-
-        Project project = Project.builder()
-            .projectId(projectId)
-            .leader(User.builder()
-                .userId(userId)
-                .email("test@gmail.com")
-                .password("test")
-                .nickName("tester")
-                .build())
-            .build();
 
         ApplyQuestion applyQuestion = ApplyQuestion.builder()
             .applyQuestionId(applyQuestionId)

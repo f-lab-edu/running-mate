@@ -4,6 +4,7 @@ import com.runningmate.runningmate.common.exception.DuplicateApplyException;
 import com.runningmate.runningmate.common.exception.NonCreatorException;
 import com.runningmate.runningmate.image.domain.entity.Image;
 import com.runningmate.runningmate.image.service.ImageUploadService;
+import com.runningmate.runningmate.like.domain.repository.LikeCacheRepository;
 import com.runningmate.runningmate.position.domain.entity.Position;
 import com.runningmate.runningmate.project.domain.entity.*;
 import com.runningmate.runningmate.project.domain.repository.ApplyAnswerRepository;
@@ -23,10 +24,12 @@ import com.runningmate.runningmate.project.dto.request.ProjectSaveRequestDto;
 import com.runningmate.runningmate.project.dto.request.ProjectSearchRequestDto;
 import com.runningmate.runningmate.project.dto.request.ProjectSkillSaveRequestDto;
 import com.runningmate.runningmate.project.dto.request.ProjectUpdateRequestDto;
+import com.runningmate.runningmate.project.dto.response.ProjectInfoResponseDto;
 import com.runningmate.runningmate.skill.domain.entity.Skill;
 import com.runningmate.runningmate.user.entity.User;
 import com.runningmate.runningmate.user.repository.UserRepository;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
@@ -55,15 +58,34 @@ public class ProjectService {
 
     private final ImageUploadService awsS3ImageUploadService;
 
+    private final LikeCacheRepository likeCacheRepository;
+
     @Transactional(readOnly = true)
-    public List<Project> getProjects(ProjectSearchRequestDto projectSearchRequestDto) {
-        return mybatisProjectRepository.findAll(projectSearchRequestDto);
+    public List<ProjectInfoResponseDto> getProjects(long userId, ProjectSearchRequestDto projectSearchRequestDto) {
+        List<Project> projects = mybatisProjectRepository.findAll(projectSearchRequestDto);
+        List<Long> ids = projects.stream().map(Project::getProjectId).collect(Collectors.toList());
+
+        Map<Long, Integer> likeCountMap = likeCacheRepository.findLikeCount(ids);
+        Map<Long, Boolean> likeExistMap = userId == 0 ? null : likeCacheRepository.existLike(userId, ids);
+
+        return projects.stream()
+            .map(project -> likeExistMap == null
+                ? ProjectInfoResponseDto.of(project, likeCountMap)
+                : ProjectInfoResponseDto.of(project, likeCountMap, likeExistMap))
+            .collect(Collectors.toList());
     }
 
     @Cacheable(value = "project", key = "#projectId")
     @Transactional(readOnly = true)
-    public Project getProject(long projectId) {
-        return mybatisProjectRepository.findByProjectId(projectId);
+    public ProjectInfoResponseDto getProject(long userId, long projectId) {
+        Project project = mybatisProjectRepository.findByProjectId(projectId);
+
+        Map<Long, Integer> likeCountMap = likeCacheRepository.findLikeCount(project.getProjectId());
+        Map<Long, Boolean> likeExistMap = userId == 0 ? null : likeCacheRepository.existLike(userId, project.getProjectId());
+
+        return likeExistMap == null
+            ? ProjectInfoResponseDto.of(project, likeCountMap)
+            : ProjectInfoResponseDto.of(project, likeCountMap, likeExistMap);
     }
 
     @Transactional
